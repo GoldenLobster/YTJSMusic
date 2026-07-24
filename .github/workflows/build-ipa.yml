@@ -21,8 +21,8 @@ jobs:
 
       - name: Install Dependencies & Bundle YouTube.js
         run: |
-          npm install
-          npm run bundle
+          npm install --force
+          npx --yes esbuild entry.js --bundle --outfile=runtime.bundle.js --format=iife --target=es2020
 
       - name: Build Xcode Archive (Unsigned)
         run: |
