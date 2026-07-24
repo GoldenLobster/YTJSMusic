@@ -29,6 +29,21 @@ struct PlayerDetailView: View {
             .padding(.top, 16)
             .padding(.horizontal)
             
+            if let error = audioManager.lastPlayerError {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.orange)
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.primary)
+                        .lineLimit(2)
+                }
+                .padding(8)
+                .background(Color.orange.opacity(0.15))
+                .cornerRadius(8)
+                .padding(.horizontal)
+            }
+            
             Spacer()
             
             // Artwork
@@ -94,7 +109,7 @@ struct PlayerDetailView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Spacer()
-                    Text(formatTime(audioManager.duration))
+                    Text(audioManager.duration > 0 ? formatTime(audioManager.duration) : (audioManager.currentTrack?.duration ?? "0:00"))
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -160,7 +175,7 @@ struct PlayerDetailView: View {
     }
     
     private func formatTime(_ seconds: Double) -> String {
-        guard !seconds.isNaN && !seconds.isInfinite else { return "0:00" }
+        guard !seconds.isNaN && !seconds.isInfinite && seconds > 0 else { return "0:00" }
         let totalSeconds = Int(seconds)
         let mins = totalSeconds / 60
         let secs = totalSeconds % 60

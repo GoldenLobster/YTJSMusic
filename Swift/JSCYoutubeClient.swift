@@ -29,13 +29,10 @@ public class JSCYoutubeClient: ObservableObject {
     
     /// Loads all modular polyfills and the bundled runtime.bundle.js into JavaScriptCore
     public func loadPolyfillsAndBundle(polyfillScriptPaths: [String], bundlePath: String) throws {
-        // Load polyfills in order
         for path in polyfillScriptPaths {
             let script = try String(contentsOfFile: path, encoding: .utf8)
             context.evaluateScript(script, withSourceURL: URL(fileURLWithPath: path))
         }
-        
-        // Load YouTube.js runtime bundle
         let bundleScript = try String(contentsOfFile: bundlePath, encoding: .utf8)
         context.evaluateScript(bundleScript, withSourceURL: URL(fileURLWithPath: bundlePath))
     }
@@ -65,20 +62,31 @@ public class JSCYoutubeClient: ObservableObject {
         }
     }
     
-    /// Search YouTube Music specifically for official songs & tracks
+    /// Search YouTube Music specifically for official songs & tracks with High Quality album art
     public func searchMusic(query: String, completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
         let escapedQuery = query.replacingOccurrences(of: "\"", with: "\\\"")
         let script = """
         (async () => {
+            function upscaleThumbnail(url) {
+                if (!url) return "";
+                if (url.includes("googleusercontent.com") || url.includes("ggpht.com")) {
+                    return url.replace(/=w\\d+-h\\d+[^=]*/, "=w512-h512-l90-rj");
+                }
+                if (url.includes("ytimg.com")) {
+                    return url.replace("/default.jpg", "/hqdefault.jpg").replace("/sddefault.jpg", "/maxresdefault.jpg");
+                }
+                return url;
+            }
+
             const results = await globalThis.ytInstance.music.search("\(escapedQuery)", { type: 'song' });
             const songs = results.songs?.contents || results.results || [];
             
             return songs.map(s => {
-                let thumbnail = "";
+                let rawThumb = "";
                 if (s.thumbnails && s.thumbnails.length > 0) {
-                    thumbnail = s.thumbnails[s.thumbnails.length - 1].url || "";
+                    rawThumb = s.thumbnails[s.thumbnails.length - 1].url || "";
                 } else if (s.thumbnail?.url) {
-                    thumbnail = s.thumbnail.url;
+                    rawThumb = s.thumbnail.url;
                 }
                 
                 return {
@@ -87,7 +95,7 @@ public class JSCYoutubeClient: ObservableObject {
                     artist: s.artists ? s.artists.map(a => a.name).join(", ") : (s.author?.name || "Unknown Artist"),
                     album: s.album?.name || "",
                     duration: s.duration?.text || s.duration || "0:00",
-                    thumbnail: thumbnail
+                    thumbnail: upscaleThumbnail(rawThumb)
                 };
             }).filter(s => s.id.length > 0);
         })()
@@ -99,22 +107,29 @@ public class JSCYoutubeClient: ObservableObject {
     public func getAudioStreamUrl(videoId: String, completion: @escaping (Result<String, Error>) -> Void) {
         let script = """
         (async () => {
+            console.log("[JSC] getAudioStreamUrl for videoId:", "\(videoId)");
             const info = await globalThis.ytInstance.getInfo("\(videoId)", { client: 'IOS' });
             const adaptiveFormats = info.streaming_data?.adaptive_formats || [];
+            const regularFormats = info.streaming_data?.formats || [];
+            const allFormats = [...adaptiveFormats, ...regularFormats];
             
             // Prefer AAC / M4A (audio/mp4) or Opus (audio/webm)
-            let format = adaptiveFormats.find(f => f.has_audio && !f.has_video && f.mime_type.includes('mp4'));
+            let format = allFormats.find(f => f.has_audio && !f.has_video && (f.mime_type?.includes('mp4') || f.mime_type?.includes('m4a')));
             if (!format) {
-                format = adaptiveFormats.find(f => f.has_audio && !f.has_video);
+                format = allFormats.find(f => f.has_audio && !f.has_video);
+            }
+            if (!format) {
+                format = allFormats.find(f => f.has_audio);
             }
             
-            if (!format) throw new Error("No audio format available for video " + "\(videoId)");
+            if (!format) throw new Error("No audio format available for track ID " + "\(videoId)");
             
             let url = format.url;
             if (!url && format.decipher) {
                 url = await format.decipher(globalThis.ytInstance.session.player);
             }
             
+            console.log("[JSC] Stream URL resolved for", "\(videoId)", ":", url ? url.substring(0, 60) + "..." : "EMPTY");
             return url || "";
         })()
         """

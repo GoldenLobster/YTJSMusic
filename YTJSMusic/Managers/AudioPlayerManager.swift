@@ -12,6 +12,7 @@ public class AudioPlayerManager: ObservableObject {
     @Published public var duration: Double = 0.0
     @Published public var isShuffle: Bool = false
     @Published public var isRepeat: Bool = false
+    @Published public var lastPlayerError: String? = nil
     
     public var queue: [Track] = []
     private var originalQueue: [Track] = []
@@ -19,6 +20,8 @@ public class AudioPlayerManager: ObservableObject {
     
     private var player: AVPlayer?
     private var timeObserverToken: Any?
+    private var statusObserverToken: NSKeyValueObservation?
+    private var durationObserverToken: NSKeyValueObservation?
     private let jscClient: JSCYoutubeClient
     
     public init(jscClient: JSCYoutubeClient) {
@@ -126,27 +129,35 @@ public class AudioPlayerManager: ObservableObject {
         self.currentTrack = track
         self.isLoading = true
         self.isPlaying = false
+        self.currentTime = 0.0
+        self.duration = 0.0
+        self.lastPlayerError = nil
+        
+        print("[AUDIO MANAGER] Requesting stream URL for \(track.title) (\(track.id))...")
         
         jscClient.getAudioStreamUrl(videoId: track.id) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 switch result {
                 case .success(let streamUrl):
-                    guard let url = URL(string: streamUrl) else {
+                    print("[AUDIO MANAGER] Resolved stream URL length: \(streamUrl.count)")
+                    guard let url = URL(string: streamUrl), !streamUrl.isEmpty else {
                         self.isLoading = false
+                        self.lastPlayerError = "Empty stream URL returned from YouTube.js"
                         return
                     }
                     self.startAVPlayer(url: url, track: track)
                 case .failure(let error):
-                    print("Failed to get audio stream URL:", error)
+                    print("[AUDIO MANAGER ERROR] Failed to get audio stream URL:", error)
                     self.isLoading = false
+                    self.lastPlayerError = error.localizedDescription
                 }
             }
         }
     }
     
     private func startAVPlayer(url: URL, track: Track) {
-        removeTimeObserver()
+        removeObservers()
         
         let playerItem = AVPlayerItem(url: url)
         if player == nil {
@@ -155,25 +166,61 @@ public class AudioPlayerManager: ObservableObject {
             player?.replaceCurrentItem(with: playerItem)
         }
         
+        // KVO observer on playerItem status (readyToPlay vs failed)
+        statusObserverToken = playerItem.observe(\.status, options: [.new, .initial]) { [weak self] item, _ in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch item.status {
+                case .readyToPlay:
+                    self.isLoading = false
+                    self.isPlaying = true
+                    let durSeconds = item.duration.seconds
+                    if !durSeconds.isNaN && !durSeconds.isInfinite && durSeconds > 0 {
+                        self.duration = durSeconds
+                    }
+                    self.updateNowPlayingInfo()
+                case .failed:
+                    self.isLoading = false
+                    self.isPlaying = false
+                    let errDesc = item.error?.localizedDescription ?? "AVPlayer stream load failed"
+                    print("[AVPLAYER STREAM ERROR] \(errDesc)")
+                    self.lastPlayerError = errDesc
+                case .unknown:
+                    break
+                @unknown default:
+                    break
+                }
+            }
+        }
+        
+        // KVO observer on playerItem duration metadata updates
+        durationObserverToken = playerItem.observe(\.duration, options: [.new]) { [weak self] item, _ in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                let durSeconds = item.duration.seconds
+                if !durSeconds.isNaN && !durSeconds.isInfinite && durSeconds > 0 {
+                    self.duration = durSeconds
+                    self.updateNowPlayingInfo()
+                }
+            }
+        }
+        
         // Add end of track observer
-        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
         
-        // Add time observer
+        // Add periodic time observer for current playback position
         let interval = CMTime(seconds: 0.5, preferredTimescale: 1000)
         timeObserverToken = player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             guard let self = self, let currentItem = self.player?.currentItem else { return }
             self.currentTime = time.seconds
             let dur = currentItem.duration.seconds
-            if !dur.isNaN && !dur.isInfinite {
+            if !dur.isNaN && !dur.isInfinite && dur > 0 {
                 self.duration = dur
             }
             self.updateNowPlayingInfo()
         }
         
         player?.play()
-        self.isLoading = false
-        self.isPlaying = true
         updateNowPlayingInfo()
     }
     
@@ -183,11 +230,18 @@ public class AudioPlayerManager: ObservableObject {
         }
     }
     
-    private func removeTimeObserver() {
+    private func removeObservers() {
         if let token = timeObserverToken {
             player?.removeTimeObserver(token)
             timeObserverToken = nil
         }
+        statusObserverToken?.invalidate()
+        statusObserverToken = nil
+        
+        durationObserverToken?.invalidate()
+        durationObserverToken = nil
+        
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
     // MARK: - Lock Screen Controls & Artwork Setup
