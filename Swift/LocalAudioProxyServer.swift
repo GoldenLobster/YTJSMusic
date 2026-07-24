@@ -15,7 +15,8 @@ public class LocalAudioProxyServer {
         guard listener == nil else { return }
         do {
             let parameters = NWParameters.tcp
-            listener = try NWListener(using: parameters, on: NWEndpoint.Port(rawValue: port)!)
+            guard let endpointPort = NWEndpoint.Port(rawValue: port) else { return }
+            listener = try NWListener(using: parameters, on: endpointPort)
             listener?.stateUpdateHandler = { state in
                 switch state {
                 case .ready:
@@ -44,7 +45,7 @@ public class LocalAudioProxyServer {
     
     private func handleConnection(_ connection: NWConnection) {
         connection.start(queue: queue)
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 8192) { [weak self] data, _, isComplete, error in
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 8192) { [weak self] data, _, _, error in
             guard let self = self, let data = data, !data.isEmpty, error == nil else {
                 connection.cancel()
                 return
@@ -76,7 +77,8 @@ public class LocalAudioProxyServer {
               let targetUrlString = String(data: b64Data, encoding: .utf8),
               let targetURL = URL(string: targetUrlString) else {
             let notFound = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n"
-            connection.send(content: notFound.data(using: .utf8), completion: .contentProcessed({ _ in connection.cancel() }))
+            let completion: NWConnection.SendCompletion = .contentProcessed { _ in connection.cancel() }
+            connection.send(content: notFound.data(using: .utf8), completion: completion)
             return
         }
         
@@ -105,7 +107,8 @@ public class LocalAudioProxyServer {
         let task = session.dataTask(with: request) { data, response, error in
             guard let httpResponse = response as? HTTPURLResponse, let data = data, error == nil else {
                 let errResp = "HTTP/1.1 502 Bad Gateway\r\nContent-Length: 0\r\n\r\n"
-                connection.send(content: errResp.data(using: .utf8), completion: .contentProcessed({ _ in connection.cancel() }))
+                let completion: NWConnection.SendCompletion = .contentProcessed { _ in connection.cancel() }
+                connection.send(content: errResp.data(using: .utf8), completion: completion)
                 return
             }
             
@@ -126,14 +129,19 @@ public class LocalAudioProxyServer {
                 headerLines.append("Content-Range: \(contentRange)")
             }
             
-            let headerData = (headerLines.joined(separator: "\r\n") + "\r\n\r\n").data(using: .utf8)!
+            guard let headerData = (headerLines.joined(separator: "\r\n") + "\r\n\r\n").data(using: .utf8) else {
+                connection.cancel()
+                return
+            }
             
-            connection.send(content: headerData, completion: .contentProcessed({ _ in
-                connection.send(content: data, completion: .contentProcessed({ _ in
+            let headerCompletion: NWConnection.SendCompletion = .contentProcessed { _ in
+                let bodyCompletion: NWConnection.SendCompletion = .contentProcessed { _ in
                     print("[PROXY SUCCESS] Sent \(data.count) bytes of \(cleanMime) to AVPlayer (HTTP \(httpResponse.statusCode))")
                     connection.cancel()
-                }))
-            }))
+                }
+                connection.send(content: data, completion: bodyCompletion)
+            }
+            connection.send(content: headerData, completion: headerCompletion)
         }
         task.resume()
     }
