@@ -9,7 +9,7 @@ struct PlayerDetailView: View {
     @State private var editingSliderValue: Double = 0.0
     
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 20) {
             // Top Bar
             HStack {
                 Button(action: {
@@ -30,17 +30,20 @@ struct PlayerDetailView: View {
             .padding(.horizontal)
             
             if let error = audioManager.lastPlayerError {
-                HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.orange)
-                    Text(error)
-                        .font(.caption)
-                        .foregroundColor(.primary)
-                        .lineLimit(2)
+                ScrollView {
+                    HStack(alignment: .top) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(.orange)
+                        Text(error)
+                            .font(.caption)
+                            .foregroundColor(.primary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(8)
+                    .background(Color.orange.opacity(0.15))
+                    .cornerRadius(8)
                 }
-                .padding(8)
-                .background(Color.orange.opacity(0.15))
-                .cornerRadius(8)
+                .frame(maxHeight: 100)
                 .padding(.horizontal)
             }
             
@@ -59,7 +62,7 @@ struct PlayerDetailView: View {
                             .overlay(Image(systemName: "music.note").font(.largeTitle))
                     }
                 }
-                .frame(width: 280, height: 280)
+                .frame(width: 260, height: 260)
                 .cornerRadius(16)
                 .shadow(color: Color.black.opacity(0.25), radius: 12, x: 0, y: 6)
             }

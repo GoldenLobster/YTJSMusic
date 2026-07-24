@@ -22,6 +22,8 @@ public class AudioPlayerManager: ObservableObject {
     private var timeObserverToken: Any?
     private var statusObserverToken: NSKeyValueObservation?
     private var durationObserverToken: NSKeyValueObservation?
+    
+    private let resourceLoaderDelegate = JSCStreamLoaderDelegate()
     private let jscClient: JSCYoutubeClient
     
     public init(jscClient: JSCYoutubeClient) {
@@ -159,18 +161,20 @@ public class AudioPlayerManager: ObservableObject {
     private func startAVPlayer(url: URL, track: Track) {
         removeObservers()
         
-        // Pass AVURLAssetPreferPreciseDurationAndTimingKey: false to prevent AVFoundation HEAD preflight probes on .googlevideo.com URLs
-        let headers: [String: String] = [
-            "User-Agent": "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)",
-            "Origin": "https://www.youtube.com"
-        ]
-        let options: [String: Any] = [
-            "AVURLAssetHTTPHeaderFieldsKey": headers,
-            AVURLAssetPreferPreciseDurationAndTimingKey: false
-        ]
-        let asset = AVURLAsset(url: url, options: options)
-        let playerItem = AVPlayerItem(asset: asset)
+        // Convert https:// to custom-stream:// so JSCStreamLoaderDelegate intercepts and injects YouTube headers
+        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        components?.scheme = "custom-stream"
         
+        guard let customURL = components?.url else {
+            self.isLoading = false
+            self.lastPlayerError = "Invalid custom-stream URL format"
+            return
+        }
+        
+        let asset = AVURLAsset(url: customURL)
+        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: DispatchQueue.main)
+        
+        let playerItem = AVPlayerItem(asset: asset)
         if player == nil {
             player = AVPlayer(playerItem: playerItem)
             player?.automaticallyWaitsToMinimizeStalling = true
