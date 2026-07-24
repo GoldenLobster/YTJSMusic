@@ -205,10 +205,12 @@ public class JSCYoutubeClient: ObservableObject {
         let nativeStreamCB: @convention(block) (String, String) -> Void = { [weak self] streamUrl, errMsg in
             DispatchQueue.main.async {
                 if !streamUrl.isEmpty {
-                    self?.onLog?("LOG", "Resolved deciphered stream URL successfully (\(streamUrl.count) chars)")
+                    self?.onLog?("LOG", "Resolved audio stream URL successfully (\(streamUrl.count) chars)")
+                    print("[STREAM LOG] Resolved audio stream URL successfully (\(streamUrl.count) chars)")
                     completion(.success(streamUrl))
                 } else {
                     self?.onLog?("ERROR", "Stream URL resolution error: \(errMsg)")
+                    print("[STREAM ERROR] Stream URL resolution error: \(errMsg)")
                     completion(.failure(NSError(domain: "JSCYoutubeClient", code: -13, userInfo: [NSLocalizedDescriptionKey: errMsg.isEmpty ? "Failed to resolve stream URL" : errMsg])))
                 }
             }
@@ -246,16 +248,23 @@ public class JSCYoutubeClient: ObservableObject {
                     throw new Error("No audio format available for track ID: " + "\(videoId)");
                 }
                 
-                console.log("[JSC] Deciphering format signature with player...");
-                const player = await globalThis.ytInstance.session.player;
-                const decipheredUrl = await format.decipher(player);
-                
-                if (!decipheredUrl) {
-                    throw new Error("Failed to decipher stream URL for track ID: " + "\(videoId)");
+                let streamUrl = format.url;
+                if (!streamUrl && typeof format.decipher === 'function') {
+                    console.log("[JSC] format.url missing, deciphering format signature with player...");
+                    try {
+                        const player = await globalThis.ytInstance.session.player;
+                        streamUrl = await format.decipher(player);
+                    } catch (e) {
+                        console.log("[JSC WARN] Decipher fallback failed:", e.message);
+                    }
                 }
                 
-                console.log("[JSC] Stream URL deciphered successfully, length:", decipheredUrl.length);
-                __nativeCompleteStream(decipheredUrl, "");
+                if (!streamUrl) {
+                    throw new Error("Failed to resolve stream URL for track ID: " + "\(videoId)");
+                }
+                
+                console.log("[JSC] Stream URL resolved successfully, length:", streamUrl.length);
+                __nativeCompleteStream(streamUrl, "");
             } catch (err) {
                 const msg = err.message || String(err);
                 console.log("[JSC ERROR] Stream URL resolution failed:", msg);

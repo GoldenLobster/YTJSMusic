@@ -112,7 +112,7 @@ public class LocalAudioProxyServer {
         
         var request = URLRequest(url: targetURL)
         request.httpMethod = "GET"
-        request.setValue("com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)", forHTTPHeaderField: "User-Agent")
+        request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148", forHTTPHeaderField: "User-Agent")
         if let rangeHeader = rangeHeader {
             request.setValue(rangeHeader, forHTTPHeaderField: "Range")
         }
