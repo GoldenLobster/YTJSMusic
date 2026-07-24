@@ -8,6 +8,7 @@ public class JSCYoutubeClient: ObservableObject {
     public let context: JSContext
     public let bridge: JSCPolyfillBridge
     @Published public var isInitialized: Bool = false
+    @Published public var lastLog: String = "Ready"
     
     public init() {
         guard let context = JSContext() else {
@@ -15,6 +16,15 @@ public class JSCYoutubeClient: ObservableObject {
         }
         self.context = context
         self.bridge = JSCPolyfillBridge(context: context)
+        
+        // Capture uncaught JS exceptions
+        self.context.exceptionHandler = { [weak self] _, exception in
+            let errMsg = exception?.toString() ?? "Unknown JS Exception"
+            print("[JSC EXCEPTION] \(errMsg)")
+            DispatchQueue.main.async {
+                self?.lastLog = "[JS ERROR] \(errMsg)"
+            }
+        }
     }
     
     /// Loads all modular polyfills and the bundled runtime.bundle.js into JavaScriptCore
@@ -42,27 +52,17 @@ public class JSCYoutubeClient: ObservableObject {
         })()
         """
         
-        guard let promiseVal = context.evaluateScript(script) else {
-            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to evaluate Innertube initialization"])))
-            return
-        }
-        
-        let onResolve: @convention(block) (JSValue) -> Void = { _ in
-            DispatchQueue.main.async {
-                self.isInitialized = true
+        evaluatePromise(script: script) { [weak self] (result: Result<Bool, Error>) in
+            switch result {
+            case .success:
+                DispatchQueue.main.async {
+                    self?.isInitialized = true
+                }
+                completion(.success(()))
+            case .failure(let err):
+                completion(.failure(err))
             }
-            completion(.success(()))
         }
-        
-        let onReject: @convention(block) (JSValue) -> Void = { err in
-            let errMsg = err.toString() ?? "Unknown error during Innertube initialization"
-            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -2, userInfo: [NSLocalizedDescriptionKey: errMsg])))
-        }
-        
-        let thenFn = promiseVal.objectForKeyedSubscript("then")
-        let catchFn = promiseVal.objectForKeyedSubscript("catch")
-        thenFn?.call(withArguments: [unsafeBitCast(onResolve, to: AnyObject.self)])
-        catchFn?.call(withArguments: [unsafeBitCast(onReject, to: AnyObject.self)])
     }
     
     /// Search YouTube Music specifically for official songs & tracks
@@ -121,7 +121,7 @@ public class JSCYoutubeClient: ObservableObject {
         evaluatePromise(script: script, completion: completion)
     }
     
-    // Helper to evaluate promise scripts in JSContext
+    // Helper to evaluate promise scripts in JSContext safely using JSValue callbacks
     private func evaluatePromise<T>(script: String, completion: @escaping (Result<T, Error>) -> Void) {
         guard let promiseVal = context.evaluateScript(script) else {
             completion(.failure(NSError(domain: "JSCYoutubeClient", code: -3, userInfo: [NSLocalizedDescriptionKey: "Failed to evaluate script"])))
@@ -133,6 +133,8 @@ public class JSCYoutubeClient: ObservableObject {
                 completion(.success(resultObj))
             } else if T.self == String.self, let strVal = val.toString() as? T {
                 completion(.success(strVal))
+            } else if T.self == Bool.self {
+                completion(.success(true as! T))
             } else {
                 completion(.failure(NSError(domain: "JSCYoutubeClient", code: -4, userInfo: [NSLocalizedDescriptionKey: "Failed to cast JS return value to expected type"])))
             }
@@ -143,9 +145,13 @@ public class JSCYoutubeClient: ObservableObject {
             completion(.failure(NSError(domain: "JSCYoutubeClient", code: -5, userInfo: [NSLocalizedDescriptionKey: errMsg])))
         }
         
-        let thenFn = promiseVal.objectForKeyedSubscript("then")
-        let catchFn = promiseVal.objectForKeyedSubscript("catch")
-        thenFn?.call(withArguments: [unsafeBitCast(onResolve, to: AnyObject.self)])
-        catchFn?.call(withArguments: [unsafeBitCast(onReject, to: AnyObject.self)])
+        guard let resolveVal = JSValue(object: onResolve, in: context),
+              let rejectVal = JSValue(object: onReject, in: context) else {
+            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -6, userInfo: [NSLocalizedDescriptionKey: "Failed to create JSValue closure wrappers"])))
+            return
+        }
+        
+        promiseVal.invokeMethod("then", withArguments: [resolveVal])
+        promiseVal.invokeMethod("catch", withArguments: [rejectVal])
     }
 }
