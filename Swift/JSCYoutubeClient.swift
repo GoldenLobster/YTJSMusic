@@ -207,13 +207,3 @@ public class JSCYoutubeClient: ObservableObject {
         }
     }
 }
-
-// Model representing search result track
-public struct Track: Identifiable, Codable, Equatable {
-    public let id: String
-    public let title: String
-    public let artist: String
-    public let album: String
-    public let duration: String
-    public let thumbnail: String
-}
