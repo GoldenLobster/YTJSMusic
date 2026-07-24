@@ -4,10 +4,10 @@
 import Foundation
 import JavaScriptCore
 
-public class JSCYoutubeClient {
+public class JSCYoutubeClient: ObservableObject {
     public let context: JSContext
     public let bridge: JSCPolyfillBridge
-    private var isInitialized: Bool = false
+    @Published public var isInitialized: Bool = false
     
     public init() {
         guard let context = JSContext() else {
@@ -48,7 +48,9 @@ public class JSCYoutubeClient {
         }
         
         let onResolve: @convention(block) (JSValue) -> Void = { _ in
-            self.isInitialized = true
+            DispatchQueue.main.async {
+                self.isInitialized = true
+            }
             completion(.success(()))
         }
         
@@ -90,7 +92,7 @@ public class JSCYoutubeClient {
             }).filter(s => s.id.length > 0);
         })()
         """
-        evaluatePromise(script, completion: completion)
+        evaluatePromise(script: script, completion: completion)
     }
     
     /// Get deciphered audio-only stream URL for a music track
@@ -116,7 +118,7 @@ public class JSCYoutubeClient {
             return url || "";
         })()
         """
-        evaluatePromise(script, completion: completion)
+        evaluatePromise(script: script, completion: completion)
     }
     
     // Helper to evaluate promise scripts in JSContext

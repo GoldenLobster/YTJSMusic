@@ -1,117 +1,108 @@
 // Swift/JSCPolyfillBridge.swift
-// Native Swift backend backing JavaScriptCore polyfills for YouTube.js on iOS / macOS
+// Native Swift Polyfill Bridge for iOS JavaScriptCore (JSContext)
 
 import Foundation
 import JavaScriptCore
 import CryptoKit
-import Security
 
-#if canImport(QuartzCore)
-import QuartzCore
-#endif
-
-@objc public protocol JSCPolyfillBridgeJSExport: JSExport {
-    // JS context native bridge declarations if needed
-}
-
-/// Native Swift Bridge providing underlying OS capabilities (Networking, Crypto, Timers, Clock)
-/// to the JavaScriptCore context for running YouTube.js (youtubei.js).
 public class JSCPolyfillBridge: NSObject {
     public weak var context: JSContext?
-    private var activeTimers: [Int: Timer] = [:]
-    private var timerCounter: Int = 0
-    private let timerLock = NSLock()
+    
+    // Timer state management
+    private var activeTimers: [Int32: Timer] = [:]
+    private var nextTimerId: Int32 = 1
+    private let timerQueue = DispatchQueue(label: "com.antigravity.jsc.timers", attributes: .concurrent)
     
     public init(context: JSContext) {
         self.context = context
         super.init()
-        setupNativeBridges()
+        registerNativeBridges()
     }
     
-    public func setupNativeBridges() {
+    /// Registers all Swift native functions onto JSContext
+    public func registerNativeBridges() {
         guard let context = context else { return }
         
-        // 1. Native Console Logger
+        // 1. Native Console Logging Bridge
         let nativeLog: @convention(block) (String, String) -> Void = { level, message in
             print("[JSC-\(level)] \(message)")
         }
         context.setObject(nativeLog, forKeyedSubscript: "__nativeLog" as NSString)
         
-        // 2. Native Network Fetcher using URLSession
-        let nativeFetch: @convention(block) (JSValue) -> JSValue? = { [weak self] paramsVal in
-            guard let context = self?.context,
-                  let dict = paramsVal.toDictionary(),
-                  let urlString = dict["url"] as? String,
-                  let url = URL(string: urlString) else {
-                return nil
-            }
-            
-            let method = (dict["method"] as? String) ?? "GET"
-            var request = URLRequest(url: url)
-            request.httpMethod = method
-            
-            if let headersArray = dict["headers"] as? [[Any]] {
-                for pair in headersArray {
-                    if pair.count >= 2, let k = pair[0] as? String, let v = pair[1] as? String {
-                        request.setValue(v, forHTTPHeaderField: k)
-                    }
-                }
-            }
-            
-            if let bodyString = dict["body"] as? String {
-                request.httpBody = bodyString.data(using: .utf8)
-            } else if let bodyBytes = dict["body"] as? [UInt8] {
-                request.httpBody = Data(bodyBytes)
-            }
+        // 2. Native Network Fetch Bridge (URLSession)
+        let nativeFetch: @convention(block) (NSDictionary) -> JSValue! = { [weak self] requestDict in
+            guard let context = self?.context else { return JSValue() }
             
             return JSValue(newPromiseIn: context) { resolve, reject in
+                guard let urlString = requestDict["url"] as? String,
+                      let url = URL(string: urlString) else {
+                    reject?.call(withArguments: ["Invalid URL"])
+                    return
+                }
+                
+                var request = URLRequest(url: url)
+                if let method = requestDict["method"] as? String {
+                    request.httpMethod = method
+                }
+                
+                if let headers = requestDict["headers"] as? [String: String] {
+                    for (key, val) in headers {
+                        request.setValue(val, forHTTPHeaderField: key)
+                    }
+                }
+                
+                if let bodyData = requestDict["body"] as? [UInt8] {
+                    request.httpBody = Data(bodyData)
+                } else if let bodyStr = requestDict["body"] as? String {
+                    request.httpBody = bodyStr.data(using: .utf8)
+                }
+                
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
                         reject?.call(withArguments: [error.localizedDescription])
                         return
                     }
                     
-                    let httpRes = response as? HTTPURLResponse
-                    let status = httpRes?.statusCode ?? 200
-                    
-                    var resHeaders: [[String]] = []
-                    if let allHeaderFields = httpRes?.allHeaderFields {
-                        for (k, v) in allHeaderFields {
-                            resHeaders.append(["\(k)", "\(v)"])
-                        }
+                    guard let httpResponse = response as? HTTPURLResponse else {
+                        reject?.call(withArguments: ["Invalid HTTP Response"])
+                        return
                     }
                     
-                    var bodyBytes: [UInt8] = []
-                    if let data = data {
-                        bodyBytes = [UInt8](data)
+                    let statusCode = httpResponse.statusCode
+                    let statusText = HTTPURLResponse.localizedString(forStatusCode: statusCode)
+                    
+                    // Parse response headers into array of [key, value] pairs
+                    var headersArray: [[String]] = []
+                    for (k, v) in httpResponse.allHeaderFields {
+                        headersArray.append(["\(k)", "\(v)"])
                     }
                     
-                    let responseDict: [String: Any] = [
-                        "status": status,
-                        "statusText": HTTPURLResponse.localizedString(forStatusCode: status),
-                        "headers": resHeaders,
+                    // Convert body data into byte array
+                    let bodyBytes: [UInt8] = data != nil ? Array(data!) : []
+                    
+                    let responsePayload: [String: Any] = [
+                        "status": statusCode,
+                        "statusText": statusText,
+                        "headers": headersArray,
                         "body": bodyBytes
                     ]
                     
-                    resolve?.call(withArguments: [responseDict])
+                    resolve?.call(withArguments: [responsePayload])
                 }
                 task.resume()
             }
         }
         context.setObject(nativeFetch, forKeyedSubscript: "__nativeFetch" as NSString)
         
-        // 3. Native Cryptography: SecRandomCopyBytes & UUID
-        let nativeGetRandomValues: @convention(block) (Int) -> [UInt8] = { byteLength in
-            var bytes = [UInt8](repeating: 0, count: byteLength)
-            let status = SecRandomCopyBytes(kSecRandomDefault, byteLength, &bytes)
-            if status != errSecSuccess {
-                // Fallback to SystemRandomNumberGenerator
-                var rng = SystemRandomNumberGenerator()
-                for i in 0..<byteLength {
-                    bytes[i] = UInt8.random(in: 0...255, using: &rng)
-                }
+        // 3. Hardware Randomness (SecRandomCopyBytes)
+        let nativeGetRandomValues: @convention(block) (Int) -> [UInt8] = { count in
+            var bytes = [UInt8](repeating: 0, count: count)
+            let result = SecRandomCopyBytes(kSecRandomDefault, count, &bytes)
+            if result == errSecSuccess {
+                return bytes
+            } else {
+                return (0..<count).map { _ in UInt8.random(in: 0...255) }
             }
-            return bytes
         }
         context.setObject(nativeGetRandomValues, forKeyedSubscript: "__nativeGetRandomValues" as NSString)
         
@@ -121,8 +112,8 @@ public class JSCPolyfillBridge: NSObject {
         context.setObject(nativeRandomUUID, forKeyedSubscript: "__nativeRandomUUID" as NSString)
         
         // 4. WebCrypto Digest & Sign via CryptoKit
-        let nativeSubtleDigest: @convention(block) (String, [UInt8]) -> JSValue? = { [weak self] algo, bytes in
-            guard let context = self?.context else { return nil }
+        let nativeSubtleDigest: @convention(block) (String, [UInt8]) -> JSValue! = { [weak self] algo, bytes in
+            guard let context = self?.context else { return JSValue() }
             return JSValue(newPromiseIn: context) { resolve, reject in
                 let data = Data(bytes)
                 var digestBytes: [UInt8] = []
@@ -149,8 +140,8 @@ public class JSCPolyfillBridge: NSObject {
         }
         context.setObject(nativeSubtleDigest, forKeyedSubscript: "__nativeSubtleDigest" as NSString)
         
-        let nativeSubtleSign: @convention(block) (String, [UInt8], [UInt8]) -> JSValue? = { [weak self] algo, keyBytes, dataBytes in
-            guard let context = self?.context else { return nil }
+        let nativeSubtleSign: @convention(block) (String, [UInt8], [UInt8]) -> JSValue! = { [weak self] algo, keyBytes, dataBytes in
+            guard let context = self?.context else { return JSValue() }
             return JSValue(newPromiseIn: context) { resolve, reject in
                 let key = SymmetricKey(data: Data(keyBytes))
                 let data = Data(dataBytes)
@@ -175,75 +166,70 @@ public class JSCPolyfillBridge: NSObject {
         }
         context.setObject(nativeSubtleSign, forKeyedSubscript: "__nativeSubtleSign" as NSString)
         
-        // 5. Native Timers (setTimeout, clearTimeout, setInterval, clearInterval)
-        let nativeSetTimeout: @convention(block) (JSValue, Double) -> Int = { [weak self] callback, delayMs in
+        // 5. Native Async Timers (DispatchQueue & Timer)
+        let nativeSetTimeout: @convention(block) (JSValue, Double) -> Int32 = { [weak self] callback, ms in
             guard let self = self else { return 0 }
-            self.timerLock.lock()
-            self.timerCounter += 1
-            let id = self.timerCounter
-            self.timerLock.unlock()
+            let timerId = OSAtomicIncrement32(&self.nextTimerId)
+            let interval = max(ms / 1000.0, 0.001)
             
-            let seconds = max(0.001, delayMs / 1000.0)
             DispatchQueue.main.async {
-                let timer = Timer.scheduledTimer(withTimeInterval: seconds, repeats: false) { [weak self] _ in
+                let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { _ in
                     callback.call(withArguments: [])
-                    self?.clearTimer(id: id)
+                    self.timerQueue.async(flags: .barrier) {
+                        self.activeTimers.removeValue(forKey: timerId)
+                    }
                 }
-                self.timerLock.lock()
-                self.activeTimers[id] = timer
-                self.timerLock.unlock()
+                self.timerQueue.async(flags: .barrier) {
+                    self.activeTimers[timerId] = timer
+                }
             }
-            return id
+            return timerId
         }
         context.setObject(nativeSetTimeout, forKeyedSubscript: "__nativeSetTimeout" as NSString)
         
-        let nativeClearTimeout: @convention(block) (Int) -> Void = { [weak self] id in
-            self?.clearTimer(id: id)
+        let nativeClearTimeout: @convention(block) (Int32) -> Void = { [weak self] timerId in
+            guard let self = self else { return }
+            self.timerQueue.async(flags: .barrier) {
+                if let timer = self.activeTimers[timerId] {
+                    DispatchQueue.main.async { timer.invalidate() }
+                    self.activeTimers.removeValue(forKey: timerId)
+                }
+            }
         }
         context.setObject(nativeClearTimeout, forKeyedSubscript: "__nativeClearTimeout" as NSString)
         
-        let nativeSetInterval: @convention(block) (JSValue, Double) -> Int = { [weak self] callback, delayMs in
+        let nativeSetInterval: @convention(block) (JSValue, Double) -> Int32 = { [weak self] callback, ms in
             guard let self = self else { return 0 }
-            self.timerLock.lock()
-            self.timerCounter += 1
-            let id = self.timerCounter
-            self.timerLock.unlock()
+            let timerId = OSAtomicIncrement32(&self.nextTimerId)
+            let interval = max(ms / 1000.0, 0.001)
             
-            let seconds = max(0.001, delayMs / 1000.0)
             DispatchQueue.main.async {
-                let timer = Timer.scheduledTimer(withTimeInterval: seconds, repeats: true) { _ in
+                let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
                     callback.call(withArguments: [])
                 }
-                self.timerLock.lock()
-                self.activeTimers[id] = timer
-                self.timerLock.unlock()
+                self.timerQueue.async(flags: .barrier) {
+                    self.activeTimers[timerId] = timer
+                }
             }
-            return id
+            return timerId
         }
         context.setObject(nativeSetInterval, forKeyedSubscript: "__nativeSetInterval" as NSString)
         
-        let nativeClearInterval: @convention(block) (Int) -> Void = { [weak self] id in
-            self?.clearTimer(id: id)
+        let nativeClearInterval: @convention(block) (Int32) -> Void = { [weak self] timerId in
+            guard let self = self else { return }
+            self.timerQueue.async(flags: .barrier) {
+                if let timer = self.activeTimers[timerId] {
+                    DispatchQueue.main.async { timer.invalidate() }
+                    self.activeTimers.removeValue(forKey: timerId)
+                }
+            }
         }
         context.setObject(nativeClearInterval, forKeyedSubscript: "__nativeClearInterval" as NSString)
         
-        // 6. High-Precision Performance Clock
+        // 6. High-Resolution Clock (CACurrentMediaTime)
         let nativePerformanceNow: @convention(block) () -> Double = {
-            #if canImport(QuartzCore)
             return CACurrentMediaTime() * 1000.0
-            #else
-            return Date().timeIntervalSince1970 * 1000.0
-            #endif
         }
         context.setObject(nativePerformanceNow, forKeyedSubscript: "__nativePerformanceNow" as NSString)
-    }
-    
-    private func clearTimer(id: Int) {
-        timerLock.lock()
-        defer { timerLock.unlock() }
-        if let timer = activeTimers[id] {
-            timer.invalidate()
-            activeTimers.removeValue(forKey: id)
-        }
     }
 }
