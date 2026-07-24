@@ -205,8 +205,10 @@ public class JSCYoutubeClient: ObservableObject {
         let nativeStreamCB: @convention(block) (String, String) -> Void = { [weak self] streamUrl, errMsg in
             DispatchQueue.main.async {
                 if !streamUrl.isEmpty {
+                    self?.onLog?("LOG", "Resolved deciphered stream URL successfully (\(streamUrl.count) chars)")
                     completion(.success(streamUrl))
                 } else {
+                    self?.onLog?("ERROR", "Stream URL resolution error: \(errMsg)")
                     completion(.failure(NSError(domain: "JSCYoutubeClient", code: -13, userInfo: [NSLocalizedDescriptionKey: errMsg.isEmpty ? "Failed to resolve stream URL" : errMsg])))
                 }
             }
@@ -244,22 +246,16 @@ public class JSCYoutubeClient: ObservableObject {
                     throw new Error("No audio format available for track ID: " + "\(videoId)");
                 }
                 
-                let url = format.url;
-                if (format.decipher) {
-                    try {
-                        const player = await globalThis.ytInstance.session.player;
-                        url = await format.decipher(player);
-                    } catch (e) {
-                        console.log("[JSC] Decipher fallback:", e.message);
-                    }
+                console.log("[JSC] Deciphering format signature with player...");
+                const player = await globalThis.ytInstance.session.player;
+                const decipheredUrl = await format.decipher(player);
+                
+                if (!decipheredUrl) {
+                    throw new Error("Failed to decipher stream URL for track ID: " + "\(videoId)");
                 }
                 
-                if (!url) {
-                    throw new Error("Resolved format has no playable URL for track ID: " + "\(videoId)");
-                }
-                
-                console.log("[JSC] Stream URL resolved successfully, length:", url.length);
-                __nativeCompleteStream(url, "");
+                console.log("[JSC] Stream URL deciphered successfully, length:", decipheredUrl.length);
+                __nativeCompleteStream(decipheredUrl, "");
             } catch (err) {
                 const msg = err.message || String(err);
                 console.log("[JSC ERROR] Stream URL resolution failed:", msg);
