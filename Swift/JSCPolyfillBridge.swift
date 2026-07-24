@@ -4,6 +4,7 @@
 import Foundation
 import JavaScriptCore
 import CryptoKit
+import QuartzCore
 
 public class JSCPolyfillBridge: NSObject {
     public weak var context: JSContext?
@@ -169,7 +170,11 @@ public class JSCPolyfillBridge: NSObject {
         // 5. Native Async Timers (DispatchQueue & Timer)
         let nativeSetTimeout: @convention(block) (JSValue, Double) -> Int32 = { [weak self] callback, ms in
             guard let self = self else { return 0 }
-            let timerId = OSAtomicIncrement32(&self.nextTimerId)
+            var timerId: Int32 = 0
+            self.timerQueue.sync(flags: .barrier) {
+                self.nextTimerId += 1
+                timerId = self.nextTimerId
+            }
             let interval = max(ms / 1000.0, 0.001)
             
             DispatchQueue.main.async {
@@ -200,7 +205,11 @@ public class JSCPolyfillBridge: NSObject {
         
         let nativeSetInterval: @convention(block) (JSValue, Double) -> Int32 = { [weak self] callback, ms in
             guard let self = self else { return 0 }
-            let timerId = OSAtomicIncrement32(&self.nextTimerId)
+            var timerId: Int32 = 0
+            self.timerQueue.sync(flags: .barrier) {
+                self.nextTimerId += 1
+                timerId = self.nextTimerId
+            }
             let interval = max(ms / 1000.0, 0.001)
             
             DispatchQueue.main.async {
