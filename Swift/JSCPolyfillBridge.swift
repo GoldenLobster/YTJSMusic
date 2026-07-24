@@ -46,20 +46,31 @@ public class JSCPolyfillBridge: NSObject {
                     request.httpMethod = method
                 }
                 
-                if let headers = requestDict["headers"] as? [String: String] {
-                    for (key, val) in headers {
+                // Parse headers from JS (supports both [[key, value]] array and [key: value] dict)
+                if let headersArray = requestDict["headers"] as? [[String]] {
+                    for pair in headersArray {
+                        if pair.count >= 2 {
+                            request.setValue(pair[1], forHTTPHeaderField: pair[0])
+                        }
+                    }
+                } else if let headersDict = requestDict["headers"] as? [String: String] {
+                    for (key, val) in headersDict {
                         request.setValue(val, forHTTPHeaderField: key)
                     }
                 }
                 
+                // Parse request body from JS
                 if let bodyData = requestDict["body"] as? [UInt8] {
                     request.httpBody = Data(bodyData)
                 } else if let bodyStr = requestDict["body"] as? String {
                     request.httpBody = bodyStr.data(using: .utf8)
                 }
                 
+                print("[FETCH OUTGOING] \(request.httpMethod ?? "GET") \(urlString) (Headers: \(request.allHTTPHeaderFields?.count ?? 0), BodyBytes: \(request.httpBody?.count ?? 0))")
+                
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
+                        print("[FETCH ERROR] \(urlString) -> \(error.localizedDescription)")
                         reject?.call(withArguments: [error.localizedDescription])
                         return
                     }
@@ -71,6 +82,13 @@ public class JSCPolyfillBridge: NSObject {
                     
                     let statusCode = httpResponse.statusCode
                     let statusText = HTTPURLResponse.localizedString(forStatusCode: statusCode)
+                    
+                    if statusCode >= 400 {
+                        let resText = data != nil ? String(data: data!, encoding: .utf8) ?? "" : ""
+                        print("[FETCH HTTP \(statusCode)] \(urlString) -> \(resText.prefix(200))")
+                    } else {
+                        print("[FETCH HTTP \(statusCode)] \(urlString)")
+                    }
                     
                     // Parse response headers into array of [key, value] pairs
                     var headersArray: [[String]] = []
