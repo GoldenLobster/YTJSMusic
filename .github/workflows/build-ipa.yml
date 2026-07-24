@@ -1,0 +1,49 @@
+name: Build Unsigned iOS IPA
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-ipa:
+    runs-on: macos-14
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies & Bundle YouTube.js
+        run: |
+          npm install
+          npm run bundle
+
+      - name: Build Xcode Archive (Unsigned)
+        run: |
+          xcodebuild -project YTJSMusic.xcodeproj \
+            -scheme YTJSMusic \
+            -sdk iphoneos \
+            -configuration Release \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            clean archive -archivePath ./build/YTJSMusic.xcarchive
+
+      - name: Package Unsigned IPA
+        run: |
+          mkdir -p Payload
+          cp -r ./build/YTJSMusic.xcarchive/Products/Applications/YTJSMusic.app Payload/
+          zip -r YTJSMusic-unsigned.ipa Payload
+
+      - name: Upload Unsigned IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: YTJSMusic-unsigned.ipa
+          path: YTJSMusic-unsigned.ipa
+          if-no-files-found: error

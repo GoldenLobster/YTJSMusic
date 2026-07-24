@@ -1,5 +1,5 @@
 // Swift/JSCYoutubeClient.swift
-// High-level Swift client for running YouTube.js inside iOS JavaScriptCore
+// High-level Swift client for running YouTube.js & YouTube Music inside iOS JavaScriptCore
 
 import Foundation
 import JavaScriptCore
@@ -18,9 +18,6 @@ public class JSCYoutubeClient {
     }
     
     /// Loads all modular polyfills and the bundled runtime.bundle.js into JavaScriptCore
-    /// - Parameters:
-    ///   - polyfillScriptPaths: Array of file paths to modular polyfill JS files
-    ///   - bundlePath: Path to runtime.bundle.js
     public func loadPolyfillsAndBundle(polyfillScriptPaths: [String], bundlePath: String) throws {
         // Load polyfills in order
         for path in polyfillScriptPaths {
@@ -66,61 +63,56 @@ public class JSCYoutubeClient {
         catchFn?.call(withArguments: [unsafeBitCast(onReject, to: AnyObject.self)])
     }
     
-    /// Search YouTube for videos
-    public func search(query: String, completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
+    /// Search YouTube Music specifically for official songs & tracks
+    public func searchMusic(query: String, completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
         let escapedQuery = query.replacingOccurrences(of: "\"", with: "\\\"")
         let script = """
         (async () => {
-            const results = await globalThis.ytInstance.search("\(escapedQuery)");
-            return (results.videos || []).map(v => ({
-                id: v.id,
-                title: v.title?.text || "",
-                author: v.author?.name || "",
-                duration: v.duration?.text || "",
-                views: v.view_count?.text || ""
-            }));
+            const results = await globalThis.ytInstance.music.search("\(escapedQuery)", { type: 'song' });
+            const songs = results.songs?.contents || results.results || [];
+            
+            return songs.map(s => {
+                let thumbnail = "";
+                if (s.thumbnails && s.thumbnails.length > 0) {
+                    thumbnail = s.thumbnails[s.thumbnails.length - 1].url || "";
+                } else if (s.thumbnail?.url) {
+                    thumbnail = s.thumbnail.url;
+                }
+                
+                return {
+                    id: s.id || "",
+                    title: s.title || s.name || (s.title?.text || "Unknown Track"),
+                    artist: s.artists ? s.artists.map(a => a.name).join(", ") : (s.author?.name || "Unknown Artist"),
+                    album: s.album?.name || "",
+                    duration: s.duration?.text || s.duration || "0:00",
+                    thumbnail: thumbnail
+                };
+            }).filter(s => s.id.length > 0);
         })()
         """
         evaluatePromise(script, completion: completion)
     }
     
-    /// Get video information and metadata
-    public func getInfo(videoId: String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
+    /// Get deciphered audio-only stream URL for a music track
+    public func getAudioStreamUrl(videoId: String, completion: @escaping (Result<String, Error>) -> Void) {
         let script = """
         (async () => {
-            const info = await globalThis.ytInstance.getInfo("\(videoId)");
-            return {
-                title: info.basic_info?.title || "",
-                author: info.basic_info?.author || "",
-                duration: info.basic_info?.duration || 0,
-                views: info.basic_info?.view_count || 0,
-                description: info.basic_info?.short_description || ""
-            };
-        })()
-        """
-        evaluatePromise(script, completion: completion)
-    }
-    
-    /// Get deciphered streaming URL for a video (audio or video)
-    public func getStreamingUrl(videoId: String, type: String = "audio", completion: @escaping (Result<String, Error>) -> Void) {
-        let script = """
-        (async () => {
-            const info = await globalThis.ytInstance.getInfo("\(videoId)");
+            const info = await globalThis.ytInstance.getInfo("\(videoId)", { client: 'IOS' });
             const adaptiveFormats = info.streaming_data?.adaptive_formats || [];
             
-            let format;
-            if ("\(type)" === "audio") {
+            // Prefer AAC / M4A (audio/mp4) or Opus (audio/webm)
+            let format = adaptiveFormats.find(f => f.has_audio && !f.has_video && f.mime_type.includes('mp4'));
+            if (!format) {
                 format = adaptiveFormats.find(f => f.has_audio && !f.has_video);
-            } else {
-                format = adaptiveFormats.find(f => f.has_video);
             }
             
-            if (!format) throw new Error("No format found for type \(type)");
+            if (!format) throw new Error("No audio format available for video " + "\(videoId)");
             
             let url = format.url;
-            if (!url && (format.signature_cipher || format.cipher)) {
+            if (!url && format.decipher) {
                 url = await format.decipher(globalThis.ytInstance.session.player);
             }
+            
             return url || "";
         })()
         """

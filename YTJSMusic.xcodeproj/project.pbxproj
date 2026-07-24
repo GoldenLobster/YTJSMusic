@@ -1,0 +1,379 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A100000129F0000100000001 /* YTJSMusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000129F0000100000001 /* YTJSMusicApp.swift */; };
+		A100000229F0000100000002 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000229F0000100000002 /* Track.swift */; };
+		A100000329F0000100000003 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000329F0000100000003 /* Playlist.swift */; };
+		A100000429F0000100000004 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000429F0000100000004 /* AudioPlayerManager.swift */; };
+		A100000529F0000100000005 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000529F0000100000005 /* PlaylistManager.swift */; };
+		A100000629F0000100000006 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000629F0000100000006 /* MainTabView.swift */; };
+		A100000729F0000100000007 /* MusicSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000729F0000100000007 /* MusicSearchView.swift */; };
+		A100000829F0000100000008 /* PlaylistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000829F0000100000008 /* PlaylistsView.swift */; };
+		A100000929F0000100000009 /* PlayerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000929F0000100000009 /* PlayerDetailView.swift */; };
+		A100000A29F000010000000A /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000A29F000010000000A /* MiniPlayerView.swift */; };
+		A100000B29F000010000000B /* JSCPolyfillBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000B29F000010000000B /* JSCPolyfillBridge.swift */; };
+		A100000C29F000010000000C /* JSCYoutubeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000C29F000010000000C /* JSCYoutubeClient.swift */; };
+		A100000D29F000010000000D /* runtime.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B100000D29F000010000000D /* runtime.bundle.js */; };
+		A100000E29F000010000000E /* polyfills in Resources */ = {isa = PBXBuildFile; fileRef = B100000E29F000010000000E /* polyfills */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C100000129F0000100000001 /* YTJSMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YTJSMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B100000129F0000100000001 /* YTJSMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTJSMusicApp.swift; sourceTree = "<group>"; };
+		B100000229F0000100000002 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		B100000329F0000100000003 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		B100000429F0000100000004 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
+		B100000529F0000100000005 /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
+		B100000629F0000100000006 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		B100000729F0000100000007 /* MusicSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSearchView.swift; sourceTree = "<group>"; };
+		B100000829F0000100000008 /* PlaylistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsView.swift; sourceTree = "<group>"; };
+		B100000929F0000100000009 /* PlayerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDetailView.swift; sourceTree = "<group>"; };
+		B100000A29F000010000000A /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
+		B100000B29F000010000000B /* JSCPolyfillBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSCPolyfillBridge.swift; path = Swift/JSCPolyfillBridge.swift; sourceTree = "<group>"; };
+		B100000C29F000010000000C /* JSCYoutubeClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSCYoutubeClient.swift; path = Swift/JSCYoutubeClient.swift; sourceTree = "<group>"; };
+		B100000D29F000010000000D /* runtime.bundle.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = runtime.bundle.js; sourceTree = "<group>"; };
+		B100000E29F000010000000E /* polyfills */ = {isa = PBXFileReference; lastKnownFileType = folder; path = polyfills; sourceTree = "<group>"; };
+		B100000F29F000010000000F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D100000129F0000100000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E100000129F0000100000001 = {
+			isa = PBXGroup;
+			children = (
+				E100000229F0000100000002 /* YTJSMusic */,
+				B100000B29F000010000000B /* JSCPolyfillBridge.swift */,
+				B100000C29F000010000000C /* JSCYoutubeClient.swift */,
+				B100000D29F000010000000D /* runtime.bundle.js */,
+				B100000E29F000010000000E /* polyfills */,
+				C100000129F0000100000001 /* YTJSMusic.app */,
+			);
+			sourceTree = "<group>";
+		};
+		E100000229F0000100000002 /* YTJSMusic */ = {
+			isa = PBXGroup;
+			children = (
+				B100000129F0000100000001 /* YTJSMusicApp.swift */,
+				B100000F29F000010000000F /* Info.plist */,
+				E100000329F0000100000003 /* Models */,
+				E100000429F0000100000004 /* Managers */,
+				E100000529F0000100000005 /* Views */,
+			);
+			path = YTJSMusic;
+			sourceTree = "<group>";
+		};
+		E100000329F0000100000003 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B100000229F0000100000002 /* Track.swift */,
+				B100000329F0000100000003 /* Playlist.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E100000429F0000100000004 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				B100000429F0000100000004 /* AudioPlayerManager.swift */,
+				B100000529F0000100000005 /* PlaylistManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		E100000529F0000100000005 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B100000629F0000100000006 /* MainTabView.swift */,
+				B100000729F0000100000007 /* MusicSearchView.swift */,
+				B100000829F0000100000008 /* PlaylistsView.swift */,
+				B100000929F0000100000009 /* PlayerDetailView.swift */,
+				B100000A29F000010000000A /* MiniPlayerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F100000129F0000100000001 /* YTJSMusic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = G100000129F0000100000001 /* Build configuration list for PBXNativeTarget "YTJSMusic" */;
+			buildPhases = (
+				H100000129F0000100000001 /* Sources */,
+				D100000129F0000100000001 /* Frameworks */,
+				I100000129F0000100000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YTJSMusic;
+			productName = YTJSMusic;
+			productReference = C100000129F0000100000001 /* YTJSMusic.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		J100000129F0000100000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					F100000129F0000100000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = G100000229F0000100000002 /* Build configuration list for PBXProject "YTJSMusic" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E100000129F0000100000001;
+			productRefGroup = E100000129F0000100000001;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F100000129F0000100000001 /* YTJSMusic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		I100000129F0000100000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000D29F000010000000D /* runtime.bundle.js in Resources */,
+				A100000E29F000010000000E /* polyfills in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		H100000129F0000100000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000129F0000100000001 /* YTJSMusicApp.swift in Sources */,
+				A100000229F0000100000002 /* Track.swift in Sources */,
+				A100000329F0000100000003 /* Playlist.swift in Sources */,
+				A100000429F0000100000004 /* AudioPlayerManager.swift in Sources */,
+				A100000529F0000100000005 /* PlaylistManager.swift in Sources */,
+				A100000629F0000100000006 /* MainTabView.swift in Sources */,
+				A100000729F0000100000007 /* MusicSearchView.swift in Sources */,
+				A100000829F0000100000008 /* PlaylistsView.swift in Sources */,
+				A100000929F0000100000009 /* PlayerDetailView.swift in Sources */,
+				A100000A29F000010000000A /* MiniPlayerView.swift in Sources */,
+				A100000B29F000010000000B /* JSCPolyfillBridge.swift in Sources */,
+				A100000C29F000010000000C /* JSCYoutubeClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		K100000129F0000100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = YTJSMusic/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.antigravity.ytjsmusic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_TARGET_PREFIX = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1";
+			};
+			name = Debug;
+		};
+		K100000229F0000100000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = YTJSMusic/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.antigravity.ytjsmusic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_TARGET_PREFIX = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1";
+			};
+			name = Release;
+		};
+		K100000329F0000100000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMPOUND_ASSIGN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		K100000429F0000100000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMPOUND_ASSIGN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		G100000129F0000100000001 /* Build configuration list for PBXNativeTarget "YTJSMusic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				K100000129F0000100000001 /* Debug */,
+				K100000229F0000100000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		G100000229F0000100000002 /* Build configuration list for PBXProject "YTJSMusic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				K100000329F0000100000003 /* Debug */,
+				K100000429F0000100000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = J100000129F0000100000001 /* Project object */;
+}
