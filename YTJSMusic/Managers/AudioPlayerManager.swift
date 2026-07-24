@@ -159,17 +159,21 @@ public class AudioPlayerManager: ObservableObject {
     private func startAVPlayer(url: URL, track: Track) {
         removeObservers()
         
-        // Pass YouTube iOS User-Agent and Origin headers to AVURLAsset
+        // Pass AVURLAssetPreferPreciseDurationAndTimingKey: false to prevent AVFoundation HEAD preflight probes on .googlevideo.com URLs
         let headers: [String: String] = [
             "User-Agent": "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)",
             "Origin": "https://www.youtube.com"
         ]
-        let options: [String: Any] = ["AVURLAssetHTTPHeaderFieldsKey": headers]
+        let options: [String: Any] = [
+            "AVURLAssetHTTPHeaderFieldsKey": headers,
+            AVURLAssetPreferPreciseDurationAndTimingKey: false
+        ]
         let asset = AVURLAsset(url: url, options: options)
         let playerItem = AVPlayerItem(asset: asset)
         
         if player == nil {
             player = AVPlayer(playerItem: playerItem)
+            player?.automaticallyWaitsToMinimizeStalling = true
         } else {
             player?.replaceCurrentItem(with: playerItem)
         }
