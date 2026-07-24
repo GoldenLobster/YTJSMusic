@@ -23,7 +23,6 @@ public class AudioPlayerManager: ObservableObject {
     private var statusObserverToken: NSKeyValueObservation?
     private var durationObserverToken: NSKeyValueObservation?
     
-    private let resourceLoaderDelegate = JSCStreamLoaderDelegate()
     private let jscClient: JSCYoutubeClient
     
     public init(jscClient: JSCYoutubeClient) {
@@ -161,20 +160,16 @@ public class AudioPlayerManager: ObservableObject {
     private func startAVPlayer(url: URL, track: Track) {
         removeObservers()
         
-        // Convert https:// to custom-stream:// so JSCStreamLoaderDelegate intercepts and injects YouTube headers
-        var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        components?.scheme = "custom-stream"
-        
-        guard let customURL = components?.url else {
+        // Route stream request through Local HTTP Proxy to pass YouTube headers over standard 127.0.0.1 HTTP connection
+        guard let proxyURL = LocalAudioProxyServer.shared.getProxyURL(for: url.absoluteString) else {
             self.isLoading = false
-            self.lastPlayerError = "Invalid custom-stream URL format"
+            self.lastPlayerError = "Failed to construct local proxy URL"
             return
         }
         
-        let asset = AVURLAsset(url: customURL)
-        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: DispatchQueue.main)
+        print("[AUDIO MANAGER] Playing via Local HTTP Proxy: \(proxyURL.absoluteString)")
         
-        let playerItem = AVPlayerItem(asset: asset)
+        let playerItem = AVPlayerItem(url: proxyURL)
         if player == nil {
             player = AVPlayer(playerItem: playerItem)
             player?.automaticallyWaitsToMinimizeStalling = true

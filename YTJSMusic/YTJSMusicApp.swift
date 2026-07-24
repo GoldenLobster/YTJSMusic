@@ -12,6 +12,9 @@ struct YTJSMusicApp: App {
     @State private var initError: String? = nil
     
     init() {
+        // Start Local HTTP Proxy Server on 127.0.0.1:8080 for AVPlayer stream requests
+        LocalAudioProxyServer.shared.start()
+        
         let client = JSCYoutubeClient()
         let audioMgr = AudioPlayerManager(jscClient: client)
         let playlistMgr = PlaylistManager()
