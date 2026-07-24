@@ -36,10 +36,13 @@ public class LocalAudioProxyServer {
         }
     }
     
-    // Safely encode raw stream URL as Base64 to prevent query-string splitting
+    // Safely encode raw stream URL as URL-safe Base64 to prevent query-string splitting or char corruption
     public func getProxyURL(for rawStreamUrl: String) -> URL? {
         guard let data = rawStreamUrl.data(using: .utf8) else { return nil }
-        let b64 = data.base64EncodedString()
+        var b64 = data.base64EncodedString()
+        b64 = b64.replacingOccurrences(of: "+", with: "-")
+                 .replacingOccurrences(of: "/", with: "_")
+                 .trimmingCharacters(in: CharacterSet(charactersIn: "="))
         return URL(string: "http://127.0.0.1:\(port)/stream?b64=\(b64)")
     }
     
@@ -72,10 +75,25 @@ public class LocalAudioProxyServer {
         let pathAndQuery = components[1]
         guard let urlComponents = URLComponents(string: pathAndQuery),
               let queryItems = urlComponents.queryItems,
-              let b64String = queryItems.first(where: { $0.name == "b64" })?.value,
-              let b64Data = Data(base64Encoded: b64String),
+              let rawB64Value = queryItems.first(where: { $0.name == "b64" })?.value else {
+            let notFound = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n"
+            let completion: NWConnection.SendCompletion = .contentProcessed { _ in connection.cancel() }
+            connection.send(content: notFound.data(using: .utf8), completion: completion)
+            return
+        }
+        
+        // Convert URL-safe Base64 back to standard Base64 (restoring + and / and padding =)
+        var b64String = rawB64Value.replacingOccurrences(of: "-", with: "+")
+                                   .replacingOccurrences(of: "_", with: "/")
+                                   .replacingOccurrences(of: " ", with: "+")
+        while b64String.count % 4 != 0 {
+            b64String.append("=")
+        }
+        
+        guard let b64Data = Data(base64Encoded: b64String),
               let targetUrlString = String(data: b64Data, encoding: .utf8),
               let targetURL = URL(string: targetUrlString) else {
+            print("[PROXY ERROR] Failed to decode Base64 target URL from: \(rawB64Value)")
             let notFound = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n"
             let completion: NWConnection.SendCompletion = .contentProcessed { _ in connection.cancel() }
             connection.send(content: notFound.data(using: .utf8), completion: completion)
@@ -95,7 +113,6 @@ public class LocalAudioProxyServer {
         var request = URLRequest(url: targetURL)
         request.httpMethod = "GET"
         request.setValue("com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)", forHTTPHeaderField: "User-Agent")
-        request.setValue("https://www.youtube.com", forHTTPHeaderField: "Origin")
         if let rangeHeader = rangeHeader {
             request.setValue(rangeHeader, forHTTPHeaderField: "Range")
         }
@@ -110,6 +127,10 @@ public class LocalAudioProxyServer {
                 let completion: NWConnection.SendCompletion = .contentProcessed { _ in connection.cancel() }
                 connection.send(content: errResp.data(using: .utf8), completion: completion)
                 return
+            }
+            
+            if httpResponse.statusCode >= 400 {
+                print("[PROXY UPSTREAM HTTP \(httpResponse.statusCode)] \(targetURL.host ?? "") returned \(httpResponse.statusCode)")
             }
             
             // Clean Content-Type header (remove codecs parameter so AVPlayer parses it cleanly)
