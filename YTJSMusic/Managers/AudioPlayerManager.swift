@@ -22,6 +22,8 @@ public class AudioPlayerManager: ObservableObject {
     private var timeObserverToken: Any?
     private var statusObserverToken: NSKeyValueObservation?
     private var durationObserverToken: NSKeyValueObservation?
+    // MUST retain the resource loader — AVURLAsset holds only a weak delegate reference
+    private var streamResourceLoader: YTStreamResourceLoader?
     
     private let jscClient: JSCYoutubeClient
     
@@ -167,16 +169,16 @@ public class AudioPlayerManager: ObservableObject {
     
     private func startAVPlayer(url: URL, track: Track) {
         removeObservers()
+        streamResourceLoader = nil  // release previous loader
         
-        // Feed the direct YouTube URL to AVPlayer via AVURLAsset with custom headers.
-        // AVPlayer manages its own chunked range requests internally - forwarding
-        // AVPlayer's large Range requests through a proxy causes YouTube CDN to return 403.
-        let headers: [String: String] = [
-            "User-Agent": "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)"
-        ]
-        let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
+        // Use YTStreamResourceLoader to intercept every AVPlayer HTTP request.
+        // This ensures:
+        //   1. Range header is ALWAYS sent (YouTube rqh=1 parameter requires it)
+        //   2. Chunk sizes are capped at 512KB (large ranges get HTTP 403 from YouTube CDN)
+        let (asset, loader) = YTStreamResourceLoader.makeAsset(for: url)
+        streamResourceLoader = loader  // retain strongly
         
-        let playMsg = "[AUDIO MANAGER] Playing direct URL via AVURLAsset: \(url.host ?? "googlevideo.com")"
+        let playMsg = "[AUDIO MANAGER] Playing via YTStreamResourceLoader: \(url.host ?? "googlevideo.com")"
         print(playMsg)
         SystemLogger.shared.append(playMsg)
         
