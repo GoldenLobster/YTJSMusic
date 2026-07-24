@@ -31,8 +31,8 @@ public class JSCPolyfillBridge: NSObject {
         context.setObject(nativeLog, forKeyedSubscript: "__nativeLog" as NSString)
         
         // 2. Native Network Fetch Bridge (URLSession)
-        let nativeFetch: @convention(block) (NSDictionary) -> JSValue! = { [weak self] requestDict in
-            guard let context = self?.context else { return JSValue() }
+        let nativeFetch: @convention(block) (NSDictionary) -> JSValue? = { [weak self] requestDict in
+            guard let context = self?.context else { return nil }
             
             return JSValue(newPromiseIn: context) { resolve, reject in
                 guard let urlString = requestDict["url"] as? String,
@@ -113,8 +113,8 @@ public class JSCPolyfillBridge: NSObject {
         context.setObject(nativeRandomUUID, forKeyedSubscript: "__nativeRandomUUID" as NSString)
         
         // 4. WebCrypto Digest & Sign via CryptoKit
-        let nativeSubtleDigest: @convention(block) (String, [UInt8]) -> JSValue! = { [weak self] algo, bytes in
-            guard let context = self?.context else { return JSValue() }
+        let nativeSubtleDigest: @convention(block) (String, [UInt8]) -> JSValue? = { [weak self] algo, bytes in
+            guard let context = self?.context else { return nil }
             return JSValue(newPromiseIn: context) { resolve, reject in
                 let data = Data(bytes)
                 var digestBytes: [UInt8] = []
@@ -141,8 +141,8 @@ public class JSCPolyfillBridge: NSObject {
         }
         context.setObject(nativeSubtleDigest, forKeyedSubscript: "__nativeSubtleDigest" as NSString)
         
-        let nativeSubtleSign: @convention(block) (String, [UInt8], [UInt8]) -> JSValue! = { [weak self] algo, keyBytes, dataBytes in
-            guard let context = self?.context else { return JSValue() }
+        let nativeSubtleSign: @convention(block) (String, [UInt8], [UInt8]) -> JSValue? = { [weak self] algo, keyBytes, dataBytes in
+            guard let context = self?.context else { return nil }
             return JSValue(newPromiseIn: context) { resolve, reject in
                 let key = SymmetricKey(data: Data(keyBytes))
                 let data = Data(dataBytes)
@@ -150,13 +150,13 @@ public class JSCPolyfillBridge: NSObject {
                 
                 switch algo.uppercased() {
                 case "SHA256", "SHA-256", "HMAC-SHA256":
-                    let mac = HMAC<SHA256>.signature(for: data, using: key)
+                    let mac = HMAC<SHA256>.authenticationCode(for: data, using: key)
                     macBytes = Array(mac)
                 case "SHA384", "SHA-384", "HMAC-SHA384":
-                    let mac = HMAC<SHA384>.signature(for: data, using: key)
+                    let mac = HMAC<SHA384>.authenticationCode(for: data, using: key)
                     macBytes = Array(mac)
                 case "SHA512", "SHA-512", "HMAC-SHA512":
-                    let mac = HMAC<SHA512>.signature(for: data, using: key)
+                    let mac = HMAC<SHA512>.authenticationCode(for: data, using: key)
                     macBytes = Array(mac)
                 default:
                     reject?.call(withArguments: ["Unsupported HMAC algorithm: \(algo)"])
