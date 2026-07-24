@@ -105,10 +105,14 @@ public class LocalAudioProxyServer {
                 return
             }
             
+            // Clean Content-Type header (remove codecs parameter so AVPlayer parses it cleanly)
+            let rawMime = httpResponse.mimeType ?? "audio/mp4"
+            let cleanMime = rawMime.components(separatedBy: ";").first?.trimmingCharacters(in: .whitespaces) ?? "audio/mp4"
+            
             // Build HTTP response headers to return to AVPlayer
             var headerLines = [
                 "HTTP/1.1 \(httpResponse.statusCode) \(HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode))",
-                "Content-Type: \(httpResponse.mimeType ?? "audio/mp4")",
+                "Content-Type: \(cleanMime)",
                 "Content-Length: \(data.count)",
                 "Accept-Ranges: bytes",
                 "Connection: close"
@@ -122,7 +126,7 @@ public class LocalAudioProxyServer {
             
             connection.send(content: headerData, completion: .contentProcessed({ _ in
                 connection.send(content: data, completion: .contentProcessed({ _ in
-                    print("[PROXY SUCCESS] Sent \(data.count) bytes to AVPlayer (HTTP \(httpResponse.statusCode))")
+                    print("[PROXY SUCCESS] Sent \(data.count) bytes of \(cleanMime) to AVPlayer (HTTP \(httpResponse.statusCode))")
                     connection.cancel()
                 }))
             }))

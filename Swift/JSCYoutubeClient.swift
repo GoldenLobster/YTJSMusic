@@ -1,116 +1,124 @@
 // Swift/JSCYoutubeClient.swift
-// High-level Swift client for running YouTube.js & YouTube Music inside iOS JavaScriptCore
-
 import Foundation
 import JavaScriptCore
 
 public class JSCYoutubeClient: ObservableObject {
-    public let context: JSContext
-    public let bridge: JSCPolyfillBridge
-    @Published public var isInitialized: Bool = false
-    @Published public var lastLog: String = "Ready"
+    private let context: JSContext
+    private let bridge: JSCPolyfillBridge
+    
+    @Published public var isReady: Bool = false
+    @Published public var lastError: String? = nil
     
     public init() {
-        guard let context = JSContext() else {
-            fatalError("Failed to create JavaScriptCore JSContext")
-        }
-        self.context = context
+        self.context = JSContext()!
         self.bridge = JSCPolyfillBridge(context: context)
-        
-        // Capture uncaught JS exceptions with detailed stack trace
-        self.context.exceptionHandler = { [weak self] _, exception in
-            let msg = exception?.objectForKeyedSubscript("message")?.toString()
-            let stack = exception?.objectForKeyedSubscript("stack")?.toString()
-            let fullErr = msg ?? exception?.toString() ?? "Unknown JS Exception"
-            print("[JSC EXCEPTION] \(fullErr)\nStack: \(stack ?? "N/A")")
-            DispatchQueue.main.async {
-                self?.lastLog = "[JS ERROR] \(fullErr)"
-            }
-        }
     }
     
-    /// Loads all modular polyfills and the bundled runtime.bundle.js into JavaScriptCore
     public func loadPolyfillsAndBundle(polyfillScriptPaths: [String], bundlePath: String) throws {
+        bridge.setupPolyfills()
+        
         for path in polyfillScriptPaths {
-            let script = try String(contentsOfFile: path, encoding: .utf8)
+            guard let script = try? String(contentsOfFile: path, encoding: .utf8) else { continue }
             context.evaluateScript(script, withSourceURL: URL(fileURLWithPath: path))
         }
-        let bundleScript = try String(contentsOfFile: bundlePath, encoding: .utf8)
+        
+        guard let bundleScript = try? String(contentsOfFile: bundlePath, encoding: .utf8) else {
+            throw NSError(domain: "JSCYoutubeClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to read runtime.bundle.js from path: \(bundlePath)"])
+        }
+        
         context.evaluateScript(bundleScript, withSourceURL: URL(fileURLWithPath: bundlePath))
     }
     
-    /// Initializes Innertube instance inside JavaScriptCore
     public func initializeInnertube(completion: @escaping (Result<Void, Error>) -> Void) {
         let script = """
         (async () => {
-            if (!globalThis.Innertube) throw new Error("Innertube is not loaded on globalThis");
+            if (globalThis.ytInstance) return true;
+            console.log("[JSC] Creating Innertube instance...");
             globalThis.ytInstance = await Innertube.create({
                 cache: new UniversalCache(false)
             });
+            console.log("[JSC] Pre-fetching YouTube player script...");
+            await globalThis.ytInstance.session.player;
+            console.log("[JSC] Innertube initialized successfully!");
             return true;
         })()
         """
         
-        evaluatePromise(script: script) { [weak self] (result: Result<Bool, Error>) in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
-                    self?.isInitialized = true
+        evaluatePromise(script: script) { (result: Result<Bool, Error>) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self.isReady = true
+                    completion(.success(()))
+                case .failure(let error):
+                    self.lastError = error.localizedDescription
+                    completion(.failure(error))
                 }
-                completion(.success(()))
-            case .failure(let err):
-                completion(.failure(err))
             }
         }
     }
     
-    /// Search YouTube Music specifically for official songs & tracks with High Quality album art
-    public func searchMusic(query: String, completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
-        let escapedQuery = query.replacingOccurrences(of: "\"", with: "\\\"")
+    public func searchMusic(query: String, completion: @escaping (Result<[Track], Error>) -> Void) {
+        let escapedQuery = query.replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "'", with: "\\'")
         let script = """
         (async () => {
-            function upscaleThumbnail(url) {
-                if (!url) return "";
-                if (url.includes("googleusercontent.com") || url.includes("ggpht.com")) {
-                    return url.replace(/=w\\d+-h\\d+[^=]*/, "=w512-h512-l90-rj");
-                }
-                if (url.includes("ytimg.com")) {
-                    return url.replace("/default.jpg", "/hqdefault.jpg").replace("/sddefault.jpg", "/maxresdefault.jpg");
-                }
-                return url;
-            }
-
-            const results = await globalThis.ytInstance.music.search("\(escapedQuery)", { type: 'song' });
-            const songs = results.songs?.contents || results.results || [];
+            console.log("[JSC] Searching music for query: '\(escapedQuery)'");
+            const searchResults = await globalThis.ytInstance.music.search("\(escapedQuery)", { type: 'song' });
+            const contents = searchResults.results || searchResults.contents || [];
             
-            return songs.map(s => {
-                let rawThumb = "";
-                if (s.thumbnails && s.thumbnails.length > 0) {
-                    rawThumb = s.thumbnails[s.thumbnails.length - 1].url || "";
-                } else if (s.thumbnail?.url) {
-                    rawThumb = s.thumbnail.url;
+            const tracks = [];
+            for (const item of contents) {
+                if (!item.id || !item.title) continue;
+                
+                let thumbUrl = "https://i.ytimg.com/vi/" + item.id + "/hqdefault.jpg";
+                if (item.thumbnails && item.thumbnails.length > 0) {
+                    const bestThumb = item.thumbnails[item.thumbnails.length - 1];
+                    thumbUrl = bestThumb.url || thumbUrl;
+                    if (thumbUrl.includes('=w') || thumbUrl.includes('=h')) {
+                        thumbUrl = thumbUrl.replace(/=w\\d+-h\\d+[^&]*/, '=w512-h512-l90-rj');
+                    }
                 }
                 
-                return {
-                    id: s.id || "",
-                    title: s.title || s.name || (s.title?.text || "Unknown Track"),
-                    artist: s.artists ? s.artists.map(a => a.name).join(", ") : (s.author?.name || "Unknown Artist"),
-                    album: s.album?.name || "",
-                    duration: s.duration?.text || s.duration || "0:00",
-                    thumbnail: upscaleThumbnail(rawThumb)
-                };
-            }).filter(s => s.id.length > 0);
+                let artistName = "Unknown Artist";
+                if (item.artists && item.artists.length > 0) {
+                    artistName = item.artists.map(a => a.name).join(", ");
+                } else if (item.author) {
+                    artistName = typeof item.author === 'string' ? item.author : (item.author.name || "Unknown Artist");
+                }
+                
+                let albumTitle = "Single";
+                if (item.album && item.album.name) {
+                    albumTitle = item.album.name;
+                }
+                
+                let durationStr = "0:00";
+                if (item.duration && item.duration.text) {
+                    durationStr = item.duration.text;
+                } else if (item.duration && typeof item.duration === 'string') {
+                    durationStr = item.duration;
+                }
+                
+                tracks.push({
+                    id: item.id,
+                    title: item.title,
+                    artist: artistName,
+                    album: albumTitle,
+                    duration: durationStr,
+                    thumbnail: thumbUrl
+                });
+            }
+            console.log("[JSC] Transformed search tracks count:", tracks.length);
+            return tracks;
         })()
         """
+        
         evaluatePromise(script: script, completion: completion)
     }
     
-    /// Get deciphered audio-only stream URL for a music track using getBasicInfo
     public func getAudioStreamUrl(videoId: String, completion: @escaping (Result<String, Error>) -> Void) {
         let script = """
         (async () => {
-            console.log("[JSC] Fetching audio stream URL for videoId:", "\(videoId)");
-            
+            console.log("[JSC] Fetching getBasicInfo for videoId: '\(videoId)'...");
             let info;
             try {
                 info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'IOS' });
@@ -139,8 +147,13 @@ public class JSCYoutubeClient: ObservableObject {
             }
             
             let url = format.url;
-            if (!url && format.decipher) {
-                url = await format.decipher(globalThis.ytInstance.session.player);
+            if (format.decipher) {
+                try {
+                    const player = await globalThis.ytInstance.session.player;
+                    url = await format.decipher(player);
+                } catch (e) {
+                    console.log("[JSC] Decipher fallback:", e.message);
+                }
             }
             
             if (!url) {
@@ -168,26 +181,39 @@ public class JSCYoutubeClient: ObservableObject {
                 completion(.success(strVal))
             } else if T.self == Bool.self {
                 completion(.success(true as! T))
+            } else if let jsonStr = context.evaluateScript("JSON.stringify")?.call(withArguments: [val])?.toString(),
+                      let jsonData = jsonStr.data(using: .utf8),
+                      let decoded = try? JSONDecoder().decode(T.self, from: jsonData) {
+                completion(.success(decoded))
             } else {
-                completion(.failure(NSError(domain: "JSCYoutubeClient", code: -4, userInfo: [NSLocalizedDescriptionKey: "Failed to cast JS return value to expected type"])))
+                completion(.failure(NSError(domain: "JSCYoutubeClient", code: -4, userInfo: [NSLocalizedDescriptionKey: "Failed to convert JSValue to type \(T.self)"])))
             }
         }
         
         let onReject: @convention(block) (JSValue) -> Void = { err in
-            let msg = err.objectForKeyedSubscript("message")?.toString()
-            let stack = err.objectForKeyedSubscript("stack")?.toString()
-            let errMsg = msg ?? err.toString() ?? "Promise rejected in JSContext"
-            print("[JSC REJECT] Error: \(errMsg)\nStack: \(stack ?? "N/A")")
+            let errMsg = err.objectForKeyedSubscript("message")?.toString() ?? err.toString() ?? "JS Promise Rejected"
+            let errStack = err.objectForKeyedSubscript("stack")?.toString() ?? ""
+            print("[JSC PROMISE REJECTED] Error:", errMsg, "\nStack:", errStack)
             completion(.failure(NSError(domain: "JSCYoutubeClient", code: -5, userInfo: [NSLocalizedDescriptionKey: errMsg])))
         }
         
-        guard let resolveVal = JSValue(object: onResolve, in: context),
-              let rejectVal = JSValue(object: onReject, in: context) else {
-            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -6, userInfo: [NSLocalizedDescriptionKey: "Failed to create JSValue closure wrappers"])))
-            return
-        }
+        let onResolveVal = JSValue(object: onResolve, in: context)
+        let onRejectVal = JSValue(object: onReject, in: context)
         
-        promiseVal.invokeMethod("then", withArguments: [resolveVal])
-        promiseVal.invokeMethod("catch", withArguments: [rejectVal])
+        if let thenFunc = promiseVal.objectForKeyedSubscript("then"), thenFunc.isObject {
+            thenFunc.call(withArguments: [onResolveVal, onRejectVal])
+        } else {
+            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -6, userInfo: [NSLocalizedDescriptionKey: "Evaluated script did not return a Promise"])))
+        }
     }
+}
+
+// Model representing search result track
+public struct Track: Identifiable, Codable, Equatable {
+    public let id: String
+    public let title: String
+    public let artist: String
+    public let album: String
+    public let duration: String
+    public let thumbnail: String
 }
