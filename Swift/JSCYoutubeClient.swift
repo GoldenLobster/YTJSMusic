@@ -17,12 +17,14 @@ public class JSCYoutubeClient: ObservableObject {
         self.context = context
         self.bridge = JSCPolyfillBridge(context: context)
         
-        // Capture uncaught JS exceptions
+        // Capture uncaught JS exceptions with detailed stack trace
         self.context.exceptionHandler = { [weak self] _, exception in
-            let errMsg = exception?.toString() ?? "Unknown JS Exception"
-            print("[JSC EXCEPTION] \(errMsg)")
+            let msg = exception?.objectForKeyedSubscript("message")?.toString()
+            let stack = exception?.objectForKeyedSubscript("stack")?.toString()
+            let fullErr = msg ?? exception?.toString() ?? "Unknown JS Exception"
+            print("[JSC EXCEPTION] \(fullErr)\nStack: \(stack ?? "N/A")")
             DispatchQueue.main.async {
-                self?.lastLog = "[JS ERROR] \(errMsg)"
+                self?.lastLog = "[JS ERROR] \(fullErr)"
             }
         }
     }
@@ -103,15 +105,25 @@ public class JSCYoutubeClient: ObservableObject {
         evaluatePromise(script: script, completion: completion)
     }
     
-    /// Get deciphered audio-only stream URL for a music track
+    /// Get deciphered audio-only stream URL for a music track using getBasicInfo
     public func getAudioStreamUrl(videoId: String, completion: @escaping (Result<String, Error>) -> Void) {
         let script = """
         (async () => {
-            console.log("[JSC] getAudioStreamUrl for videoId:", "\(videoId)");
-            const info = await globalThis.ytInstance.getInfo("\(videoId)", { client: 'IOS' });
+            console.log("[JSC] Fetching audio stream URL for videoId:", "\(videoId)");
+            
+            let info;
+            try {
+                info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'IOS' });
+            } catch (e) {
+                console.log("[JSC] IOS client failed, falling back to ANDROID client:", e.message);
+                info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'ANDROID' });
+            }
+            
             const adaptiveFormats = info.streaming_data?.adaptive_formats || [];
             const regularFormats = info.streaming_data?.formats || [];
             const allFormats = [...adaptiveFormats, ...regularFormats];
+            
+            console.log("[JSC] Total formats found:", allFormats.length);
             
             // Prefer AAC / M4A (audio/mp4) or Opus (audio/webm)
             let format = allFormats.find(f => f.has_audio && !f.has_video && (f.mime_type?.includes('mp4') || f.mime_type?.includes('m4a')));
@@ -122,15 +134,21 @@ public class JSCYoutubeClient: ObservableObject {
                 format = allFormats.find(f => f.has_audio);
             }
             
-            if (!format) throw new Error("No audio format available for track ID " + "\(videoId)");
+            if (!format) {
+                throw new Error("No audio format available for track ID: " + "\(videoId)");
+            }
             
             let url = format.url;
             if (!url && format.decipher) {
                 url = await format.decipher(globalThis.ytInstance.session.player);
             }
             
-            console.log("[JSC] Stream URL resolved for", "\(videoId)", ":", url ? url.substring(0, 60) + "..." : "EMPTY");
-            return url || "";
+            if (!url) {
+                throw new Error("Resolved format has no playable URL for track ID: " + "\(videoId)");
+            }
+            
+            console.log("[JSC] Stream URL resolved successfully, length:", url.length);
+            return url;
         })()
         """
         evaluatePromise(script: script, completion: completion)
@@ -139,7 +157,7 @@ public class JSCYoutubeClient: ObservableObject {
     // Helper to evaluate promise scripts in JSContext safely using JSValue callbacks
     private func evaluatePromise<T>(script: String, completion: @escaping (Result<T, Error>) -> Void) {
         guard let promiseVal = context.evaluateScript(script) else {
-            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -3, userInfo: [NSLocalizedDescriptionKey: "Failed to evaluate script"])))
+            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -3, userInfo: [NSLocalizedDescriptionKey: "Failed to evaluate script in JSContext"])))
             return
         }
         
@@ -156,7 +174,10 @@ public class JSCYoutubeClient: ObservableObject {
         }
         
         let onReject: @convention(block) (JSValue) -> Void = { err in
-            let errMsg = err.toString() ?? "Promise rejected in JSContext"
+            let msg = err.objectForKeyedSubscript("message")?.toString()
+            let stack = err.objectForKeyedSubscript("stack")?.toString()
+            let errMsg = msg ?? err.toString() ?? "Promise rejected in JSContext"
+            print("[JSC REJECT] Error: \(errMsg)\nStack: \(stack ?? "N/A")")
             completion(.failure(NSError(domain: "JSCYoutubeClient", code: -5, userInfo: [NSLocalizedDescriptionKey: errMsg])))
         }
         
