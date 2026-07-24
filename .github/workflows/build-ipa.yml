@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Dependencies & Bundle YouTube.js
         run: |
-          rm -f package-lock.json
+          rm -rf node_modules package-lock.json
           npm install
           npm run bundle
 

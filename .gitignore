@@ -1,0 +1,9 @@
+node_modules/
+package-lock.json
+build/
+DerivedData/
+*.ipa
+.DS_Store
+/tmp/
+test_*.js
+inspect_*.js
