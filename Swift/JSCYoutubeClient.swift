@@ -36,181 +36,184 @@ public class JSCYoutubeClient: ObservableObject {
     }
     
     public func initializeInnertube(completion: @escaping (Result<Void, Error>) -> Void) {
-        let script = """
-        (async () => {
-            if (globalThis.ytInstance) return true;
-            console.log("[JSC] Creating Innertube instance...");
-            globalThis.ytInstance = await Innertube.create({
-                cache: new UniversalCache(false)
-            });
-            console.log("[JSC] Innertube initialized successfully!");
-            return true;
-        })()
-        """
-        
-        evaluatePromise(script: script) { (result: Result<Bool, Error>) in
+        let nativeInitCB: @convention(block) (Bool, String) -> Void = { [weak self] success, errMsg in
             DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    self.isReady = true
+                if success {
+                    self?.isReady = true
+                    self?.onLog?("LOG", "Native init callback success! Launching UI...")
                     completion(.success(()))
-                case .failure(let error):
-                    self.lastError = error.localizedDescription
-                    completion(.failure(error))
+                } else {
+                    self?.lastError = errMsg
+                    self?.onLog?("ERROR", "Native init callback failed: \(errMsg)")
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -10, userInfo: [NSLocalizedDescriptionKey: errMsg])))
                 }
             }
         }
+        context.setObject(nativeInitCB, forKeyedSubscript: "__nativeCompleteInit" as NSString)
+        
+        let script = """
+        (async () => {
+            try {
+                if (!globalThis.ytInstance) {
+                    console.log("[JSC] Creating Innertube instance...");
+                    globalThis.ytInstance = await Innertube.create({
+                        cache: new UniversalCache(false)
+                    });
+                    console.log("[JSC] Innertube initialized successfully!");
+                }
+                __nativeCompleteInit(true, "");
+            } catch (err) {
+                const msg = err.message || String(err);
+                console.log("[JSC ERROR] Innertube initialization failed:", msg);
+                __nativeCompleteInit(false, msg);
+            }
+        })()
+        """
+        context.evaluateScript(script)
     }
     
     public func searchMusic(query: String, completion: @escaping (Result<[Track], Error>) -> Void) {
         let escapedQuery = query.replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "'", with: "\\'")
+        
+        let nativeSearchCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
+            DispatchQueue.main.async {
+                if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let tracks = try? JSONDecoder().decode([Track].self, from: data) {
+                    completion(.success(tracks))
+                } else if !errMsg.isEmpty {
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -11, userInfo: [NSLocalizedDescriptionKey: errMsg])))
+                } else {
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -12, userInfo: [NSLocalizedDescriptionKey: "Search returned no tracks"])))
+                }
+            }
+        }
+        context.setObject(nativeSearchCB, forKeyedSubscript: "__nativeCompleteSearch" as NSString)
+        
         let script = """
         (async () => {
-            console.log("[JSC] Searching music for query: '\(escapedQuery)'");
-            const searchResults = await globalThis.ytInstance.music.search("\(escapedQuery)", { type: 'song' });
-            const contents = searchResults.results || searchResults.contents || [];
-            
-            const tracks = [];
-            for (const item of contents) {
-                if (!item.id || !item.title) continue;
+            try {
+                console.log("[JSC] Searching music for query: '\(escapedQuery)'");
+                const searchResults = await globalThis.ytInstance.music.search("\(escapedQuery)", { type: 'song' });
+                const contents = searchResults.results || searchResults.contents || [];
                 
-                let thumbUrl = "https://i.ytimg.com/vi/" + item.id + "/hqdefault.jpg";
-                if (item.thumbnails && item.thumbnails.length > 0) {
-                    const bestThumb = item.thumbnails[item.thumbnails.length - 1];
-                    thumbUrl = bestThumb.url || thumbUrl;
-                    if (thumbUrl.includes('=w') || thumbUrl.includes('=h')) {
-                        thumbUrl = thumbUrl.replace(/=w\\d+-h\\d+[^&]*/, '=w512-h512-l90-rj');
+                const tracks = [];
+                for (const item of contents) {
+                    if (!item.id || !item.title) continue;
+                    
+                    let thumbUrl = "https://i.ytimg.com/vi/" + item.id + "/hqdefault.jpg";
+                    if (item.thumbnails && item.thumbnails.length > 0) {
+                        const bestThumb = item.thumbnails[item.thumbnails.length - 1];
+                        thumbUrl = bestThumb.url || thumbUrl;
+                        if (thumbUrl.includes('=w') || thumbUrl.includes('=h')) {
+                            thumbUrl = thumbUrl.replace(/=w\\d+-h\\d+[^&]*/, '=w512-h512-l90-rj');
+                        }
                     }
+                    
+                    let artistName = "Unknown Artist";
+                    if (item.artists && item.artists.length > 0) {
+                        artistName = item.artists.map(a => a.name).join(", ");
+                    } else if (item.author) {
+                        artistName = typeof item.author === 'string' ? item.author : (item.author.name || "Unknown Artist");
+                    }
+                    
+                    let albumTitle = "Single";
+                    if (item.album && item.album.name) {
+                        albumTitle = item.album.name;
+                    }
+                    
+                    let durationStr = "0:00";
+                    if (item.duration && item.duration.text) {
+                        durationStr = item.duration.text;
+                    } else if (item.duration && typeof item.duration === 'string') {
+                        durationStr = item.duration;
+                    }
+                    
+                    tracks.push({
+                        id: item.id,
+                        title: item.title,
+                        artist: artistName,
+                        album: albumTitle,
+                        duration: durationStr,
+                        thumbnail: thumbUrl
+                    });
                 }
-                
-                let artistName = "Unknown Artist";
-                if (item.artists && item.artists.length > 0) {
-                    artistName = item.artists.map(a => a.name).join(", ");
-                } else if (item.author) {
-                    artistName = typeof item.author === 'string' ? item.author : (item.author.name || "Unknown Artist");
-                }
-                
-                let albumTitle = "Single";
-                if (item.album && item.album.name) {
-                    albumTitle = item.album.name;
-                }
-                
-                let durationStr = "0:00";
-                if (item.duration && item.duration.text) {
-                    durationStr = item.duration.text;
-                } else if (item.duration && typeof item.duration === 'string') {
-                    durationStr = item.duration;
-                }
-                
-                tracks.push({
-                    id: item.id,
-                    title: item.title,
-                    artist: artistName,
-                    album: albumTitle,
-                    duration: durationStr,
-                    thumbnail: thumbUrl
-                });
+                console.log("[JSC] Transformed search tracks count:", tracks.length);
+                __nativeCompleteSearch(JSON.stringify(tracks), "");
+            } catch (err) {
+                const msg = err.message || String(err);
+                console.log("[JSC ERROR] Search failed:", msg);
+                __nativeCompleteSearch("", msg);
             }
-            console.log("[JSC] Transformed search tracks count:", tracks.length);
-            return tracks;
         })()
         """
-        
-        evaluatePromise(script: script, completion: completion)
+        context.evaluateScript(script)
     }
     
     public func getAudioStreamUrl(videoId: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let script = """
-        (async () => {
-            console.log("[JSC] Fetching getBasicInfo for videoId: '\(videoId)'...");
-            let info;
-            try {
-                info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'IOS' });
-            } catch (e) {
-                console.log("[JSC] IOS client failed, falling back to ANDROID client:", e.message);
-                info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'ANDROID' });
-            }
-            
-            const adaptiveFormats = info.streaming_data?.adaptive_formats || [];
-            const regularFormats = info.streaming_data?.formats || [];
-            const allFormats = [...adaptiveFormats, ...regularFormats];
-            
-            console.log("[JSC] Total formats found:", allFormats.length);
-            
-            // Prefer AAC / M4A (audio/mp4) or Opus (audio/webm)
-            let format = allFormats.find(f => f.has_audio && !f.has_video && (f.mime_type?.includes('mp4') || f.mime_type?.includes('m4a')));
-            if (!format) {
-                format = allFormats.find(f => f.has_audio && !f.has_video);
-            }
-            if (!format) {
-                format = allFormats.find(f => f.has_audio);
-            }
-            
-            if (!format) {
-                throw new Error("No audio format available for track ID: " + "\(videoId)");
-            }
-            
-            let url = format.url;
-            if (format.decipher) {
-                try {
-                    const player = await globalThis.ytInstance.session.player;
-                    url = await format.decipher(player);
-                } catch (e) {
-                    console.log("[JSC] Decipher fallback:", e.message);
+        let nativeStreamCB: @convention(block) (String, String) -> Void = { [weak self] streamUrl, errMsg in
+            DispatchQueue.main.async {
+                if !streamUrl.isEmpty {
+                    completion(.success(streamUrl))
+                } else {
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -13, userInfo: [NSLocalizedDescriptionKey: errMsg.isEmpty ? "Failed to resolve stream URL" : errMsg])))
                 }
             }
-            
-            if (!url) {
-                throw new Error("Resolved format has no playable URL for track ID: " + "\(videoId)");
+        }
+        context.setObject(nativeStreamCB, forKeyedSubscript: "__nativeCompleteStream" as NSString)
+        
+        let script = """
+        (async () => {
+            try {
+                console.log("[JSC] Fetching getBasicInfo for videoId: '\(videoId)'...");
+                let info;
+                try {
+                    info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'IOS' });
+                } catch (e) {
+                    console.log("[JSC] IOS client failed, falling back to ANDROID client:", e.message);
+                    info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'ANDROID' });
+                }
+                
+                const adaptiveFormats = info.streaming_data?.adaptive_formats || [];
+                const regularFormats = info.streaming_data?.formats || [];
+                const allFormats = [...adaptiveFormats, ...regularFormats];
+                
+                console.log("[JSC] Total formats found:", allFormats.length);
+                
+                // Prefer AAC / M4A (audio/mp4) or Opus (audio/webm)
+                let format = allFormats.find(f => f.has_audio && !f.has_video && (f.mime_type?.includes('mp4') || f.mime_type?.includes('m4a')));
+                if (!format) {
+                    format = allFormats.find(f => f.has_audio && !f.has_video);
+                }
+                if (!format) {
+                    format = allFormats.find(f => f.has_audio);
+                }
+                
+                if (!format) {
+                    throw new Error("No audio format available for track ID: " + "\(videoId)");
+                }
+                
+                let url = format.url;
+                if (format.decipher) {
+                    try {
+                        const player = await globalThis.ytInstance.session.player;
+                        url = await format.decipher(player);
+                    } catch (e) {
+                        console.log("[JSC] Decipher fallback:", e.message);
+                    }
+                }
+                
+                if (!url) {
+                    throw new Error("Resolved format has no playable URL for track ID: " + "\(videoId)");
+                }
+                
+                console.log("[JSC] Stream URL resolved successfully, length:", url.length);
+                __nativeCompleteStream(url, "");
+            } catch (err) {
+                const msg = err.message || String(err);
+                console.log("[JSC ERROR] Stream URL resolution failed:", msg);
+                __nativeCompleteStream("", msg);
             }
-            
-            console.log("[JSC] Stream URL resolved successfully, length:", url.length);
-            return url;
         })()
         """
-        evaluatePromise(script: script, completion: completion)
-    }
-    
-    // Helper to evaluate promise scripts in JSContext safely using JSValue callbacks
-    private func evaluatePromise<T: Decodable>(script: String, completion: @escaping (Result<T, Error>) -> Void) {
-        guard let promiseVal = context.evaluateScript(script) else {
-            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -3, userInfo: [NSLocalizedDescriptionKey: "Failed to evaluate script in JSContext"])))
-            return
-        }
-        
-        let onResolve: @convention(block) (JSValue) -> Void = { [weak self] val in
-            if let resultObj = val.toObject() as? T {
-                completion(.success(resultObj))
-            } else if T.self == String.self, let strVal = val.toString() as? T {
-                completion(.success(strVal))
-            } else if T.self == Bool.self {
-                completion(.success(true as! T))
-            } else if let jsonStr = self?.context.evaluateScript("JSON.stringify")?.call(withArguments: [val])?.toString(),
-                      let jsonData = jsonStr.data(using: .utf8),
-                      let decoded = try? JSONDecoder().decode(T.self, from: jsonData) {
-                completion(.success(decoded))
-            } else {
-                completion(.failure(NSError(domain: "JSCYoutubeClient", code: -4, userInfo: [NSLocalizedDescriptionKey: "Failed to convert JSValue to type \(T.self)"])))
-            }
-        }
-        
-        let onReject: @convention(block) (JSValue) -> Void = { [weak self] err in
-            let errMsg = err.objectForKeyedSubscript("message")?.toString() ?? err.toString() ?? "JS Promise Rejected"
-            let errStack = err.objectForKeyedSubscript("stack")?.toString() ?? ""
-            let errLog = "[JSC PROMISE REJECTED] Error: \(errMsg)\nStack: \(errStack)"
-            print(errLog)
-            self?.onLog?("ERROR", errLog)
-            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -5, userInfo: [NSLocalizedDescriptionKey: errMsg])))
-        }
-        
-        let onResolveVal = JSValue(object: onResolve, in: context)
-        let onRejectVal = JSValue(object: onReject, in: context)
-        
-        if let thenFunc = promiseVal.objectForKeyedSubscript("then"), thenFunc.isObject {
-            let args: [Any] = [onResolveVal as Any, onRejectVal as Any]
-            thenFunc.call(withArguments: args)
-        } else {
-            completion(.failure(NSError(domain: "JSCYoutubeClient", code: -6, userInfo: [NSLocalizedDescriptionKey: "Evaluated script did not return a Promise"])))
-        }
+        context.evaluateScript(script)
     }
 }
