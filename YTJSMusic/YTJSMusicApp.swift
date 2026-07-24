@@ -81,6 +81,9 @@ struct YTJSMusicApp: App {
                     }
                     .padding(24)
                     .onAppear {
+                        jscClient.onLog = { level, message in
+                            self.appendLog("[\(level)] \(message)")
+                        }
                         loadEngine()
                     }
                 }

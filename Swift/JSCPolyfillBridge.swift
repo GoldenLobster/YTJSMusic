@@ -8,6 +8,7 @@ import QuartzCore
 
 public class JSCPolyfillBridge: NSObject {
     public weak var context: JSContext?
+    public var onLog: ((String, String) -> Void)?
     
     // Timer state management
     private var activeTimers: [Int32: Timer] = [:]
@@ -25,8 +26,9 @@ public class JSCPolyfillBridge: NSObject {
         guard let context = context else { return }
         
         // 1. Native Console Logging Bridge
-        let nativeLog: @convention(block) (String, String) -> Void = { level, message in
+        let nativeLog: @convention(block) (String, String) -> Void = { [weak self] level, message in
             print("[JSC-\(level)] \(message)")
+            self?.onLog?(level, message)
         }
         context.setObject(nativeLog, forKeyedSubscript: "__nativeLog" as NSString)
         
@@ -66,11 +68,15 @@ public class JSCPolyfillBridge: NSObject {
                     request.httpBody = bodyStr.data(using: .utf8)
                 }
                 
-                print("[FETCH OUTGOING] \(request.httpMethod ?? "GET") \(urlString) (Headers: \(request.allHTTPHeaderFields?.count ?? 0), BodyBytes: \(request.httpBody?.count ?? 0))")
+                let logMsg = "[FETCH OUTGOING] \(request.httpMethod ?? "GET") \(urlString)"
+                print(logMsg)
+                self?.onLog?("LOG", logMsg)
                 
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
-                        print("[FETCH ERROR] \(urlString) -> \(error.localizedDescription)")
+                        let errLog = "[FETCH ERROR] \(urlString) -> \(error.localizedDescription)"
+                        print(errLog)
+                        self?.onLog?("ERROR", errLog)
                         reject?.call(withArguments: [error.localizedDescription])
                         return
                     }
@@ -85,9 +91,13 @@ public class JSCPolyfillBridge: NSObject {
                     
                     if statusCode >= 400 {
                         let resText = data != nil ? String(data: data!, encoding: .utf8) ?? "" : ""
-                        print("[FETCH HTTP \(statusCode)] \(urlString) -> \(resText.prefix(200))")
+                        let resLog = "[FETCH HTTP \(statusCode)] \(urlString) -> \(resText.prefix(200))"
+                        print(resLog)
+                        self?.onLog?("WARN", resLog)
                     } else {
-                        print("[FETCH HTTP \(statusCode)] \(urlString)")
+                        let resLog = "[FETCH HTTP \(statusCode)] \(urlString)"
+                        print(resLog)
+                        self?.onLog?("LOG", resLog)
                     }
                     
                     // Parse response headers into array of [key, value] pairs

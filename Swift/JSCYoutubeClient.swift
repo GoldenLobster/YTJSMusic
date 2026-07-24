@@ -9,6 +9,12 @@ public class JSCYoutubeClient: ObservableObject {
     @Published public var isReady: Bool = false
     @Published public var lastError: String? = nil
     
+    public var onLog: ((String, String) -> Void)? {
+        didSet {
+            bridge.onLog = onLog
+        }
+    }
+    
     public init() {
         self.context = JSContext()!
         self.bridge = JSCPolyfillBridge(context: context)
@@ -37,8 +43,6 @@ public class JSCYoutubeClient: ObservableObject {
             globalThis.ytInstance = await Innertube.create({
                 cache: new UniversalCache(false)
             });
-            console.log("[JSC] Pre-fetching YouTube player script...");
-            await globalThis.ytInstance.session.player;
             console.log("[JSC] Innertube initialized successfully!");
             return true;
         })()
@@ -174,14 +178,14 @@ public class JSCYoutubeClient: ObservableObject {
             return
         }
         
-        let onResolve: @convention(block) (JSValue) -> Void = { val in
+        let onResolve: @convention(block) (JSValue) -> Void = { [weak self] val in
             if let resultObj = val.toObject() as? T {
                 completion(.success(resultObj))
             } else if T.self == String.self, let strVal = val.toString() as? T {
                 completion(.success(strVal))
             } else if T.self == Bool.self {
                 completion(.success(true as! T))
-            } else if let jsonStr = self.context.evaluateScript("JSON.stringify")?.call(withArguments: [val])?.toString(),
+            } else if let jsonStr = self?.context.evaluateScript("JSON.stringify")?.call(withArguments: [val])?.toString(),
                       let jsonData = jsonStr.data(using: .utf8),
                       let decoded = try? JSONDecoder().decode(T.self, from: jsonData) {
                 completion(.success(decoded))
@@ -190,10 +194,12 @@ public class JSCYoutubeClient: ObservableObject {
             }
         }
         
-        let onReject: @convention(block) (JSValue) -> Void = { err in
+        let onReject: @convention(block) (JSValue) -> Void = { [weak self] err in
             let errMsg = err.objectForKeyedSubscript("message")?.toString() ?? err.toString() ?? "JS Promise Rejected"
             let errStack = err.objectForKeyedSubscript("stack")?.toString() ?? ""
-            print("[JSC PROMISE REJECTED] Error:", errMsg, "\nStack:", errStack)
+            let errLog = "[JSC PROMISE REJECTED] Error: \(errMsg)\nStack: \(errStack)"
+            print(errLog)
+            self?.onLog?("ERROR", errLog)
             completion(.failure(NSError(domain: "JSCYoutubeClient", code: -5, userInfo: [NSLocalizedDescriptionKey: errMsg])))
         }
         
