@@ -1,0 +1,18 @@
+{
+  "name": "youtube-jsc-test",
+  "version": "1.0.0",
+  "description": "YouTube.js JavaScriptCore iOS Polyfills and Test Harness",
+  "type": "module",
+  "main": "entry.js",
+  "scripts": {
+    "bundle": "npx esbuild entry.js --bundle --outfile=runtime.bundle.js --format=iife --target=es2020",
+    "test": "node run.js"
+  },
+  "dependencies": {
+    "web-streams-polyfill": "^4.3.0",
+    "youtubei.js": "^17.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}
