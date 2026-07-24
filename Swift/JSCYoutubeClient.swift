@@ -226,7 +226,12 @@ public class JSCYoutubeClient: ObservableObject {
                     info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'IOS' });
                 } catch (e) {
                     console.log("[JSC] IOS client failed, falling back to ANDROID client:", e.message);
-                    info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'ANDROID' });
+                    try {
+                        info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'ANDROID' });
+                    } catch (e2) {
+                        console.log("[JSC] ANDROID client failed, falling back to YTMUSIC client:", e2.message);
+                        info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'YTMUSIC' });
+                    }
                 }
                 
                 const adaptiveFormats = info.streaming_data?.adaptive_formats || [];
@@ -250,7 +255,7 @@ public class JSCYoutubeClient: ObservableObject {
                 
                 let streamUrl = format.url;
                 if (!streamUrl && typeof format.decipher === 'function') {
-                    console.log("[JSC] format.url missing, deciphering format signature with player...");
+                    console.log("[JSC] format.url missing, deciphering signature with player...");
                     try {
                         const player = await globalThis.ytInstance.session.player;
                         streamUrl = await format.decipher(player);
@@ -263,7 +268,7 @@ public class JSCYoutubeClient: ObservableObject {
                     throw new Error("Failed to resolve stream URL for track ID: " + "\(videoId)");
                 }
                 
-                console.log("[JSC] Stream URL resolved successfully, length:", streamUrl.length);
+                console.log("[JSC SUCCESS] Stream URL resolved (\(videoId)), length:", streamUrl.length);
                 __nativeCompleteStream(streamUrl, "");
             } catch (err) {
                 const msg = err.message || String(err);

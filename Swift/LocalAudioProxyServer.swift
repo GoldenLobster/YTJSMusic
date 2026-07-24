@@ -7,6 +7,8 @@ import Network
 public class LocalAudioProxyServer {
     public static let shared = LocalAudioProxyServer()
     
+    public var onLog: ((String) -> Void)?
+    
     private var listener: NWListener?
     private let port: UInt16 = 8080
     private let queue = DispatchQueue(label: "com.antigravity.proxy", qos: .userInitiated)
@@ -17,12 +19,16 @@ public class LocalAudioProxyServer {
             let parameters = NWParameters.tcp
             guard let endpointPort = NWEndpoint.Port(rawValue: port) else { return }
             listener = try NWListener(using: parameters, on: endpointPort)
-            listener?.stateUpdateHandler = { state in
+            listener?.stateUpdateHandler = { [weak self] state in
                 switch state {
                 case .ready:
-                    print("[PROXY] Local HTTP Audio Proxy server ready on 127.0.0.1:\(self.port)")
+                    let msg = "[PROXY] Local HTTP Audio Proxy server ready on 127.0.0.1:\(self?.port ?? 8080)"
+                    print(msg)
+                    self?.onLog?(msg)
                 case .failed(let err):
-                    print("[PROXY ERROR] Proxy server failed: \(err.localizedDescription)")
+                    let msg = "[PROXY ERROR] Proxy server failed: \(err.localizedDescription)"
+                    print(msg)
+                    self?.onLog?(msg)
                 default:
                     break
                 }
@@ -32,7 +38,9 @@ public class LocalAudioProxyServer {
             }
             listener?.start(queue: queue)
         } catch {
-            print("[PROXY ERROR] Could not start NWListener: \(error.localizedDescription)")
+            let msg = "[PROXY ERROR] Could not start NWListener: \(error.localizedDescription)"
+            print(msg)
+            onLog?(msg)
         }
     }
     
@@ -93,7 +101,9 @@ public class LocalAudioProxyServer {
         guard let b64Data = Data(base64Encoded: b64String),
               let targetUrlString = String(data: b64Data, encoding: .utf8),
               let targetURL = URL(string: targetUrlString) else {
-            print("[PROXY ERROR] Failed to decode Base64 target URL from: \(rawB64Value)")
+            let logErr = "[PROXY ERROR] Failed to decode Base64 target URL from: \(rawB64Value)"
+            print(logErr)
+            onLog?(logErr)
             let notFound = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n"
             let completion: NWConnection.SendCompletion = .contentProcessed { _ in connection.cancel() }
             connection.send(content: notFound.data(using: .utf8), completion: completion)
@@ -108,11 +118,13 @@ public class LocalAudioProxyServer {
             }
         }
         
-        print("[PROXY] Forwarding GET request for \(targetURL.host ?? "googlevideo.com") Range: \(rangeHeader ?? "bytes=0-")")
+        let reqLog = "[PROXY] Forwarding GET for \(targetURL.host ?? "googlevideo.com") (Range: \(rangeHeader ?? "bytes=0-"))"
+        print(reqLog)
+        onLog?(reqLog)
         
         var request = URLRequest(url: targetURL)
         request.httpMethod = "GET"
-        request.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148", forHTTPHeaderField: "User-Agent")
+        request.setValue("com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)", forHTTPHeaderField: "User-Agent")
         if let rangeHeader = rangeHeader {
             request.setValue(rangeHeader, forHTTPHeaderField: "Range")
         }
@@ -121,63 +133,97 @@ public class LocalAudioProxyServer {
         sessionConfig.requestCachePolicy = .reloadIgnoringLocalCacheData
         let session = URLSession(configuration: sessionConfig)
         
-        let task = session.dataTask(with: request) { data, response, error in
-            guard let httpResponse = response as? HTTPURLResponse, let data = data, error == nil else {
-                let errResp = "HTTP/1.1 502 Bad Gateway\r\nContent-Length: 0\r\n\r\n"
-                let completion: NWConnection.SendCompletion = .contentProcessed { _ in connection.cancel() }
-                connection.send(content: errResp.data(using: .utf8), completion: completion)
+        let task = session.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            
+            if let httpResp = response as? HTTPURLResponse, httpResp.statusCode == 403 {
+                let warnMsg = "[PROXY 403 FORBIDDEN] \(targetURL.host ?? "") returned 403. Retrying without custom User-Agent..."
+                print(warnMsg)
+                self.onLog?(warnMsg)
+                
+                var retryRequest = URLRequest(url: targetURL)
+                retryRequest.httpMethod = "GET"
+                if let rangeHeader = rangeHeader {
+                    retryRequest.setValue(rangeHeader, forHTTPHeaderField: "Range")
+                }
+                
+                let retryTask = session.dataTask(with: retryRequest) { rData, rResponse, rError in
+                    if let rHttp = rResponse as? HTTPURLResponse {
+                        let rMsg = "[PROXY RETRY RESULT] Status \(rHttp.statusCode) for \(targetURL.host ?? "")"
+                        print(rMsg)
+                        self.onLog?(rMsg)
+                    }
+                    self.sendProxyResponse(connection: connection, response: rResponse, data: rData, error: rError)
+                }
+                retryTask.resume()
                 return
             }
             
-            if httpResponse.statusCode >= 400 {
-                print("[PROXY UPSTREAM HTTP \(httpResponse.statusCode)] \(targetURL.host ?? "") returned \(httpResponse.statusCode)")
-            }
-            
-            // Clean Content-Type header (remove codecs parameter so AVPlayer parses it cleanly)
-            let rawMime = httpResponse.mimeType ?? "audio/mp4"
-            let cleanMime = rawMime.components(separatedBy: ";").first?.trimmingCharacters(in: .whitespaces) ?? "audio/mp4"
-            
-            // Extract Content-Range header case-insensitively from upstream YouTube response
-            var upstreamContentRange: String? = nil
-            for (k, v) in httpResponse.allHeaderFields {
-                if "\(k)".lowercased() == "content-range" {
-                    upstreamContentRange = "\(v)"
-                    break
-                }
-            }
-            
-            // Build HTTP response headers to return to AVPlayer
-            var headerLines = [
-                "HTTP/1.1 \(httpResponse.statusCode) \(HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode))",
-                "Content-Type: \(cleanMime)",
-                "Content-Length: \(data.count)",
-                "Accept-Ranges: bytes",
-                "Connection: close"
-            ]
-            
-            // For 206 Partial Content, format/forward valid Content-Range header
-            if httpResponse.statusCode == 206 {
-                if let contentRange = upstreamContentRange {
-                    headerLines.append("Content-Range: \(contentRange)")
-                } else if data.count > 0 {
-                    headerLines.append("Content-Range: bytes 0-\(data.count - 1)/*")
-                }
-            }
-            
-            guard let headerData = (headerLines.joined(separator: "\r\n") + "\r\n\r\n").data(using: .utf8) else {
-                connection.cancel()
-                return
-            }
-            
-            let headerCompletion: NWConnection.SendCompletion = .contentProcessed { _ in
-                let bodyCompletion: NWConnection.SendCompletion = .contentProcessed { _ in
-                    print("[PROXY SUCCESS] Sent \(data.count) bytes of \(cleanMime) to AVPlayer (HTTP \(httpResponse.statusCode))")
-                    connection.cancel()
-                }
-                connection.send(content: data, completion: bodyCompletion)
-            }
-            connection.send(content: headerData, completion: headerCompletion)
+            self.sendProxyResponse(connection: connection, response: response, data: data, error: error)
         }
         task.resume()
+    }
+    
+    private func sendProxyResponse(connection: NWConnection, response: URLResponse?, data: Data?, error: Error?) {
+        guard let httpResponse = response as? HTTPURLResponse, let data = data, error == nil else {
+            let errLog = "[PROXY ERROR] Upstream request failed: \(error?.localizedDescription ?? "No data received")"
+            print(errLog)
+            onLog?(errLog)
+            let errResp = "HTTP/1.1 502 Bad Gateway\r\nContent-Length: 0\r\n\r\n"
+            let completion: NWConnection.SendCompletion = .contentProcessed { _ in connection.cancel() }
+            connection.send(content: errResp.data(using: .utf8), completion: completion)
+            return
+        }
+        
+        let statusLog = "[PROXY UPSTREAM] HTTP \(httpResponse.statusCode) (\(data.count) bytes)"
+        print(statusLog)
+        onLog?(statusLog)
+        
+        // Clean Content-Type header (remove codecs parameter so AVPlayer parses it cleanly)
+        let rawMime = httpResponse.mimeType ?? "audio/mp4"
+        let cleanMime = rawMime.components(separatedBy: ";").first?.trimmingCharacters(in: .whitespaces) ?? "audio/mp4"
+        
+        // Extract Content-Range header case-insensitively from upstream YouTube response
+        var upstreamContentRange: String? = nil
+        for (k, v) in httpResponse.allHeaderFields {
+            if "\(k)".lowercased() == "content-range" {
+                upstreamContentRange = "\(v)"
+                break
+            }
+        }
+        
+        // Build HTTP response headers to return to AVPlayer
+        var headerLines = [
+            "HTTP/1.1 \(httpResponse.statusCode) \(HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode))",
+            "Content-Type: \(cleanMime)",
+            "Content-Length: \(data.count)",
+            "Accept-Ranges: bytes",
+            "Connection: close"
+        ]
+        
+        // For 206 Partial Content, format/forward valid Content-Range header
+        if httpResponse.statusCode == 206 {
+            if let contentRange = upstreamContentRange {
+                headerLines.append("Content-Range: \(contentRange)")
+            } else if data.count > 0 {
+                headerLines.append("Content-Range: bytes 0-\(data.count - 1)/*")
+            }
+        }
+        
+        guard let headerData = (headerLines.joined(separator: "\r\n") + "\r\n\r\n").data(using: .utf8) else {
+            connection.cancel()
+            return
+        }
+        
+        let headerCompletion: NWConnection.SendCompletion = .contentProcessed { _ in
+            let bodyCompletion: NWConnection.SendCompletion = .contentProcessed { [weak self] _ in
+                let succMsg = "[PROXY SUCCESS] Sent \(data.count) bytes of \(cleanMime) to AVPlayer (HTTP \(httpResponse.statusCode))"
+                print(succMsg)
+                self?.onLog?(succMsg)
+                connection.cancel()
+            }
+            connection.send(content: data, completion: bodyCompletion)
+        }
+        connection.send(content: headerData, completion: headerCompletion)
     }
 }

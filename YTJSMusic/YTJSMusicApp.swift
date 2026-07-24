@@ -6,16 +6,23 @@ struct YTJSMusicApp: App {
     @StateObject private var jscClient: JSCYoutubeClient
     @StateObject private var audioManager: AudioPlayerManager
     @StateObject private var playlistManager: PlaylistManager
+    @ObservedObject private var logger = SystemLogger.shared
     
     @State private var isBundleLoaded: Bool = false
-    @State private var logs: [String] = ["Initializing YouTube Music Engine..."]
     @State private var initError: String? = nil
     
     init() {
         // Start Local HTTP Proxy Server on 127.0.0.1:8080 for AVPlayer stream requests
         LocalAudioProxyServer.shared.start()
+        LocalAudioProxyServer.shared.onLog = { msg in
+            SystemLogger.shared.append(msg)
+        }
         
         let client = JSCYoutubeClient()
+        client.onLog = { level, message in
+            SystemLogger.shared.append("[\(level)] \(message)")
+        }
+        
         let audioMgr = AudioPlayerManager(jscClient: client)
         let playlistMgr = PlaylistManager()
         
@@ -62,7 +69,7 @@ struct YTJSMusicApp: App {
                         ScrollViewReader { proxy in
                             ScrollView {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    ForEach(Array(logs.enumerated()), id: \.offset) { idx, log in
+                                    ForEach(Array(logger.logs.enumerated()), id: \.offset) { idx, log in
                                         Text(log)
                                             .font(.system(size: 11, design: .monospaced))
                                             .foregroundColor(log.contains("ERROR") || log.contains("Failed") ? .red : .primary)
@@ -74,16 +81,13 @@ struct YTJSMusicApp: App {
                             }
                             .background(Color(UIColor.secondarySystemBackground))
                             .cornerRadius(10)
-                            .onChange(of: logs.count) { newCount in
+                            .onChange(of: logger.logs.count) { newCount in
                                 proxy.scrollTo(newCount - 1, anchor: .bottom)
                             }
                         }
                     }
                     .padding(24)
                     .onAppear {
-                        jscClient.onLog = { level, message in
-                            self.appendLog("[\(level)] \(message)")
-                        }
                         loadEngine()
                     }
                 }
@@ -91,57 +95,50 @@ struct YTJSMusicApp: App {
         }
     }
     
-    private func appendLog(_ message: String) {
-        DispatchQueue.main.async {
-            print("[APP LOG]", message)
-            self.logs.append(message)
-        }
-    }
-    
     private func loadEngine() {
         DispatchQueue.global(qos: .userInitiated).async {
             do {
-                self.appendLog("Step 1: Locating polyfill files in main bundle...")
+                SystemLogger.shared.append("Step 1: Locating polyfill files in main bundle...")
                 var polyfillPaths: [String] = []
                 
                 if let polyfillsFolder = Bundle.main.path(forResource: "polyfills", ofType: nil) {
                     let files = try FileManager.default.contentsOfDirectory(atPath: polyfillsFolder)
                     polyfillPaths = files.filter { $0.hasSuffix(".js") }.sorted().map { (polyfillsFolder as NSString).appendingPathComponent($0) }
-                    self.appendLog("Found \(polyfillPaths.count) polyfill scripts in polyfills/ folder.")
+                    SystemLogger.shared.append("Found \(polyfillPaths.count) polyfill scripts in polyfills/ folder.")
                 } else {
-                    self.appendLog("polyfills/ folder not found, checking top-level bundle resources...")
+                    SystemLogger.shared.append("polyfills/ folder not found, checking top-level bundle resources...")
                     let paths = Bundle.main.paths(forResourcesOfType: "js", inDirectory: nil)
                     polyfillPaths = paths.filter { !$0.contains("runtime.bundle") }.sorted()
-                    self.appendLog("Found \(polyfillPaths.count) polyfill scripts in bundle root.")
+                    SystemLogger.shared.append("Found \(polyfillPaths.count) polyfill scripts in bundle root.")
                 }
                 
                 guard let bundlePath = Bundle.main.path(forResource: "runtime.bundle", ofType: "js") else {
                     throw NSError(domain: "YTJSMusicApp", code: -1, userInfo: [NSLocalizedDescriptionKey: "runtime.bundle.js is missing from app bundle resources!"])
                 }
-                self.appendLog("Step 2: Located runtime.bundle.js (\((try? FileManager.default.attributesOfItem(atPath: bundlePath)[.size] as? Int64) ?? 0) bytes)")
+                SystemLogger.shared.append("Step 2: Located runtime.bundle.js (\((try? FileManager.default.attributesOfItem(atPath: bundlePath)[.size] as? Int64) ?? 0) bytes)")
                 
-                self.appendLog("Step 3: Loading polyfills and runtime bundle into JavaScriptCore...")
+                SystemLogger.shared.append("Step 3: Loading polyfills and runtime bundle into JavaScriptCore...")
                 try jscClient.loadPolyfillsAndBundle(polyfillScriptPaths: polyfillPaths, bundlePath: bundlePath)
-                self.appendLog("Polyfills and bundle loaded into JSContext cleanly!")
+                SystemLogger.shared.append("Polyfills and bundle loaded into JSContext cleanly!")
                 
-                self.appendLog("Step 4: Calling Innertube.create()...")
+                SystemLogger.shared.append("Step 4: Calling Innertube.create()...")
                 jscClient.initializeInnertube { result in
                     DispatchQueue.main.async {
                         switch result {
                         case .success:
-                            self.appendLog("Innertube initialized successfully! Launching UI...")
+                            SystemLogger.shared.append("Innertube initialized successfully! Launching UI...")
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 self.isBundleLoaded = true
                             }
                         case .failure(let err):
-                            self.appendLog("ERROR: Innertube initialization failed: \(err.localizedDescription)")
+                            SystemLogger.shared.append("ERROR: Innertube initialization failed: \(err.localizedDescription)")
                             self.initError = err.localizedDescription
                         }
                     }
                 }
             } catch {
                 DispatchQueue.main.async {
-                    self.appendLog("ERROR: Engine setup failed: \(error.localizedDescription)")
+                    SystemLogger.shared.append("ERROR: Engine setup failed: \(error.localizedDescription)")
                     self.initError = error.localizedDescription
                 }
             }

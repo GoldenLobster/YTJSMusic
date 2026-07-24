@@ -7,6 +7,7 @@ struct PlayerDetailView: View {
     
     @State private var isEditingSlider: Bool = false
     @State private var editingSliderValue: Double = 0.0
+    @State private var showDebugLogs: Bool = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -24,13 +25,19 @@ struct PlayerDetailView: View {
                     .font(.headline)
                     .foregroundColor(.secondary)
                 Spacer()
-                Spacer().frame(width: 24)
+                Button(action: {
+                    showDebugLogs = true
+                }) {
+                    Image(systemName: "terminal")
+                        .font(.title3)
+                        .foregroundColor(.red)
+                }
             }
             .padding(.top, 16)
             .padding(.horizontal)
             
             if let error = audioManager.lastPlayerError {
-                ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .top) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(.orange)
@@ -39,11 +46,18 @@ struct PlayerDetailView: View {
                             .foregroundColor(.primary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(8)
-                    .background(Color.orange.opacity(0.15))
-                    .cornerRadius(8)
+                    Button(action: {
+                        showDebugLogs = true
+                    }) {
+                        Label("View Diagnostic Logs", systemImage: "text.justify.left")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.red)
+                    }
                 }
-                .frame(maxHeight: 100)
+                .padding(10)
+                .background(Color.orange.opacity(0.15))
+                .cornerRadius(8)
                 .padding(.horizontal)
             }
             
@@ -175,6 +189,9 @@ struct PlayerDetailView: View {
             .padding(.bottom, 32)
         }
         .background(Color(UIColor.systemBackground).ignoresSafeArea())
+        .sheet(isPresented: $showDebugLogs) {
+            DebugLogsView()
+        }
     }
     
     private func formatTime(_ seconds: Double) -> String {
@@ -183,5 +200,33 @@ struct PlayerDetailView: View {
         let mins = totalSeconds / 60
         let secs = totalSeconds % 60
         return String(format: "%d:%02d", mins, secs)
+    }
+}
+
+struct DebugLogsView: View {
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        NavigationView {
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 4) {
+                        ForEach(Array(SystemLogger.shared.logs.enumerated()), id: \.offset) { idx, log in
+                            Text(log)
+                                .font(.system(size: 11, design: .monospaced))
+                                .foregroundColor(log.contains("ERROR") || log.contains("403") || log.contains("Failed") ? .red : (log.contains("PROXY") ? .blue : .primary))
+                                .id(idx)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(10)
+                }
+                .background(Color(UIColor.secondarySystemBackground))
+            }
+            .navigationTitle("Diagnostic Logs")
+            .navigationBarItems(trailing: Button("Done") {
+                presentationMode.wrappedValue.dismiss()
+            })
+        }
     }
 }

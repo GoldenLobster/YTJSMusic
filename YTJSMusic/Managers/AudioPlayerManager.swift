@@ -134,22 +134,30 @@ public class AudioPlayerManager: ObservableObject {
         self.duration = 0.0
         self.lastPlayerError = nil
         
-        print("[AUDIO MANAGER] Requesting stream URL for \(track.title) (\(track.id))...")
+        let msg = "[AUDIO MANAGER] Requesting stream URL for '\(track.title)' (\(track.id))..."
+        print(msg)
+        SystemLogger.shared.append(msg)
         
         jscClient.getAudioStreamUrl(videoId: track.id) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 switch result {
                 case .success(let streamUrl):
-                    print("[AUDIO MANAGER] Resolved stream URL length: \(streamUrl.count)")
+                    let resLog = "[AUDIO MANAGER] Resolved stream URL (\(streamUrl.count) chars)"
+                    print(resLog)
+                    SystemLogger.shared.append(resLog)
+                    
                     guard let url = URL(string: streamUrl), !streamUrl.isEmpty else {
                         self.isLoading = false
                         self.lastPlayerError = "Empty stream URL returned from YouTube.js"
+                        SystemLogger.shared.append("[AUDIO MANAGER ERROR] Empty stream URL returned")
                         return
                     }
                     self.startAVPlayer(url: url, track: track)
                 case .failure(let error):
-                    print("[AUDIO MANAGER ERROR] Failed to get audio stream URL:", error)
+                    let errLog = "[AUDIO MANAGER ERROR] Failed to get audio stream URL: \(error.localizedDescription)"
+                    print(errLog)
+                    SystemLogger.shared.append(errLog)
                     self.isLoading = false
                     self.lastPlayerError = error.localizedDescription
                 }
@@ -164,10 +172,13 @@ public class AudioPlayerManager: ObservableObject {
         guard let proxyURL = LocalAudioProxyServer.shared.getProxyURL(for: url.absoluteString) else {
             self.isLoading = false
             self.lastPlayerError = "Failed to construct local proxy URL"
+            SystemLogger.shared.append("[AUDIO MANAGER ERROR] Failed to construct local proxy URL")
             return
         }
         
-        print("[AUDIO MANAGER] Playing via Local HTTP Proxy: \(proxyURL.absoluteString)")
+        let playMsg = "[AUDIO MANAGER] Playing via Local HTTP Proxy: \(proxyURL.absoluteString)"
+        print(playMsg)
+        SystemLogger.shared.append(playMsg)
         
         let playerItem = AVPlayerItem(url: proxyURL)
         if player == nil {
@@ -183,7 +194,9 @@ public class AudioPlayerManager: ObservableObject {
                 guard let self = self else { return }
                 switch item.status {
                 case .readyToPlay:
-                    print("[AVPLAYER] Stream readyToPlay!")
+                    let okMsg = "[AVPLAYER] Stream readyToPlay!"
+                    print(okMsg)
+                    SystemLogger.shared.append(okMsg)
                     self.isLoading = false
                     self.isPlaying = true
                     let durSeconds = item.duration.seconds
@@ -199,7 +212,9 @@ public class AudioPlayerManager: ObservableObject {
                     if let nsErr = item.error as NSError? {
                         let underlying = nsErr.userInfo["NSUnderlyingError"] as? NSError
                         errDesc = underlying?.localizedDescription ?? nsErr.localizedDescription
-                        print("[AVPLAYER FAILED] Domain: \(nsErr.domain) Code: \(nsErr.code) Details: \(nsErr.userInfo)")
+                        let failMsg = "[AVPLAYER FAILED] Domain: \(nsErr.domain) Code: \(nsErr.code) Details: \(nsErr.userInfo)"
+                        print(failMsg)
+                        SystemLogger.shared.append(failMsg)
                     }
                     self.lastPlayerError = errDesc
                 case .unknown:
