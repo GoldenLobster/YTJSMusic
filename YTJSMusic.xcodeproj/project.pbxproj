@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A100000129F0000100000001 /* YTJSMusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000129F0000100000001 /* YTJSMusicApp.swift */; };
 		A100000229F0000100000002 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000229F0000100000002 /* Track.swift */; };
+		A100001229F0000100000012 /* SystemLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001229F0000100000012 /* SystemLogger.swift */; };
 		A100000329F0000100000003 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000329F0000100000003 /* Playlist.swift */; };
 		A100000429F0000100000004 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000429F0000100000004 /* AudioPlayerManager.swift */; };
 		A100000529F0000100000005 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000529F0000100000005 /* PlaylistManager.swift */; };
@@ -28,6 +29,7 @@
 		C100000129F0000100000001 /* YTJSMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YTJSMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B100000129F0000100000001 /* YTJSMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTJSMusicApp.swift; sourceTree = "<group>"; };
 		B100000229F0000100000002 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		B100001229F0000100000012 /* SystemLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemLogger.swift; sourceTree = "<group>"; };
 		B100000329F0000100000003 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		B100000429F0000100000004 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		B100000529F0000100000005 /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			children = (
 				B100000229F0000100000002 /* Track.swift */,
 				B100000329F0000100000003 /* Playlist.swift */,
+				B100001229F0000100000012 /* SystemLogger.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -182,6 +185,7 @@
 			files = (
 				A100000129F0000100000001 /* YTJSMusicApp.swift in Sources */,
 				A100000229F0000100000002 /* Track.swift in Sources */,
+				A100001229F0000100000012 /* SystemLogger.swift in Sources */,
 				A100000329F0000100000003 /* Playlist.swift in Sources */,
 				A100000429F0000100000004 /* AudioPlayerManager.swift in Sources */,
 				A100000529F0000100000005 /* PlaylistManager.swift in Sources */,
