@@ -116,6 +116,15 @@ public class LocalAudioProxyServer {
             let rawMime = httpResponse.mimeType ?? "audio/mp4"
             let cleanMime = rawMime.components(separatedBy: ";").first?.trimmingCharacters(in: .whitespaces) ?? "audio/mp4"
             
+            // Extract Content-Range header case-insensitively from upstream YouTube response
+            var upstreamContentRange: String? = nil
+            for (k, v) in httpResponse.allHeaderFields {
+                if "\(k)".lowercased() == "content-range" {
+                    upstreamContentRange = "\(v)"
+                    break
+                }
+            }
+            
             // Build HTTP response headers to return to AVPlayer
             var headerLines = [
                 "HTTP/1.1 \(httpResponse.statusCode) \(HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode))",
@@ -125,8 +134,13 @@ public class LocalAudioProxyServer {
                 "Connection: close"
             ]
             
-            if let contentRange = httpResponse.allHeaderFields["Content-Range"] as? String {
-                headerLines.append("Content-Range: \(contentRange)")
+            // For 206 Partial Content, format/forward valid Content-Range header
+            if httpResponse.statusCode == 206 {
+                if let contentRange = upstreamContentRange {
+                    headerLines.append("Content-Range: \(contentRange)")
+                } else if data.count > 0 {
+                    headerLines.append("Content-Range: bytes 0-\(data.count - 1)/*")
+                }
             }
             
             guard let headerData = (headerLines.joined(separator: "\r\n") + "\r\n\r\n").data(using: .utf8) else {
