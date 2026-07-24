@@ -78,10 +78,13 @@ public class JSCYoutubeClient: ObservableObject {
         let nativeSearchCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
             DispatchQueue.main.async {
                 if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let tracks = try? JSONDecoder().decode([Track].self, from: data) {
+                    self?.onLog?("LOG", "Search callback successfully decoded \(tracks.count) tracks")
                     completion(.success(tracks))
                 } else if !errMsg.isEmpty {
+                    self?.onLog?("ERROR", "Search callback error: \(errMsg)")
                     completion(.failure(NSError(domain: "JSCYoutubeClient", code: -11, userInfo: [NSLocalizedDescriptionKey: errMsg])))
                 } else {
+                    self?.onLog?("WARN", "Search callback returned no tracks")
                     completion(.failure(NSError(domain: "JSCYoutubeClient", code: -12, userInfo: [NSLocalizedDescriptionKey: "Search returned no tracks"])))
                 }
             }
@@ -92,30 +95,53 @@ public class JSCYoutubeClient: ObservableObject {
         (async () => {
             try {
                 console.log("[JSC] Searching music for query: '\(escapedQuery)'");
-                const searchResults = await globalThis.ytInstance.music.search("\(escapedQuery)", { type: 'song' });
-                const contents = searchResults.results || searchResults.contents || [];
+                let rawItems = [];
+                
+                try {
+                    const musicRes = await globalThis.ytInstance.music.search("\(escapedQuery)", { type: 'song' });
+                    if (musicRes.songs && musicRes.songs.length > 0) {
+                        rawItems = musicRes.songs;
+                    } else if (musicRes.contents && Array.isArray(musicRes.contents)) {
+                        rawItems = musicRes.contents;
+                    }
+                } catch (e) {
+                    console.log("[JSC] music.search fallback:", e.message);
+                }
+                
+                if (!rawItems || rawItems.length === 0) {
+                    console.log("[JSC] Performing general YouTube search fallback...");
+                    const genRes = await globalThis.ytInstance.search("\(escapedQuery)");
+                    rawItems = genRes.videos || genRes.results || [];
+                }
                 
                 const tracks = [];
-                for (const item of contents) {
-                    if (!item.id || !item.title) continue;
+                for (const item of rawItems) {
+                    const id = item.id || item.video_id;
+                    if (!id) continue;
                     
-                    let thumbUrl = "https://i.ytimg.com/vi/" + item.id + "/hqdefault.jpg";
-                    if (item.thumbnails && item.thumbnails.length > 0) {
-                        const bestThumb = item.thumbnails[item.thumbnails.length - 1];
-                        thumbUrl = bestThumb.url || thumbUrl;
-                        if (thumbUrl.includes('=w') || thumbUrl.includes('=h')) {
-                            thumbUrl = thumbUrl.replace(/=w\\d+-h\\d+[^&]*/, '=w512-h512-l90-rj');
+                    let titleStr = "";
+                    if (item.title && typeof item.title === 'string') {
+                        titleStr = item.title;
+                    } else if (item.title && item.title.text) {
+                        titleStr = item.title.text;
+                    } else if (item.title && item.title.toString) {
+                        titleStr = item.title.toString();
+                    }
+                    
+                    if (!titleStr) continue;
+                    
+                    let artistStr = "Unknown Artist";
+                    if (item.author) {
+                        if (typeof item.author === 'string') {
+                            artistStr = item.author;
+                        } else if (item.author.name) {
+                            artistStr = item.author.name;
                         }
+                    } else if (item.artists && item.artists.length > 0) {
+                        artistStr = item.artists.map(a => a.name).join(", ");
                     }
                     
-                    let artistName = "Unknown Artist";
-                    if (item.artists && item.artists.length > 0) {
-                        artistName = item.artists.map(a => a.name).join(", ");
-                    } else if (item.author) {
-                        artistName = typeof item.author === 'string' ? item.author : (item.author.name || "Unknown Artist");
-                    }
-                    
-                    let albumTitle = "Single";
+                    let albumTitle = "YouTube Track";
                     if (item.album && item.album.name) {
                         albumTitle = item.album.name;
                     }
@@ -123,14 +149,22 @@ public class JSCYoutubeClient: ObservableObject {
                     let durationStr = "0:00";
                     if (item.duration && item.duration.text) {
                         durationStr = item.duration.text;
-                    } else if (item.duration && typeof item.duration === 'string') {
+                    } else if (item.length_text && item.length_text.text) {
+                        durationStr = item.length_text.text;
+                    } else if (typeof item.duration === 'string') {
                         durationStr = item.duration;
                     }
                     
+                    let thumbUrl = "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
+                    if (item.thumbnails && item.thumbnails.length > 0) {
+                        const best = item.thumbnails[item.thumbnails.length - 1];
+                        thumbUrl = best.url || thumbUrl;
+                    }
+                    
                     tracks.push({
-                        id: item.id,
-                        title: item.title,
-                        artist: artistName,
+                        id: id,
+                        title: titleStr,
+                        artist: artistStr,
                         album: albumTitle,
                         duration: durationStr,
                         thumbnail: thumbUrl
