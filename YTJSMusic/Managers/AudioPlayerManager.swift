@@ -168,19 +168,19 @@ public class AudioPlayerManager: ObservableObject {
     private func startAVPlayer(url: URL, track: Track) {
         removeObservers()
         
-        // Route stream request through Local HTTP Proxy to pass YouTube headers over standard 127.0.0.1 HTTP connection
-        guard let proxyURL = LocalAudioProxyServer.shared.getProxyURL(for: url.absoluteString) else {
-            self.isLoading = false
-            self.lastPlayerError = "Failed to construct local proxy URL"
-            SystemLogger.shared.append("[AUDIO MANAGER ERROR] Failed to construct local proxy URL")
-            return
-        }
+        // Feed the direct YouTube URL to AVPlayer via AVURLAsset with custom headers.
+        // AVPlayer manages its own chunked range requests internally - forwarding
+        // AVPlayer's large Range requests through a proxy causes YouTube CDN to return 403.
+        let headers: [String: String] = [
+            "User-Agent": "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)"
+        ]
+        let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
         
-        let playMsg = "[AUDIO MANAGER] Playing via Local HTTP Proxy: \(proxyURL.absoluteString)"
+        let playMsg = "[AUDIO MANAGER] Playing direct URL via AVURLAsset: \(url.host ?? "googlevideo.com")"
         print(playMsg)
         SystemLogger.shared.append(playMsg)
         
-        let playerItem = AVPlayerItem(url: proxyURL)
+        let playerItem = AVPlayerItem(asset: asset)
         if player == nil {
             player = AVPlayer(playerItem: playerItem)
             player?.automaticallyWaitsToMinimizeStalling = true
