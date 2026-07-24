@@ -159,7 +159,15 @@ public class AudioPlayerManager: ObservableObject {
     private func startAVPlayer(url: URL, track: Track) {
         removeObservers()
         
-        let playerItem = AVPlayerItem(url: url)
+        // Pass YouTube iOS User-Agent and Origin headers to AVURLAsset
+        let headers: [String: String] = [
+            "User-Agent": "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)",
+            "Origin": "https://www.youtube.com"
+        ]
+        let options: [String: Any] = ["AVURLAssetHTTPHeaderFieldsKey": headers]
+        let asset = AVURLAsset(url: url, options: options)
+        let playerItem = AVPlayerItem(asset: asset)
+        
         if player == nil {
             player = AVPlayer(playerItem: playerItem)
         } else {
@@ -172,6 +180,7 @@ public class AudioPlayerManager: ObservableObject {
                 guard let self = self else { return }
                 switch item.status {
                 case .readyToPlay:
+                    print("[AVPLAYER] Stream readyToPlay!")
                     self.isLoading = false
                     self.isPlaying = true
                     let durSeconds = item.duration.seconds
@@ -182,8 +191,13 @@ public class AudioPlayerManager: ObservableObject {
                 case .failed:
                     self.isLoading = false
                     self.isPlaying = false
-                    let errDesc = item.error?.localizedDescription ?? "AVPlayer stream load failed"
-                    print("[AVPLAYER STREAM ERROR] \(errDesc)")
+                    
+                    var errDesc = "AVPlayer stream load failed"
+                    if let nsErr = item.error as NSError? {
+                        let underlying = nsErr.userInfo["NSUnderlyingError"] as? NSError
+                        errDesc = underlying?.localizedDescription ?? nsErr.localizedDescription
+                        print("[AVPLAYER FAILED] Domain: \(nsErr.domain) Code: \(nsErr.code) Details: \(nsErr.userInfo)")
+                    }
                     self.lastPlayerError = errDesc
                 case .unknown:
                     break
