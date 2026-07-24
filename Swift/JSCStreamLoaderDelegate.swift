@@ -12,6 +12,7 @@ public class JSCStreamLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate, U
         super.init()
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        config.timeoutIntervalForRequest = 30.0
         self.session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
     }
     
@@ -21,18 +22,17 @@ public class JSCStreamLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate, U
             return false
         }
         
-        // Convert custom scheme back to https
         components.scheme = "https"
         guard let targetURL = components.url else { return false }
         
         var request = URLRequest(url: targetURL)
         request.httpMethod = "GET"
         
-        // Pass YouTube iOS app User-Agent and Origin headers
+        // Inject YouTube iOS App User-Agent and Origin headers
         request.setValue("com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)", forHTTPHeaderField: "User-Agent")
         request.setValue("https://www.youtube.com", forHTTPHeaderField: "Origin")
         
-        // Handle Range requests from AVPlayer
+        // Handle Byte Range requests from AVPlayer
         if let dataRequest = loadingRequest.dataRequest {
             let offset = dataRequest.requestedOffset
             let length = dataRequest.requestedLength
@@ -45,7 +45,7 @@ public class JSCStreamLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate, U
             }
         }
         
-        print("[RESOURCE LOADER] Intercepted stream request for \(targetURL.host ?? "googlevideo.com")")
+        print("[RESOURCE LOADER] Intercepted stream request for target: \(targetURL.host ?? "googlevideo.com")")
         
         let task = session?.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
@@ -57,26 +57,45 @@ public class JSCStreamLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate, U
                 return
             }
             
-            if let httpResponse = response as? HTTPURLResponse {
-                if let dataRequest = loadingRequest.dataRequest, let data = data {
-                    // Fill response info
-                    let infoRequest = loadingRequest.contentInformationRequest
-                    infoRequest?.isByteRangeAccessSupported = true
-                    infoRequest?.contentType = httpResponse.mimeType ?? "audio/mp4"
-                    if let contentLengthStr = httpResponse.allHeaderFields["Content-Length"] as? String,
-                       let contentLength = Int64(contentLengthStr) {
-                        infoRequest?.contentLength = contentLength
-                    }
-                    
-                    dataRequest.respond(with: data)
-                    loadingRequest.finishLoading()
-                    print("[RESOURCE LOADER] Streamed \(data.count) bytes to AVPlayer (HTTP \(httpResponse.statusCode))")
+            guard let httpResponse = response as? HTTPURLResponse else {
+                loadingRequest.finishLoading(with: NSError(domain: "JSCStreamLoader", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid HTTP response"]))
+                self.pendingRequests.removeValue(forKey: loadingRequest)
+                return
+            }
+            
+            // Set content information request properties if present
+            if let infoRequest = loadingRequest.contentInformationRequest {
+                infoRequest.isByteRangeAccessSupported = true
+                
+                // Convert MIME type to valid Apple Uniform Type Identifier (UTI)
+                let mime = httpResponse.mimeType?.lowercased() ?? ""
+                if mime.contains("webm") {
+                    infoRequest.contentType = "org.webmproject.webm"
+                } else if mime.contains("mp4") || mime.contains("m4a") || mime.contains("aac") {
+                    infoRequest.contentType = "public.mpeg-4-audio"
                 } else {
-                    loadingRequest.finishLoading()
+                    infoRequest.contentType = "public.mpeg-4-audio"
                 }
+                
+                // Extract total content length from Content-Range or Content-Length
+                if let contentRange = httpResponse.allHeaderFields["Content-Range"] as? String,
+                   let totalStr = contentRange.components(separatedBy: "/").last,
+                   let totalLength = Int64(totalStr) {
+                    infoRequest.contentLength = totalLength
+                } else if let contentLengthStr = httpResponse.allHeaderFields["Content-Length"] as? String,
+                          let contentLength = Int64(contentLengthStr) {
+                    infoRequest.contentLength = contentLength
+                }
+            }
+            
+            if let dataRequest = loadingRequest.dataRequest, let data = data {
+                dataRequest.respond(with: data)
+                loadingRequest.finishLoading()
+                print("[RESOURCE LOADER SUCCESS] Provided \(data.count) bytes to AVPlayer (HTTP \(httpResponse.statusCode))")
             } else {
                 loadingRequest.finishLoading()
             }
+            
             self.pendingRequests.removeValue(forKey: loadingRequest)
         }
         
