@@ -107,17 +107,8 @@ struct MusicSearchView: View {
             DispatchQueue.main.async {
                 self.isSearching = false
                 switch result {
-                case .success(let rawSongs):
-                    self.searchResults = rawSongs.compactMap { dict in
-                        guard let id = dict["id"] as? String,
-                              let title = dict["title"] as? String,
-                              let artist = dict["artist"] as? String else { return nil }
-                        
-                        let album = dict["album"] as? String ?? ""
-                        let duration = dict["duration"] as? String ?? "0:00"
-                        let thumbnail = dict["thumbnail"] as? String ?? ""
-                        return Track(id: id, title: title, artist: artist, album: album, duration: duration, thumbnail: thumbnail)
-                    }
+                case .success(let tracks):
+                    self.searchResults = tracks
                 case .failure(let err):
                     self.errorMessage = err.localizedDescription
                 }
