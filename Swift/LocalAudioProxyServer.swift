@@ -35,9 +35,11 @@ public class LocalAudioProxyServer {
         }
     }
     
+    // Safely encode raw stream URL as Base64 to prevent query-string splitting
     public func getProxyURL(for rawStreamUrl: String) -> URL? {
-        guard let encoded = rawStreamUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
-        return URL(string: "http://127.0.0.1:\(port)/stream?url=\(encoded)")
+        guard let data = rawStreamUrl.data(using: .utf8) else { return nil }
+        let b64 = data.base64EncodedString()
+        return URL(string: "http://127.0.0.1:\(port)/stream?b64=\(b64)")
     }
     
     private func handleConnection(_ connection: NWConnection) {
@@ -69,14 +71,16 @@ public class LocalAudioProxyServer {
         let pathAndQuery = components[1]
         guard let urlComponents = URLComponents(string: pathAndQuery),
               let queryItems = urlComponents.queryItems,
-              let targetUrlString = queryItems.first(where: { $0.name == "url" })?.value,
+              let b64String = queryItems.first(where: { $0.name == "b64" })?.value,
+              let b64Data = Data(base64Encoded: b64String),
+              let targetUrlString = String(data: b64Data, encoding: .utf8),
               let targetURL = URL(string: targetUrlString) else {
             let notFound = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n"
             connection.send(content: notFound.data(using: .utf8), completion: .contentProcessed({ _ in connection.cancel() }))
             return
         }
         
-        // Extract Range header from incoming request
+        // Extract Range header from incoming AVPlayer request
         var rangeHeader: String? = nil
         for line in lines {
             if line.lowercased().hasPrefix("range:") {
