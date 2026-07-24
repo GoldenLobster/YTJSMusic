@@ -15,7 +15,7 @@ public class JSCYoutubeClient: ObservableObject {
     }
     
     public func loadPolyfillsAndBundle(polyfillScriptPaths: [String], bundlePath: String) throws {
-        bridge.setupPolyfills()
+        bridge.registerNativeBridges()
         
         for path in polyfillScriptPaths {
             guard let script = try? String(contentsOfFile: path, encoding: .utf8) else { continue }
@@ -168,7 +168,7 @@ public class JSCYoutubeClient: ObservableObject {
     }
     
     // Helper to evaluate promise scripts in JSContext safely using JSValue callbacks
-    private func evaluatePromise<T>(script: String, completion: @escaping (Result<T, Error>) -> Void) {
+    private func evaluatePromise<T: Decodable>(script: String, completion: @escaping (Result<T, Error>) -> Void) {
         guard let promiseVal = context.evaluateScript(script) else {
             completion(.failure(NSError(domain: "JSCYoutubeClient", code: -3, userInfo: [NSLocalizedDescriptionKey: "Failed to evaluate script in JSContext"])))
             return
@@ -181,7 +181,7 @@ public class JSCYoutubeClient: ObservableObject {
                 completion(.success(strVal))
             } else if T.self == Bool.self {
                 completion(.success(true as! T))
-            } else if let jsonStr = context.evaluateScript("JSON.stringify")?.call(withArguments: [val])?.toString(),
+            } else if let jsonStr = self.context.evaluateScript("JSON.stringify")?.call(withArguments: [val])?.toString(),
                       let jsonData = jsonStr.data(using: .utf8),
                       let decoded = try? JSONDecoder().decode(T.self, from: jsonData) {
                 completion(.success(decoded))
@@ -201,7 +201,8 @@ public class JSCYoutubeClient: ObservableObject {
         let onRejectVal = JSValue(object: onReject, in: context)
         
         if let thenFunc = promiseVal.objectForKeyedSubscript("then"), thenFunc.isObject {
-            thenFunc.call(withArguments: [onResolveVal, onRejectVal])
+            let args: [Any] = [onResolveVal as Any, onRejectVal as Any]
+            thenFunc.call(withArguments: args)
         } else {
             completion(.failure(NSError(domain: "JSCYoutubeClient", code: -6, userInfo: [NSLocalizedDescriptionKey: "Evaluated script did not return a Promise"])))
         }
