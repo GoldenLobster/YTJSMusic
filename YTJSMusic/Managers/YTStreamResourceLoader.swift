@@ -130,13 +130,17 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
             // Populate content information (total file size, MIME, seek support)
             if let info = infoReq {
                 info.isByteRangeAccessSupported = true
-                info.contentType = "audio/mp4"
+                // contentType MUST be a UTI string, NOT a MIME type.
+                // "audio/mp4" is a MIME type and causes AVPlayer to fail with -11828.
+                // AVFileType.m4a.rawValue = "com.apple.m4a-audio" (UTI for AAC/M4A).
+                info.contentType = AVFileType.m4a.rawValue
                 for (k, v) in http.allHeaderFields {
                     if "\(k)".lowercased() == "content-range" {
                         // "bytes start-end/total"
                         if let totalStr = "\(v)".components(separatedBy: "/").last,
                            let total   = Int64(totalStr.trimmingCharacters(in: .whitespaces)), total > 0 {
                             info.contentLength = total
+                            SystemLogger.shared.append("[STREAM LOADER] Content-Length: \(total) bytes")
                         }
                         break
                     }
