@@ -12,15 +12,20 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     // Custom URL scheme so AVPlayer routes ALL requests through this delegate
     static let scheme = "ytaudio"
     
-    // YouTube CDN rejects full-file range requests but allows chunked ones
-    private static let chunkSize: Int64 = 512 * 1024  // 512KB
+    // 64KB per chunk: ~4s of 128kbps audio, well within YouTube CDN's range limit.
+    // 512KB was triggering 403 — YouTube's rqh=1 URLs only allow small range requests.
+    private static let chunkSize: Int64 = 64 * 1024  // 64KB
+    
+    // YouTube iOS app User-Agent — CDN may require this for c=IOS-generated URLs
+    private static let userAgent = "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)"
     
     private let actualURL: URL
     private var activeTasks: [ObjectIdentifier: URLSessionDataTask] = [:]
     private let lock = NSLock()
     
+    // Ephemeral session: no shared cookies or cache that could corrupt YouTube CDN requests
     private lazy var session: URLSession = {
-        let config = URLSessionConfiguration.default
+        let config = URLSessionConfiguration.ephemeral
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         return URLSession(configuration: config)
     }()
@@ -85,6 +90,7 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         var req = URLRequest(url: actualURL, timeoutInterval: 60)
         req.httpMethod = "GET"
         req.setValue("bytes=\(rangeStart)-\(rangeEnd)", forHTTPHeaderField: "Range")
+        req.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
         
         let logMsg = "[STREAM LOADER] → bytes=\(rangeStart)-\(rangeEnd) of \(actualURL.host ?? "googlevideo")"
         print(logMsg)
