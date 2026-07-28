@@ -109,8 +109,12 @@ async function runMusicTest() {
           const songId = songs[0].id;
           console.log("\\nFetching stream URL for music song ID:", songId);
           const info = await yt.getInfo(songId, { client: 'IOS' });
-          const audioFormat = info.streaming_data?.adaptive_formats?.find(f => f.has_audio && !f.has_video);
+          const adaptiveFormats = info.streaming_data?.adaptive_formats || [];
+          const m4aAudioFormats = adaptiveFormats.filter(f => f.has_audio && !f.has_video && (f.mime_type?.includes('mp4') || f.mime_type?.includes('m4a')));
+          m4aAudioFormats.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));
+          const audioFormat = m4aAudioFormats[0] || adaptiveFormats.find(f => f.has_audio && !f.has_video);
           console.log("Audio Stream ITAG:", audioFormat?.itag);
+          console.log("Audio Stream Bitrate:", audioFormat?.bitrate);
           console.log("Audio Stream MimeType:", audioFormat?.mime_type);
           console.log("Audio Stream URL:", audioFormat?.url ? audioFormat.url.substring(0, 100) + "..." : "N/A");
         }

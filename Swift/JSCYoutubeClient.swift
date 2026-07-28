@@ -240,10 +240,19 @@ public class JSCYoutubeClient: ObservableObject {
                 
                 console.log("[JSC] Total formats found:", allFormats.length);
                 
-                // Prefer AAC / M4A (audio/mp4) or Opus (audio/webm)
-                let format = allFormats.find(f => f.has_audio && !f.has_video && (f.mime_type?.includes('mp4') || f.mime_type?.includes('m4a')));
+                // Filter for audio-only MP4/M4A (AAC) formats natively supported by AVPlayer
+                const m4aAudioFormats = allFormats.filter(f => f.has_audio && !f.has_video && (f.mime_type?.includes('mp4') || f.mime_type?.includes('m4a')));
+                
+                // Sort descending by bitrate to select the highest quality AAC stream (e.g. itag 140 @ ~128kbps over itag 139 @ ~48kbps)
+                m4aAudioFormats.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));
+                
+                let format = m4aAudioFormats[0];
+                
                 if (!format) {
-                    format = allFormats.find(f => f.has_audio && !f.has_video);
+                    console.log("[JSC WARN] No MP4/M4A audio format found, searching all audio-only formats...");
+                    const audioOnly = allFormats.filter(f => f.has_audio && !f.has_video);
+                    audioOnly.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));
+                    format = audioOnly[0];
                 }
                 if (!format) {
                     format = allFormats.find(f => f.has_audio);
@@ -252,6 +261,8 @@ public class JSCYoutubeClient: ObservableObject {
                 if (!format) {
                     throw new Error("No audio format available for track ID: " + "\(videoId)");
                 }
+                
+                console.log("[JSC SUCCESS] Selected audio format: itag=" + format.itag + ", mime=" + format.mime_type + ", bitrate=" + format.bitrate + ", quality=" + (format.audio_quality || 'N/A'));
                 
                 let streamUrl = format.url;
                 if (!streamUrl && typeof format.decipher === 'function') {
