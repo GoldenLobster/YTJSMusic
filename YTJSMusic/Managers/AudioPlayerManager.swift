@@ -133,7 +133,7 @@ public class AudioPlayerManager: ObservableObject {
         self.currentTime = targetTime
         self.isLoading = true
         
-        player.seek(to: cmTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
+        player.seek(to: cmTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) { [weak self] finished in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 self.isLoading = false
@@ -296,6 +296,7 @@ public class AudioPlayerManager: ObservableObject {
             
             // Auto advance if current time exceeds track duration
             if self.duration > 0 && self.currentTime >= self.duration - 0.5 {
+                self.removeObservers()
                 self.playerItemDidReachEnd()
             } else {
                 self.updateNowPlayingInfo()

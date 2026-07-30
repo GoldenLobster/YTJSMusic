@@ -1,29 +1,21 @@
 // YTJSMusic/Managers/YTStreamResourceLoader.swift
-//
-// Intercepts every AVPlayer HTTP request to YouTube CDN and ensures:
-// 1. Range header is ALWAYS present (YouTube rqh=1 param requires it)
-// 2. Sub-chunked downloading (128KB per HTTP request) for fast, zero-delay initial playback and smooth streaming without 1MB cutoffs.
-
 import Foundation
 import AVFoundation
 
 class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     
-    // Custom URL scheme so AVPlayer routes ALL requests through this delegate
     static let scheme = "ytaudio"
     
     // 128KB sub-chunks: ~8s of 128kbps audio per HTTP request.
     // Fetching in 128KB sub-chunks allows initial playback to start in <100ms.
     private static let chunkSize: Int64 = 128 * 1024  // 128KB
     
-    // YouTube iOS app User-Agent
     private static let userAgent = "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)"
     
     private let actualURL: URL
     private var activeTasks: [ObjectIdentifier: URLSessionDataTask] = [:]
     private let lock = NSLock()
     
-    // Ephemeral session: no shared cookies or cache
     private lazy var session: URLSession = {
         let config = URLSessionConfiguration.ephemeral
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
@@ -37,8 +29,6 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     
     // MARK: - Factory
     
-    /// Creates an AVURLAsset wired to this resource loader.
-    /// The asset uses a `ytaudio://` scheme that forces ALL requests through our delegate.
     static func makeAsset(for streamURL: URL) -> (AVURLAsset, YTStreamResourceLoader) {
         let loader = YTStreamResourceLoader(actualURL: streamURL)
         
@@ -77,7 +67,7 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         // 1. Immediately configure Content Information Request if present
         if let info = infoReq {
             info.isByteRangeAccessSupported = true
-            info.contentType = AVFileType.m4a.rawValue // "com.apple.m4a-audio"
+            info.contentType = "com.apple.m4a-audio"
         }
         
         // 2. Handle Data Request
