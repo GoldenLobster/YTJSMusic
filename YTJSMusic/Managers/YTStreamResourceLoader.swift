@@ -1,8 +1,8 @@
 // YTJSMusic/Managers/YTStreamResourceLoader.swift
 //
 // Intercepts every AVPlayer HTTP request to YouTube CDN and ensures:
-// 1. A Range header is ALWAYS present (YouTube URL param rqh=1 mandates it)
-// 2. Sub-chunked downloading (256KB per HTTP request) to satisfy YouTube CDN rate-limits while fully fulfilling AVPlayer's requested byte ranges.
+// 1. Range header is ALWAYS present (YouTube rqh=1 param requires it)
+// 2. Sub-chunked downloading (128KB per HTTP request) for fast, zero-delay initial playback and smooth streaming without 1MB cutoffs.
 
 import Foundation
 import AVFoundation
@@ -12,19 +12,18 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     // Custom URL scheme so AVPlayer routes ALL requests through this delegate
     static let scheme = "ytaudio"
     
-    // 256KB sub-chunks: ~16 seconds of 128kbps audio per HTTP request.
-    // Fetching in 256KB sub-chunks satisfies YouTube CDN range limits while allowing
-    // AVPlayer to continuously receive data without early finishLoading() cutoffs.
-    private static let chunkSize: Int64 = 256 * 1024  // 256KB
+    // 128KB sub-chunks: ~8s of 128kbps audio per HTTP request.
+    // Fetching in 128KB sub-chunks allows initial playback to start in <100ms.
+    private static let chunkSize: Int64 = 128 * 1024  // 128KB
     
-    // YouTube iOS app User-Agent — CDN requires this for c=IOS-generated URLs
+    // YouTube iOS app User-Agent
     private static let userAgent = "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)"
     
     private let actualURL: URL
     private var activeTasks: [ObjectIdentifier: URLSessionDataTask] = [:]
     private let lock = NSLock()
     
-    // Ephemeral session: no shared cookies or cache that could corrupt YouTube CDN requests
+    // Ephemeral session: no shared cookies or cache
     private lazy var session: URLSession = {
         let config = URLSessionConfiguration.ephemeral
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
@@ -40,11 +39,9 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     
     /// Creates an AVURLAsset wired to this resource loader.
     /// The asset uses a `ytaudio://` scheme that forces ALL requests through our delegate.
-    /// Caller MUST retain the returned loader for the lifetime of the AVPlayerItem.
     static func makeAsset(for streamURL: URL) -> (AVURLAsset, YTStreamResourceLoader) {
         let loader = YTStreamResourceLoader(actualURL: streamURL)
         
-        // Swap https:// -> ytaudio:// so AVURLAsset defers to our delegate
         var comps = URLComponents(url: streamURL, resolvingAgainstBaseURL: false) ?? URLComponents()
         comps.scheme = scheme
         let fakeURL = comps.url ?? streamURL
@@ -77,41 +74,10 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         let infoReq = loadingRequest.contentInformationRequest
         let dataReq = loadingRequest.dataRequest
         
-        // 1. Handle Content Information Request
+        // 1. Immediately configure Content Information Request if present
         if let info = infoReq {
             info.isByteRangeAccessSupported = true
             info.contentType = AVFileType.m4a.rawValue // "com.apple.m4a-audio"
-            
-            // Quick 2-byte probe to determine total track length if not yet known
-            var probeReq = URLRequest(url: actualURL, timeoutInterval: 30)
-            probeReq.httpMethod = "GET"
-            probeReq.setValue("bytes=0-1", forHTTPHeaderField: "Range")
-            probeReq.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
-            
-            let sema = DispatchSemaphore(value: 0)
-            var totalLength: Int64 = 0
-            
-            let probeTask = session.dataTask(with: probeReq) { data, response, error in
-                if let http = response as? HTTPURLResponse {
-                    for (k, v) in http.allHeaderFields {
-                        if "\(k)".lowercased() == "content-range" {
-                            if let totalStr = "\(v)".components(separatedBy: "/").last,
-                               let total = Int64(totalStr.trimmingCharacters(in: .whitespaces)), total > 0 {
-                                totalLength = total
-                            }
-                            break
-                        }
-                    }
-                }
-                sema.signal()
-            }
-            probeTask.resume()
-            _ = sema.wait(timeout: .now() + 10.0)
-            
-            if totalLength > 0 {
-                info.contentLength = totalLength
-                SystemLogger.shared.append("[STREAM LOADER] Total track size: \(totalLength) bytes")
-            }
         }
         
         // 2. Handle Data Request
@@ -129,12 +95,12 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         print(startLog)
         SystemLogger.shared.append(startLog)
         
-        // Continuously fetch sub-chunks and feed data to AVPlayer until requestedLength is satisfied
+        // Continuously fetch 128KB sub-chunks and feed data to AVPlayer
         while dr.currentOffset < targetEndOffset && !loadingRequest.isCancelled {
             let currentStart = dr.currentOffset
             let currentEnd = min(currentStart + Self.chunkSize - 1, targetEndOffset - 1)
             
-            var req = URLRequest(url: actualURL, timeoutInterval: 30)
+            var req = URLRequest(url: actualURL, timeoutInterval: 20)
             req.httpMethod = "GET"
             req.setValue("bytes=\(currentStart)-\(currentEnd)", forHTTPHeaderField: "Range")
             req.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
@@ -143,10 +109,14 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
             var chunkData: Data?
             var statusCode: Int = 0
             var taskError: Error?
+            var responseHeaders: [AnyHashable: Any]?
             
             let key = ObjectIdentifier(loadingRequest)
             let task = session.dataTask(with: req) { [weak self] data, response, error in
-                statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+                if let http = response as? HTTPURLResponse {
+                    statusCode = http.statusCode
+                    responseHeaders = http.allHeaderFields
+                }
                 chunkData = data
                 taskError = error
                 
@@ -162,14 +132,15 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
             lock.unlock()
             
             task.resume()
-            _ = sema.wait(timeout: .now() + 30.0)
+            _ = sema.wait(timeout: .now() + 20.0)
             
             if loadingRequest.isCancelled {
-                SystemLogger.shared.append("[STREAM LOADER] Request cancelled by AVPlayer at offset \(currentStart)")
+                SystemLogger.shared.append("[STREAM LOADER] Cancelled at offset \(currentStart)")
                 return
             }
             
             if let error = taskError {
+                if (error as NSError).code == NSURLErrorCancelled { return }
                 let msg = "[STREAM LOADER ERROR] Network error at \(currentStart): \(error.localizedDescription)"
                 print(msg); SystemLogger.shared.append(msg)
                 loadingRequest.finishLoading(with: error)
@@ -184,8 +155,20 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
                 return
             }
             
+            // Populate content length dynamically from response headers
+            if let info = infoReq, info.contentLength == 0, let headers = responseHeaders {
+                for (k, v) in headers {
+                    if "\(k)".lowercased() == "content-range" {
+                        if let totalStr = "\(v)".components(separatedBy: "/").last,
+                           let total = Int64(totalStr.trimmingCharacters(in: .whitespaces)), total > 0 {
+                            info.contentLength = total
+                        }
+                        break
+                    }
+                }
+            }
+            
             guard let data = chunkData, !data.isEmpty else {
-                // End of stream reached
                 break
             }
             

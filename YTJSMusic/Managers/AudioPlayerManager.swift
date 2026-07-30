@@ -22,6 +22,9 @@ public class AudioPlayerManager: ObservableObject {
     private var timeObserverToken: Any?
     private var statusObserverToken: NSKeyValueObservation?
     private var durationObserverToken: NSKeyValueObservation?
+    private var likelyToKeepUpObserverToken: NSKeyValueObservation?
+    private var bufferEmptyObserverToken: NSKeyValueObservation?
+    
     // MUST retain the resource loader — AVURLAsset holds only a weak delegate reference
     private var streamResourceLoader: YTStreamResourceLoader?
     
@@ -122,8 +125,25 @@ public class AudioPlayerManager: ObservableObject {
     }
     
     public func seek(to timeInSeconds: Double) {
-        let cmTime = CMTime(seconds: timeInSeconds, preferredTimescale: 1000)
-        player?.seek(to: cmTime)
+        guard let player = player else { return }
+        let maxDur = duration > 0 ? duration : timeInSeconds
+        let targetTime = min(max(timeInSeconds, 0.0), maxDur)
+        let cmTime = CMTime(seconds: targetTime, preferredTimescale: 1000)
+        
+        self.currentTime = targetTime
+        self.isLoading = true
+        
+        player.seek(to: cmTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                self.isLoading = false
+                if finished {
+                    if self.isPlaying {
+                        self.player?.play()
+                    }
+                }
+            }
+        }
     }
     
     private func loadAndPlayCurrentTrack() {
@@ -133,7 +153,7 @@ public class AudioPlayerManager: ObservableObject {
         self.isLoading = true
         self.isPlaying = false
         self.currentTime = 0.0
-        self.duration = 0.0
+        self.duration = track.durationInSeconds
         self.lastPlayerError = nil
         
         let msg = "[AUDIO MANAGER] Requesting stream URL for '\(track.title)' (\(track.id))..."
@@ -171,10 +191,9 @@ public class AudioPlayerManager: ObservableObject {
         removeObservers()
         streamResourceLoader = nil  // release previous loader
         
-        // Use YTStreamResourceLoader to intercept every AVPlayer HTTP request.
-        // This ensures:
-        //   1. Range header is ALWAYS sent (YouTube rqh=1 parameter requires it)
-        //   2. Chunk sizes are capped at 512KB (large ranges get HTTP 403 from YouTube CDN)
+        // Prefer exact metadata duration from YouTube Music API ("3:30" -> 210.0s)
+        self.duration = track.durationInSeconds
+        
         let (asset, loader) = YTStreamResourceLoader.makeAsset(for: url)
         streamResourceLoader = loader  // retain strongly
         
@@ -201,9 +220,11 @@ public class AudioPlayerManager: ObservableObject {
                     SystemLogger.shared.append(okMsg)
                     self.isLoading = false
                     self.isPlaying = true
-                    let durSeconds = item.duration.seconds
-                    if !durSeconds.isNaN && !durSeconds.isInfinite && durSeconds > 0 {
-                        self.duration = durSeconds
+                    if self.duration == 0 {
+                        let durSeconds = item.duration.seconds
+                        if !durSeconds.isNaN && !durSeconds.isInfinite && durSeconds > 0 {
+                            self.duration = durSeconds
+                        }
                     }
                     self.updateNowPlayingInfo()
                 case .failed:
@@ -227,14 +248,39 @@ public class AudioPlayerManager: ObservableObject {
             }
         }
         
-        // KVO observer on playerItem duration metadata updates
+        // KVO observer on playerItem duration metadata updates (fallback if metadata duration was 0)
         durationObserverToken = playerItem.observe(\.duration, options: [.new]) { [weak self] item, _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
-                let durSeconds = item.duration.seconds
-                if !durSeconds.isNaN && !durSeconds.isInfinite && durSeconds > 0 {
-                    self.duration = durSeconds
-                    self.updateNowPlayingInfo()
+                if self.duration == 0 {
+                    let durSeconds = item.duration.seconds
+                    if !durSeconds.isNaN && !durSeconds.isInfinite && durSeconds > 0 {
+                        self.duration = durSeconds
+                        self.updateNowPlayingInfo()
+                    }
+                }
+            }
+        }
+        
+        // KVO observer on buffer likelihood - resumes play automatically after seeking or buffering
+        likelyToKeepUpObserverToken = playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] item, _ in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                if item.isPlaybackLikelyToKeepUp {
+                    self.isLoading = false
+                    if self.isPlaying {
+                        self.player?.play()
+                    }
+                }
+            }
+        }
+        
+        // KVO observer on buffer empty state
+        bufferEmptyObserverToken = playerItem.observe(\.isPlaybackBufferEmpty, options: [.new]) { [weak self] item, _ in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                if item.isPlaybackBufferEmpty {
+                    self.isLoading = true
                 }
             }
         }
@@ -245,13 +291,15 @@ public class AudioPlayerManager: ObservableObject {
         // Add periodic time observer for current playback position
         let interval = CMTime(seconds: 0.5, preferredTimescale: 1000)
         timeObserverToken = player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            guard let self = self, let currentItem = self.player?.currentItem else { return }
+            guard let self = self else { return }
             self.currentTime = time.seconds
-            let dur = currentItem.duration.seconds
-            if !dur.isNaN && !dur.isInfinite && dur > 0 {
-                self.duration = dur
+            
+            // Auto advance if current time exceeds track duration
+            if self.duration > 0 && self.currentTime >= self.duration - 0.5 {
+                self.playerItemDidReachEnd()
+            } else {
+                self.updateNowPlayingInfo()
             }
-            self.updateNowPlayingInfo()
         }
         
         player?.play()
@@ -274,6 +322,12 @@ public class AudioPlayerManager: ObservableObject {
         
         durationObserverToken?.invalidate()
         durationObserverToken = nil
+        
+        likelyToKeepUpObserverToken?.invalidate()
+        likelyToKeepUpObserverToken = nil
+        
+        bufferEmptyObserverToken?.invalidate()
+        bufferEmptyObserverToken = nil
         
         NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
@@ -322,7 +376,7 @@ public class AudioPlayerManager: ObservableObject {
         nowPlayingInfo[MPMediaItemPropertyArtist] = track.artist
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = track.album
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
-        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackDuration] = duration
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
