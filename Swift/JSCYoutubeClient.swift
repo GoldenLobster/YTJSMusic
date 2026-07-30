@@ -193,9 +193,11 @@ public class JSCYoutubeClient: ObservableObject {
                         
                         // Upgrade Google / YouTube Music thumbnail dimensions to crisp 544x544 high-resolution artwork
                         if (thumbUrl.includes("googleusercontent.com") || thumbUrl.includes("ggpht.com")) {
-                            thumbUrl = thumbUrl.replace(/=w\d+-h\d+/g, "=w544-h544").replace(/=s\d+/g, "=s544");
+                            thumbUrl = thumbUrl.split("=")[0] + "=w544-h544-l90-rj";
                         } else if (thumbUrl.includes("i.ytimg.com") || thumbUrl.includes("ytimg.com")) {
-                            thumbUrl = thumbUrl.replace(/\/default\.jpg|\/mqdefault\.jpg|\/hqdefault\.jpg|\/sddefault\.jpg/g, "/hqdefault.jpg");
+                            if (!thumbUrl.includes("hqdefault.jpg") && !thumbUrl.includes("maxresdefault.jpg")) {
+                                thumbUrl = "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
+                            }
                         }
                         
                         tracks.push({
