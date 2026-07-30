@@ -2,7 +2,7 @@
 //
 // Intercepts every AVPlayer HTTP request to YouTube CDN and ensures:
 // 1. A Range header is ALWAYS present (YouTube URL param rqh=1 mandates it)
-// 2. Requested byte ranges are capped at 512KB to avoid YouTube's anti-bulk-download HTTP 403
+// 2. Sub-chunked downloading (256KB per HTTP request) to satisfy YouTube CDN rate-limits while fully fulfilling AVPlayer's requested byte ranges.
 
 import Foundation
 import AVFoundation
@@ -12,11 +12,12 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     // Custom URL scheme so AVPlayer routes ALL requests through this delegate
     static let scheme = "ytaudio"
     
-    // 64KB per chunk: ~4s of 128kbps audio, well within YouTube CDN's range limit.
-    // 512KB was triggering 403 — YouTube's rqh=1 URLs only allow small range requests.
-    private static let chunkSize: Int64 = 64 * 1024  // 64KB
+    // 256KB sub-chunks: ~16 seconds of 128kbps audio per HTTP request.
+    // Fetching in 256KB sub-chunks satisfies YouTube CDN range limits while allowing
+    // AVPlayer to continuously receive data without early finishLoading() cutoffs.
+    private static let chunkSize: Int64 = 256 * 1024  // 256KB
     
-    // YouTube iOS app User-Agent — CDN may require this for c=IOS-generated URLs
+    // YouTube iOS app User-Agent — CDN requires this for c=IOS-generated URLs
     private static let userAgent = "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)"
     
     private let actualURL: URL
@@ -73,89 +74,129 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     // MARK: - Request Handling
     
     private func perform(_ loadingRequest: AVAssetResourceLoadingRequest) {
-        let infoReq  = loadingRequest.contentInformationRequest
-        let dataReq  = loadingRequest.dataRequest
+        let infoReq = loadingRequest.contentInformationRequest
+        let dataReq = loadingRequest.dataRequest
         
-        // Determine byte range - always include Range header (required by YouTube rqh=1)
-        var rangeStart: Int64 = 0
-        var rangeEnd:   Int64 = Self.chunkSize - 1
-        
-        if let dr = dataReq {
-            rangeStart = dr.requestedOffset
-            let requested = Int64(dr.requestedLength)
-            let capped    = min(requested, Self.chunkSize)
-            rangeEnd      = rangeStart + capped - 1
+        // 1. Handle Content Information Request
+        if let info = infoReq {
+            info.isByteRangeAccessSupported = true
+            info.contentType = AVFileType.m4a.rawValue // "com.apple.m4a-audio"
+            
+            // Quick 2-byte probe to determine total track length if not yet known
+            var probeReq = URLRequest(url: actualURL, timeoutInterval: 30)
+            probeReq.httpMethod = "GET"
+            probeReq.setValue("bytes=0-1", forHTTPHeaderField: "Range")
+            probeReq.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
+            
+            let sema = DispatchSemaphore(value: 0)
+            var totalLength: Int64 = 0
+            
+            let probeTask = session.dataTask(with: probeReq) { data, response, error in
+                if let http = response as? HTTPURLResponse {
+                    for (k, v) in http.allHeaderFields {
+                        if "\(k)".lowercased() == "content-range" {
+                            if let totalStr = "\(v)".components(separatedBy: "/").last,
+                               let total = Int64(totalStr.trimmingCharacters(in: .whitespaces)), total > 0 {
+                                totalLength = total
+                            }
+                            break
+                        }
+                    }
+                }
+                sema.signal()
+            }
+            probeTask.resume()
+            _ = sema.wait(timeout: .now() + 10.0)
+            
+            if totalLength > 0 {
+                info.contentLength = totalLength
+                SystemLogger.shared.append("[STREAM LOADER] Total track size: \(totalLength) bytes")
+            }
         }
         
-        var req = URLRequest(url: actualURL, timeoutInterval: 60)
-        req.httpMethod = "GET"
-        req.setValue("bytes=\(rangeStart)-\(rangeEnd)", forHTTPHeaderField: "Range")
-        req.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
+        // 2. Handle Data Request
+        guard let dr = dataReq else {
+            if !loadingRequest.isCancelled {
+                loadingRequest.finishLoading()
+            }
+            return
+        }
         
-        let logMsg = "[STREAM LOADER] → bytes=\(rangeStart)-\(rangeEnd) of \(actualURL.host ?? "googlevideo")"
-        print(logMsg)
-        SystemLogger.shared.append(logMsg)
+        let targetEndOffset = dr.requestedOffset + Int64(dr.requestedLength)
+        let hostName = actualURL.host ?? "googlevideo"
         
-        let key = ObjectIdentifier(loadingRequest)
-        let task = session.dataTask(with: req) { [weak self] data, response, error in
-            guard let self = self else { return }
-            defer {
-                self.lock.lock()
-                self.activeTasks.removeValue(forKey: key)
-                self.lock.unlock()
+        let startLog = "[STREAM LOADER] Requested range: bytes=\(dr.requestedOffset)-\(targetEndOffset - 1) (\(dr.requestedLength) bytes) of \(hostName)"
+        print(startLog)
+        SystemLogger.shared.append(startLog)
+        
+        // Continuously fetch sub-chunks and feed data to AVPlayer until requestedLength is satisfied
+        while dr.currentOffset < targetEndOffset && !loadingRequest.isCancelled {
+            let currentStart = dr.currentOffset
+            let currentEnd = min(currentStart + Self.chunkSize - 1, targetEndOffset - 1)
+            
+            var req = URLRequest(url: actualURL, timeoutInterval: 30)
+            req.httpMethod = "GET"
+            req.setValue("bytes=\(currentStart)-\(currentEnd)", forHTTPHeaderField: "Range")
+            req.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
+            
+            let sema = DispatchSemaphore(value: 0)
+            var chunkData: Data?
+            var statusCode: Int = 0
+            var taskError: Error?
+            
+            let key = ObjectIdentifier(loadingRequest)
+            let task = session.dataTask(with: req) { [weak self] data, response, error in
+                statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+                chunkData = data
+                taskError = error
+                
+                self?.lock.lock()
+                self?.activeTasks.removeValue(forKey: key)
+                self?.lock.unlock()
+                
+                sema.signal()
             }
             
-            if let error = error {
-                let msg = "[STREAM LOADER ERROR] \(error.localizedDescription)"
+            lock.lock()
+            activeTasks[key] = task
+            lock.unlock()
+            
+            task.resume()
+            _ = sema.wait(timeout: .now() + 30.0)
+            
+            if loadingRequest.isCancelled {
+                SystemLogger.shared.append("[STREAM LOADER] Request cancelled by AVPlayer at offset \(currentStart)")
+                return
+            }
+            
+            if let error = taskError {
+                let msg = "[STREAM LOADER ERROR] Network error at \(currentStart): \(error.localizedDescription)"
                 print(msg); SystemLogger.shared.append(msg)
                 loadingRequest.finishLoading(with: error)
                 return
             }
             
-            guard let http = response as? HTTPURLResponse else {
-                loadingRequest.finishLoading(with: NSError(domain: "YTStreamLoader", code: -1, userInfo: nil))
-                return
-            }
-            
-            let resMsg = "[STREAM LOADER] ← HTTP \(http.statusCode) | \(data?.count ?? 0) bytes | bytes=\(rangeStart)-\(rangeEnd)"
-            print(resMsg); SystemLogger.shared.append(resMsg)
-            
-            guard http.statusCode < 400 else {
-                let err = NSError(domain: "YTStreamLoader", code: http.statusCode,
-                                  userInfo: [NSLocalizedDescriptionKey: "YouTube CDN HTTP \(http.statusCode)"])
+            if statusCode >= 400 {
+                let msg = "[STREAM LOADER HTTP \(statusCode)] Failed fetching bytes=\(currentStart)-\(currentEnd)"
+                print(msg); SystemLogger.shared.append(msg)
+                let err = NSError(domain: "YTStreamLoader", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "YouTube CDN HTTP \(statusCode)"])
                 loadingRequest.finishLoading(with: err)
                 return
             }
             
-            // Populate content information (total file size, MIME, seek support)
-            if let info = infoReq {
-                info.isByteRangeAccessSupported = true
-                // contentType MUST be a UTI string, NOT a MIME type.
-                // "audio/mp4" is a MIME type and causes AVPlayer to fail with -11828.
-                // AVFileType.m4a.rawValue = "com.apple.m4a-audio" (UTI for AAC/M4A).
-                info.contentType = AVFileType.m4a.rawValue
-                for (k, v) in http.allHeaderFields {
-                    if "\(k)".lowercased() == "content-range" {
-                        // "bytes start-end/total"
-                        if let totalStr = "\(v)".components(separatedBy: "/").last,
-                           let total   = Int64(totalStr.trimmingCharacters(in: .whitespaces)), total > 0 {
-                            info.contentLength = total
-                            SystemLogger.shared.append("[STREAM LOADER] Content-Length: \(total) bytes")
-                        }
-                        break
-                    }
-                }
+            guard let data = chunkData, !data.isEmpty else {
+                // End of stream reached
+                break
             }
             
-            if let data = data, !data.isEmpty {
-                loadingRequest.dataRequest?.respond(with: data)
-            }
-            loadingRequest.finishLoading()
+            dr.respond(with: data)
+            let progressMsg = "[STREAM LOADER] Fetched \(data.count) bytes (progress: \(dr.currentOffset)/\(targetEndOffset))"
+            print(progressMsg)
+            SystemLogger.shared.append(progressMsg)
         }
         
-        lock.lock()
-        activeTasks[key] = task
-        lock.unlock()
-        task.resume()
+        if !loadingRequest.isCancelled {
+            loadingRequest.finishLoading()
+        }
     }
 }

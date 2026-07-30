@@ -172,10 +172,30 @@ public class JSCYoutubeClient: ObservableObject {
                             durationStr = item.duration;
                         }
                         
-                        let thumbUrl = "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
-                        if (item.thumbnails && Array.isArray(item.thumbnails) && item.thumbnails.length > 0) {
-                            const best = item.thumbnails[item.thumbnails.length - 1];
-                            thumbUrl = best.url || thumbUrl;
+                        let thumbs = [];
+                        if (item.thumbnail && item.thumbnail.contents && Array.isArray(item.thumbnail.contents)) {
+                            thumbs = item.thumbnail.contents;
+                        } else if (item.thumbnails && Array.isArray(item.thumbnails)) {
+                            thumbs = item.thumbnails;
+                        } else if (item.thumbnail && Array.isArray(item.thumbnail)) {
+                            thumbs = item.thumbnail;
+                        }
+                        
+                        let thumbUrl = "";
+                        if (thumbs.length > 0) {
+                            const sorted = [...thumbs].sort((a, b) => (b.width || 0) - (a.width || 0));
+                            thumbUrl = sorted[0].url || "";
+                        }
+                        
+                        if (!thumbUrl) {
+                            thumbUrl = "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
+                        }
+                        
+                        // Upgrade Google / YouTube Music thumbnail dimensions to crisp 544x544 high-resolution artwork
+                        if (thumbUrl.includes("googleusercontent.com") || thumbUrl.includes("ggpht.com")) {
+                            thumbUrl = thumbUrl.replace(/=w\d+-h\d+/g, "=w544-h544").replace(/=s\d+/g, "=s544");
+                        } else if (thumbUrl.includes("i.ytimg.com") || thumbUrl.includes("ytimg.com")) {
+                            thumbUrl = thumbUrl.replace(/\/default\.jpg|\/mqdefault\.jpg|\/hqdefault\.jpg|\/sddefault\.jpg/g, "/hqdefault.jpg");
                         }
                         
                         tracks.push({
