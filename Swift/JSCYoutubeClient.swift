@@ -245,13 +245,13 @@ public class JSCYoutubeClient: ObservableObject {
                 console.log("[JSC] Fetching getBasicInfo for videoId: '\(videoId)'...");
                 let info;
                 try {
-                    info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'IOS' });
+                    info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'ANDROID_VR' });
                 } catch (e) {
-                    console.log("[JSC] IOS client failed, falling back to ANDROID client:", e.message);
+                    console.log("[JSC] ANDROID_VR client failed, falling back to IOS client:", e.message);
                     try {
-                        info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'ANDROID' });
+                        info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'IOS' });
                     } catch (e2) {
-                        console.log("[JSC] ANDROID client failed, falling back to YTMUSIC client:", e2.message);
+                        console.log("[JSC] IOS client failed, falling back to YTMUSIC client:", e2.message);
                         info = await globalThis.ytInstance.getBasicInfo("\(videoId)", { client: 'YTMUSIC' });
                     }
                 }

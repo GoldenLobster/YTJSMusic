@@ -108,7 +108,7 @@ async function runMusicTest() {
         if (songs[0] && songs[0].id) {
           const songId = songs[0].id;
           console.log("\\nFetching stream URL for music song ID:", songId);
-          const info = await yt.getInfo(songId, { client: 'IOS' });
+          const info = await yt.getInfo(songId, { client: 'ANDROID_VR' });
           const adaptiveFormats = info.streaming_data?.adaptive_formats || [];
           const m4aAudioFormats = adaptiveFormats.filter(f => f.has_audio && !f.has_video && (f.mime_type?.includes('mp4') || f.mime_type?.includes('m4a')));
           m4aAudioFormats.sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0));
