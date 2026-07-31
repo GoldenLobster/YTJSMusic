@@ -6,9 +6,9 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     
     static let scheme = "ytaudio"
     
-    // 128KB sub-chunks: ~8s of 128kbps audio per HTTP request.
-    // Fetching in 128KB sub-chunks allows initial playback to start in <100ms.
-    private static let chunkSize: Int64 = 128 * 1024  // 128KB
+    // 256KB sub-chunks per HTTP range request (~16s of 128kbps audio per request).
+    // Serving requests in 256KB chunks allows AVPlayer to receive data and start playback in <0.2s.
+    private static let chunkSize: Int64 = 256 * 1024  // 256KB
     
     private static let userAgent = "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)"
     
@@ -78,92 +78,86 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
             return
         }
         
-        let targetEndOffset = dr.requestedOffset + Int64(dr.requestedLength)
+        let requestedStart = dr.currentOffset
+        let fetchLength = Swift.min(Int64(dr.requestedLength), Self.chunkSize)
+        let requestedEnd = requestedStart + fetchLength - 1
         let hostName = actualURL.host ?? "googlevideo"
         
-        let startLog = "[STREAM LOADER] Requested range: bytes=\(dr.requestedOffset)-\(targetEndOffset - 1) (\(dr.requestedLength) bytes) of \(hostName)"
+        let startLog = "[STREAM LOADER] Fetching chunk: bytes=\(requestedStart)-\(requestedEnd) of \(hostName)"
         print(startLog)
         SystemLogger.shared.append(startLog)
         
-        // Continuously fetch 128KB sub-chunks and feed data to AVPlayer
-        while dr.currentOffset < targetEndOffset && !loadingRequest.isCancelled {
-            let currentStart = dr.currentOffset
-            let currentEnd = Swift.min(currentStart + Self.chunkSize - 1, targetEndOffset - 1)
-            
-            var req = URLRequest(url: actualURL, timeoutInterval: 20)
-            req.httpMethod = "GET"
-            req.setValue("bytes=\(currentStart)-\(currentEnd)", forHTTPHeaderField: "Range")
-            req.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
-            
-            let sema = DispatchSemaphore(value: 0)
-            var chunkData: Data?
-            var statusCode: Int = 0
-            var taskError: Error?
-            var responseHeaders: [AnyHashable: Any]?
-            
-            let key = ObjectIdentifier(loadingRequest)
-            let task = session.dataTask(with: req) { [weak self] data, response, error in
-                if let http = response as? HTTPURLResponse {
-                    statusCode = http.statusCode
-                    responseHeaders = http.allHeaderFields
-                }
-                chunkData = data
-                taskError = error
-                
-                self?.lock.lock()
-                self?.activeTasks.removeValue(forKey: key)
-                self?.lock.unlock()
-                
-                sema.signal()
+        var req = URLRequest(url: actualURL, timeoutInterval: 20)
+        req.httpMethod = "GET"
+        req.setValue("bytes=\(requestedStart)-\(requestedEnd)", forHTTPHeaderField: "Range")
+        req.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
+        
+        let sema = DispatchSemaphore(value: 0)
+        var chunkData: Data?
+        var statusCode: Int = 0
+        var taskError: Error?
+        var responseHeaders: [AnyHashable: Any]?
+        
+        let key = ObjectIdentifier(loadingRequest)
+        let task = session.dataTask(with: req) { [weak self] data, response, error in
+            if let http = response as? HTTPURLResponse {
+                statusCode = http.statusCode
+                responseHeaders = http.allHeaderFields
             }
+            chunkData = data
+            taskError = error
             
-            lock.lock()
-            activeTasks[key] = task
-            lock.unlock()
+            self?.lock.lock()
+            self?.activeTasks.removeValue(forKey: key)
+            self?.lock.unlock()
             
-            task.resume()
-            _ = sema.wait(timeout: .now() + 20.0)
-            
-            if loadingRequest.isCancelled {
-                SystemLogger.shared.append("[STREAM LOADER] Cancelled at offset \(currentStart)")
-                return
-            }
-            
-            if let error = taskError {
-                if (error as NSError).code == NSURLErrorCancelled { return }
-                let msg = "[STREAM LOADER ERROR] Network error at \(currentStart): \(error.localizedDescription)"
-                print(msg); SystemLogger.shared.append(msg)
-                loadingRequest.finishLoading(with: error)
-                return
-            }
-            
-            if statusCode >= 400 {
-                let msg = "[STREAM LOADER HTTP \(statusCode)] Failed fetching bytes=\(currentStart)-\(currentEnd)"
-                print(msg); SystemLogger.shared.append(msg)
-                let err = NSError(domain: "YTStreamLoader", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "YouTube CDN HTTP \(statusCode)"])
-                loadingRequest.finishLoading(with: err)
-                return
-            }
-            
-            // Populate content length dynamically from response headers
-            if let info = infoReq, info.contentLength == 0, let headers = responseHeaders {
-                for (k, v) in headers {
-                    if "\(k)".lowercased() == "content-range" {
-                        if let totalStr = "\(v)".components(separatedBy: "/").last,
-                           let total = Int64(totalStr.trimmingCharacters(in: .whitespaces)), total > 0 {
-                            info.contentLength = total
-                        }
-                        break
+            sema.signal()
+        }
+        
+        lock.lock()
+        activeTasks[key] = task
+        lock.unlock()
+        
+        task.resume()
+        _ = sema.wait(timeout: .now() + 20.0)
+        
+        if loadingRequest.isCancelled {
+            SystemLogger.shared.append("[STREAM LOADER] Cancelled at offset \(requestedStart)")
+            return
+        }
+        
+        if let error = taskError {
+            if (error as NSError).code == NSURLErrorCancelled { return }
+            let msg = "[STREAM LOADER ERROR] Network error at \(requestedStart): \(error.localizedDescription)"
+            print(msg); SystemLogger.shared.append(msg)
+            loadingRequest.finishLoading(with: error)
+            return
+        }
+        
+        if statusCode >= 400 {
+            let msg = "[STREAM LOADER HTTP \(statusCode)] Failed fetching bytes=\(requestedStart)-\(requestedEnd)"
+            print(msg); SystemLogger.shared.append(msg)
+            let err = NSError(domain: "YTStreamLoader", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "YouTube CDN HTTP \(statusCode)"])
+            loadingRequest.finishLoading(with: err)
+            return
+        }
+        
+        // Populate content length dynamically from response headers
+        if let info = infoReq, let headers = responseHeaders {
+            for (k, v) in headers {
+                if "\(k)".lowercased() == "content-range" {
+                    if let totalStr = "\(v)".components(separatedBy: "/").last,
+                       let total = Int64(totalStr.trimmingCharacters(in: .whitespaces)), total > 0 {
+                        info.contentLength = total
                     }
+                    break
                 }
             }
-            
-            guard let data = chunkData, !data.isEmpty else {
-                break
-            }
-            
+        }
+        
+        if let data = chunkData, !data.isEmpty {
             dr.respond(with: data)
-            let progressMsg = "[STREAM LOADER] Fetched \(data.count) bytes (progress: \(dr.currentOffset)/\(targetEndOffset))"
+            let progressMsg = "[STREAM LOADER] Delivered \(data.count) bytes at offset \(requestedStart)"
             print(progressMsg)
             SystemLogger.shared.append(progressMsg)
         }

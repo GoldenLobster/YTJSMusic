@@ -205,6 +205,7 @@ struct PlayerDetailView: View {
 
 struct DebugLogsView: View {
     @Environment(\.presentationMode) var presentationMode
+    @State private var isCopied: Bool = false
     
     var body: some View {
         NavigationView {
@@ -224,9 +225,26 @@ struct DebugLogsView: View {
                 .background(Color(UIColor.secondarySystemBackground))
             }
             .navigationTitle("Diagnostic Logs")
-            .navigationBarItems(trailing: Button("Done") {
-                presentationMode.wrappedValue.dismiss()
-            })
+            .navigationBarItems(
+                leading: Button(action: {
+                    let allLogs = SystemLogger.shared.logs.joined(separator: "\n")
+                    UIPasteboard.general.string = allLogs
+                    isCopied = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        isCopied = false
+                    }
+                }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
+                        Text(isCopied ? "Copied!" : "Copy All")
+                    }
+                    .fontWeight(.semibold)
+                    .foregroundColor(.blue)
+                },
+                trailing: Button("Done") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            )
         }
     }
 }
