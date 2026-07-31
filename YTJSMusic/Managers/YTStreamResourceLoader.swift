@@ -88,7 +88,7 @@ class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         // Continuously fetch 128KB sub-chunks and feed data to AVPlayer
         while dr.currentOffset < targetEndOffset && !loadingRequest.isCancelled {
             let currentStart = dr.currentOffset
-            let currentEnd = min(currentStart + Self.chunkSize - 1, targetEndOffset - 1)
+            let currentEnd = Swift.min(currentStart + Self.chunkSize - 1, targetEndOffset - 1)
             
             var req = URLRequest(url: actualURL, timeoutInterval: 20)
             req.httpMethod = "GET"

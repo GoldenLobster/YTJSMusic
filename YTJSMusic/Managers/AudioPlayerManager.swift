@@ -127,7 +127,7 @@ public class AudioPlayerManager: ObservableObject {
     public func seek(to timeInSeconds: Double) {
         guard let player = player else { return }
         let maxDur = duration > 0 ? duration : timeInSeconds
-        let targetTime = min(max(timeInSeconds, 0.0), maxDur)
+        let targetTime = Swift.min(Swift.max(timeInSeconds, 0.0), maxDur)
         let cmTime = CMTime(seconds: targetTime, preferredTimescale: 1000)
         
         self.currentTime = targetTime
@@ -286,7 +286,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // Add end of track observer
-        NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(_:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
         
         // Add periodic time observer for current playback position
         let interval = CMTime(seconds: 0.5, preferredTimescale: 1000)
@@ -296,8 +296,7 @@ public class AudioPlayerManager: ObservableObject {
             
             // Auto advance if current time exceeds track duration
             if self.duration > 0 && self.currentTime >= self.duration - 0.5 {
-                self.removeObservers()
-                self.playerItemDidReachEnd()
+                self.handleTrackEnded()
             } else {
                 self.updateNowPlayingInfo()
             }
@@ -307,9 +306,13 @@ public class AudioPlayerManager: ObservableObject {
         updateNowPlayingInfo()
     }
     
-    @objc private func playerItemDidReachEnd() {
-        DispatchQueue.main.async {
-            self.nextTrack()
+    @objc private func playerItemDidReachEnd(_ notification: Notification) {
+        handleTrackEnded()
+    }
+    
+    private func handleTrackEnded() {
+        DispatchQueue.main.async { [weak self] in
+            self?.nextTrack()
         }
     }
     
@@ -377,7 +380,7 @@ public class AudioPlayerManager: ObservableObject {
         nowPlayingInfo[MPMediaItemPropertyArtist] = track.artist
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = track.album
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackDuration] = duration
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
