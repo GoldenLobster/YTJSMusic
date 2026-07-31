@@ -61,6 +61,12 @@ public class JSCYoutubeClient: ObservableObject {
                     });
                     console.log("[JSC] Innertube initialized successfully!");
                 }
+                if (!globalThis.amInstance && globalThis.AppleMusic) {
+                    console.log("[JSC] Creating AppleMusic client instance...");
+                    globalThis.amInstance = new globalThis.AppleMusic({ region: globalThis.Region.US, authType: globalThis.AuthType.Scraped });
+                    await globalThis.amInstance.init();
+                    console.log("[JSC] AppleMusic initialized successfully!");
+                }
                 __nativeCompleteInit(true, "");
             } catch (err) {
                 const msg = err.message || String(err);
@@ -307,6 +313,153 @@ public class JSCYoutubeClient: ObservableObject {
                 const msg = err.message || String(err);
                 console.log("[JSC ERROR] Stream URL resolution failed:", msg);
                 __nativeCompleteStream("", msg);
+            }
+        })()
+        """
+        context.evaluateScript(script)
+    }
+    
+    public func searchAppleMusicSuggestions(query: String, completion: @escaping (Result<[String], Error>) -> Void) {
+        let escapedQuery = query.replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "'", with: "\\'")
+        
+        let nativeSuggestionsCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
+            DispatchQueue.main.async {
+                if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let suggestions = try? JSONDecoder().decode([String].self, from: data) {
+                    completion(.success(suggestions))
+                } else if !errMsg.isEmpty {
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -20, userInfo: [NSLocalizedDescriptionKey: errMsg])))
+                } else {
+                    completion(.success([]))
+                }
+            }
+        }
+        context.setObject(nativeSuggestionsCB, forKeyedSubscript: "__nativeCompleteAMSuggestions" as NSString)
+        
+        let script = """
+        (async () => {
+            try {
+                if (!globalThis.amInstance && globalThis.AppleMusic) {
+                    globalThis.amInstance = new globalThis.AppleMusic({ region: globalThis.Region.US, authType: globalThis.AuthType.Scraped });
+                    await globalThis.amInstance.init();
+                }
+                if (!globalThis.amInstance) {
+                    __nativeCompleteAMSuggestions(JSON.stringify([]), "");
+                    return;
+                }
+                const res = await globalThis.amInstance.Suggestions.suggestions({ term: "\(escapedQuery)", limit: 8 });
+                const suggestions = [];
+                const rawList = res?.results?.suggestions || [];
+                for (const item of rawList) {
+                    if (typeof item === 'string') {
+                        suggestions.push(item);
+                    } else if (item && typeof item === 'object') {
+                        if (item.searchTerm) suggestions.push(item.searchTerm);
+                        else if (item.displayTerm) suggestions.push(item.displayTerm);
+                    }
+                }
+                __nativeCompleteAMSuggestions(JSON.stringify(suggestions), "");
+            } catch (err) {
+                const msg = err.message || String(err);
+                console.log("[JSC ERROR] AM Suggestions failed:", msg);
+                __nativeCompleteAMSuggestions("", msg);
+            }
+        })()
+        """
+        context.evaluateScript(script)
+    }
+    
+    public func searchAppleMusic(query: String, completion: @escaping (Result<AppleMusicSearchContainer, Error>) -> Void) {
+        let escapedQuery = query.replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "'", with: "\\'")
+        
+        let nativeAMSearchCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
+            DispatchQueue.main.async {
+                if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let container = try? JSONDecoder().decode(AppleMusicSearchContainer.self, from: data) {
+                    completion(.success(container))
+                } else if !errMsg.isEmpty {
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -21, userInfo: [NSLocalizedDescriptionKey: errMsg])))
+                } else {
+                    completion(.success(AppleMusicSearchContainer()))
+                }
+            }
+        }
+        context.setObject(nativeAMSearchCB, forKeyedSubscript: "__nativeCompleteAMSearch" as NSString)
+        
+        let script = """
+        (async () => {
+            try {
+                if (!globalThis.amInstance && globalThis.AppleMusic) {
+                    globalThis.amInstance = new globalThis.AppleMusic({ region: globalThis.Region.US, authType: globalThis.AuthType.Scraped });
+                    await globalThis.amInstance.init();
+                }
+                if (!globalThis.amInstance) {
+                    __nativeCompleteAMSearch(JSON.stringify({ songs: [], albums: [], artists: [] }), "");
+                    return;
+                }
+                const res = await globalThis.amInstance.Search.search({ term: "\(escapedQuery)", types: ["songs", "albums", "artists"], limit: 15 });
+                const results = res?.results || {};
+                
+                // Parse songs
+                const songs = [];
+                const songsDict = results.songs?.data || results.songs || {};
+                const songList = Array.isArray(songsDict) ? songsDict : Object.values(songsDict);
+                for (const song of songList) {
+                    const attr = song.attributes || {};
+                    let artUrl = attr.artwork?.url || "";
+                    if (artUrl) artUrl = artUrl.replace('{w}', '300').replace('{h}', '300').replace('{f}', 'jpg');
+                    songs.push({
+                        id: song.id || attr.playParams?.id || "",
+                        title: attr.name || "",
+                        artist: attr.artistName || "",
+                        album: attr.albumName || "",
+                        durationMs: attr.durationInMillis || 0,
+                        artworkUrl: artUrl,
+                        releaseDate: attr.releaseDate || "",
+                        isrc: attr.isrc || "",
+                        genre: Array.isArray(attr.genreNames) ? attr.genreNames[0] || "" : "",
+                        isExplicit: attr.contentRating === 'explicit'
+                    });
+                }
+                
+                // Parse albums
+                const albums = [];
+                const albumsDict = results.albums?.data || results.albums || {};
+                const albumList = Array.isArray(albumsDict) ? albumsDict : Object.values(albumsDict);
+                for (const alb of albumList) {
+                    const attr = alb.attributes || {};
+                    let artUrl = attr.artwork?.url || "";
+                    if (artUrl) artUrl = artUrl.replace('{w}', '300').replace('{h}', '300').replace('{f}', 'jpg');
+                    albums.push({
+                        id: alb.id || "",
+                        title: attr.name || "",
+                        artist: attr.artistName || "",
+                        artworkUrl: artUrl,
+                        trackCount: attr.trackCount || 0,
+                        releaseYear: attr.releaseDate ? attr.releaseDate.substring(0, 4) : ""
+                    });
+                }
+                
+                // Parse artists
+                const artists = [];
+                const artistsDict = results.artists?.data || results.artists || {};
+                const artistList = Array.isArray(artistsDict) ? artistsDict : Object.values(artistsDict);
+                for (const art of artistList) {
+                    const attr = art.attributes || {};
+                    let artUrl = attr.artwork?.url || "";
+                    if (artUrl) artUrl = artUrl.replace('{w}', '300').replace('{h}', '300').replace('{f}', 'jpg');
+                    artists.push({
+                        id: art.id || "",
+                        name: attr.name || "",
+                        artworkUrl: artUrl,
+                        genre: Array.isArray(attr.genreNames) ? attr.genreNames[0] || "" : ""
+                    });
+                }
+                
+                const container = { songs, albums, artists };
+                __nativeCompleteAMSearch(JSON.stringify(container), "");
+            } catch (err) {
+                const msg = err.message || String(err);
+                console.log("[JSC ERROR] AM Search failed:", msg);
+                __nativeCompleteAMSearch("", msg);
             }
         })()
         """

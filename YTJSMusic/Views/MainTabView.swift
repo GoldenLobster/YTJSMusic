@@ -15,16 +15,23 @@ struct MainTabView: View {
                 MusicSearchView(jscClient: jscClient, audioManager: audioManager, playlistManager: playlistManager)
                     .tabItem {
                         Image(systemName: "magnifyingglass")
-                        Text("Search")
+                        Text("YT Search")
                     }
                     .tag(0)
+                
+                AppleSearchView(jscClient: jscClient)
+                    .tabItem {
+                        Image(systemName: "applelogo")
+                        Text("Apple Search")
+                    }
+                    .tag(1)
                 
                 PlaylistsView(playlistManager: playlistManager, audioManager: audioManager)
                     .tabItem {
                         Image(systemName: "music.note.list")
                         Text("Playlists")
                     }
-                    .tag(1)
+                    .tag(2)
             }
             
             // Persistent Mini Player Overlay
