@@ -22,6 +22,8 @@
 		A100000B29F000010000000B /* JSCPolyfillBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000B29F000010000000B /* JSCPolyfillBridge.swift */; };
 		A100000C29F000010000000C /* JSCYoutubeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000C29F000010000000C /* JSCYoutubeClient.swift */; };
 		A100001129F0000100000011 /* LocalAudioProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001129F0000100000011 /* LocalAudioProxyServer.swift */; };
+		A100001429F0000100000014 /* AppleMusicSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001429F0000100000014 /* AppleMusicSearchResult.swift */; };
+		A100001529F0000100000015 /* AppleSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001529F0000100000015 /* AppleSearchView.swift */; };
 		A100000D29F000010000000D /* runtime.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B100000D29F000010000000D /* runtime.bundle.js */; };
 		A100000E29F000010000000E /* polyfills in Resources */ = {isa = PBXBuildFile; fileRef = B100000E29F000010000000E /* polyfills */; };
 /* End PBXBuildFile section */
@@ -43,6 +45,8 @@
 		B100000B29F000010000000B /* JSCPolyfillBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSCPolyfillBridge.swift; path = Swift/JSCPolyfillBridge.swift; sourceTree = "<group>"; };
 		B100000C29F000010000000C /* JSCYoutubeClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSCYoutubeClient.swift; path = Swift/JSCYoutubeClient.swift; sourceTree = "<group>"; };
 		B100001129F0000100000011 /* LocalAudioProxyServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocalAudioProxyServer.swift; path = Swift/LocalAudioProxyServer.swift; sourceTree = "<group>"; };
+		B100001429F0000100000014 /* AppleMusicSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicSearchResult.swift; sourceTree = "<group>"; };
+		B100001529F0000100000015 /* AppleSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSearchView.swift; sourceTree = "<group>"; };
 		B100000D29F000010000000D /* runtime.bundle.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = runtime.bundle.js; sourceTree = "<group>"; };
 		B100000E29F000010000000E /* polyfills */ = {isa = PBXFileReference; lastKnownFileType = folder; path = polyfills; sourceTree = "<group>"; };
 		B100000F29F000010000000F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -90,6 +94,7 @@
 				B100000229F0000100000002 /* Track.swift */,
 				B100000329F0000100000003 /* Playlist.swift */,
 				B100001229F0000100000012 /* SystemLogger.swift */,
+				B100001429F0000100000014 /* AppleMusicSearchResult.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -112,6 +117,7 @@
 				B100000829F0000100000008 /* PlaylistsView.swift */,
 				B100000929F0000100000009 /* PlayerDetailView.swift */,
 				B100000A29F000010000000A /* MiniPlayerView.swift */,
+				B100001529F0000100000015 /* AppleSearchView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -201,6 +207,8 @@
 				A100000B29F000010000000B /* JSCPolyfillBridge.swift in Sources */,
 				A100000C29F000010000000C /* JSCYoutubeClient.swift in Sources */,
 				A100001129F0000100000011 /* LocalAudioProxyServer.swift in Sources */,
+				A100001429F0000100000014 /* AppleMusicSearchResult.swift in Sources */,
+				A100001529F0000100000015 /* AppleSearchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
