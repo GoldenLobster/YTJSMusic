@@ -511,15 +511,15 @@ public class JSCYoutubeClient: ObservableObject {
                     function normalize(str) {
                         if (!str) return "";
                         return str.toLowerCase()
-                            .replace(/\\(remastered[^)]*\\)/gi, "")
-                            .replace(/\\(explicit[^)]*\\)/gi, "")
-                            .replace(/\\(clean[^)]*\\)/gi, "")
-                            .replace(/\\(official audio[^)]*\\)/gi, "")
-                            .replace(/\\(official video[^)]*\\)/gi, "")
-                            .replace(/feat\\..*/gi, "")
-                            .replace(/ft\\..*/gi, "")
-                            .replace(/[^a-z0-9\\s]/gi, " ")
-                            .replace(/\\s+/g, " ")
+                            .replace(new RegExp("\\\\(remastered[^)]*\\\\)", "gi"), "")
+                            .replace(new RegExp("\\\\(explicit[^)]*\\\\)", "gi"), "")
+                            .replace(new RegExp("\\\\(clean[^)]*\\\\)", "gi"), "")
+                            .replace(new RegExp("\\\\(official audio[^)]*\\\\)", "gi"), "")
+                            .replace(new RegExp("\\\\(official video[^)]*\\\\)", "gi"), "")
+                            .replace(new RegExp("feat\\\\..*", "gi"), "")
+                            .replace(new RegExp("ft\\\\..*", "gi"), "")
+                            .replace(new RegExp("[^a-z0-9\\\\s]", "gi"), " ")
+                            .replace(new RegExp("\\\\s+", "g"), " ")
                             .trim();
                     }
                     
