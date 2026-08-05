@@ -127,7 +127,7 @@ struct AddToPlaylistSheet: View {
                                 duration: track.durationFormatted,
                                 thumbnail: track.artworkUrl
                             )
-                            playlistManager.addTrackToPlaylist(converted, playlistId: playlist.id)
+                            playlistManager.addTrackToPlaylist(track: converted, playlistId: playlist.id)
                             presentationMode.wrappedValue.dismiss()
                         }) {
                             HStack {
