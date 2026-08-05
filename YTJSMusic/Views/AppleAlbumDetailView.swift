@@ -182,7 +182,7 @@ struct AppleAlbumDetailView: View {
         }
         .sheet(isPresented: $showPlaylistSheet) {
             if let track = trackForPlaylist {
-                AddToPlaylistSheet(track: track, playlistManager: playlistManager)
+                AddAppleTrackToPlaylistSheet(track: track, playlistManager: playlistManager)
             }
         }
     }

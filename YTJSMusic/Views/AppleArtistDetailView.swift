@@ -108,7 +108,7 @@ struct AppleArtistDetailView: View {
 
 // MARK: - Add To Playlist Modal Sheet
 
-struct AddToPlaylistSheet: View {
+struct AddAppleTrackToPlaylistSheet: View {
     let track: AppleMusicTrack
     @ObservedObject var playlistManager: PlaylistManager
     @Environment(\.presentationMode) var presentationMode
