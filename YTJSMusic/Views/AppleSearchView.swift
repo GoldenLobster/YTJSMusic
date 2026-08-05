@@ -312,7 +312,7 @@ struct AppleSearchView: View {
                             duration: track.durationFormatted,
                             thumbnail: track.artworkUrl
                         )
-                        self.audioManager.playTrack(ytTrack)
+                        self.audioManager.playTrack(track: ytTrack)
                     } else {
                         print("[RESOLVER] No candidate video found for track: \(track.title)")
                     }

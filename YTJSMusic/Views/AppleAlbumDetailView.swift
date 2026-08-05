@@ -213,7 +213,7 @@ struct AppleAlbumDetailView: View {
                         duration: selected.durationFormatted,
                         thumbnail: selected.artworkUrl
                     )
-                    self.audioManager.playTrack(ytTrack)
+                    self.audioManager.playTrack(track: ytTrack)
                 }
             }
         }
