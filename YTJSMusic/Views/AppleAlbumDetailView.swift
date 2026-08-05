@@ -10,7 +10,6 @@ struct AppleAlbumDetailView: View {
     @State private var albumContainer: AppleAlbumDetailContainer? = nil
     @State private var isLoading: Bool = true
     @State private var errorMessage: String? = nil
-    @State private var showPlaylistSheet: Bool = false
     @State private var trackForPlaylist: AppleMusicTrack? = nil
     
     var body: some View {
@@ -145,17 +144,16 @@ struct AppleAlbumDetailView: View {
                                     .foregroundColor(.secondary)
                                 
                                 Menu {
-                                    Button(action: {
-                                        playAlbum(tracks: container.tracks, startIndex: index)
-                                    }) {
-                                        Label("Play Next", systemImage: "play.line")
-                                    }
-                                    Button(action: {
-                                        trackForPlaylist = track
-                                        showPlaylistSheet = true
-                                    }) {
-                                        Label("Add to Playlist", systemImage: "plus")
-                                    }
+                                     Button(action: {
+                                         playAlbum(tracks: container.tracks, startIndex: index)
+                                     }) {
+                                         Label("Play Next", systemImage: "play.circle")
+                                     }
+                                     Button(action: {
+                                         trackForPlaylist = track
+                                     }) {
+                                         Label("Add to Playlist", systemImage: "plus")
+                                     }
                                 } label: {
                                     Image(systemName: "ellipsis")
                                         .foregroundColor(.gray)
@@ -181,10 +179,8 @@ struct AppleAlbumDetailView: View {
         .onAppear {
             loadAlbumDetails()
         }
-        .sheet(isPresented: $showPlaylistSheet) {
-            if let track = trackForPlaylist {
-                AddAppleTrackToPlaylistSheet(track: track, playlistManager: playlistManager)
-            }
+        .sheet(item: $trackForPlaylist) { track in
+            AddAppleTrackToPlaylistSheet(track: track, playlistManager: playlistManager)
         }
     }
     

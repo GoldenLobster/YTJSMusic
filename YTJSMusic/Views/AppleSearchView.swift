@@ -11,12 +11,22 @@ struct AppleSearchView: View {
     @State private var searchResults: AppleMusicSearchContainer = AppleMusicSearchContainer()
     @State private var isLoading: Bool = false
     @State private var selectedCategory: SearchCategory = .top
-    @State private var selectedTrackForPreview: AppleMusicTrack? = nil
     @State private var searchDebounceWorkItem: DispatchWorkItem? = nil
     @State private var isEditingSearch: Bool = false
     @State private var resolvingTrackId: String? = nil
-    @State private var showPlaylistSheet: Bool = false
-    @State private var trackForPlaylist: AppleMusicTrack? = nil
+    @State private var activeSheet: ActiveSheet? = nil
+    
+    enum ActiveSheet: Identifiable {
+        case preview(AppleMusicTrack)
+        case playlist(AppleMusicTrack)
+        
+        var id: String {
+            switch self {
+            case .preview(let track): return "preview_\(track.id)"
+            case .playlist(let track): return "playlist_\(track.id)"
+            }
+        }
+    }
     
     enum SearchCategory: String, CaseIterable, Identifiable {
         case top = "Top"
@@ -150,11 +160,10 @@ struct AppleSearchView: View {
                                                             playAppleTrack(track)
                                                         },
                                                         onInfoTap: {
-                                                            selectedTrackForPreview = track
+                                                            activeSheet = .preview(track)
                                                         },
                                                         onAddToPlaylist: {
-                                                            trackForPlaylist = track
-                                                            showPlaylistSheet = true
+                                                            activeSheet = .playlist(track)
                                                         }
                                                     )
                                                 }
@@ -232,11 +241,11 @@ struct AppleSearchView: View {
             }
             .navigationTitle("Search")
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(item: $selectedTrackForPreview) { track in
-                AppleTrackPreviewSheet(track: track)
-            }
-            .sheet(isPresented: $showPlaylistSheet) {
-                if let track = trackForPlaylist {
+            .sheet(item: $activeSheet) { item in
+                switch item {
+                case .preview(let track):
+                    AppleTrackPreviewSheet(track: track)
+                case .playlist(let track):
                     AddAppleTrackToPlaylistSheet(track: track, playlistManager: playlistManager)
                 }
             }
