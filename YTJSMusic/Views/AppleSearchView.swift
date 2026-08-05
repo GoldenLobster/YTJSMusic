@@ -469,3 +469,94 @@ struct AppleTrackPreviewSheet: View {
     }
 }
 
+// MARK: - Album & Artist Row Views
+
+struct AlbumRowView: View {
+    let album: AppleMusicAlbum
+    
+    var body: some View {
+        HStack(spacing: 14) {
+            AsyncImage(url: URL(string: album.artworkUrl)) { phase in
+                if let image = phase.image {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } else {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.2))
+                        .overlay(Image(systemName: "square.stack").foregroundColor(.gray))
+                }
+            }
+            .frame(width: 56, height: 56)
+            .cornerRadius(8)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(album.title)
+                    .font(.body)
+                    .fontWeight(.semibold)
+                    .lineLimit(1)
+                
+                Text("\(album.artist) • \(album.releaseYear)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundColor(.gray)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 4)
+        .contentShape(Rectangle())
+    }
+}
+
+struct ArtistRowView: View {
+    let artist: AppleMusicArtist
+    
+    var body: some View {
+        HStack(spacing: 14) {
+            AsyncImage(url: URL(string: artist.artworkUrl)) { phase in
+                if let image = phase.image {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } else {
+                    Circle()
+                        .fill(Color.gray.opacity(0.2))
+                        .overlay(Image(systemName: "person.fill").foregroundColor(.gray))
+                }
+            }
+            .frame(width: 56, height: 56)
+            .clipShape(Circle())
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(artist.name)
+                    .font(.body)
+                    .fontWeight(.semibold)
+                    .lineLimit(1)
+                
+                if !artist.genre.isEmpty {
+                    Text(artist.genre)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundColor(.gray)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 4)
+        .contentShape(Rectangle())
+    }
+}
+
+
