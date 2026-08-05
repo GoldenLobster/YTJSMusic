@@ -12,24 +12,24 @@ struct MainTabView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             TabView(selection: $selectedTab) {
-                MusicSearchView(jscClient: jscClient, audioManager: audioManager, playlistManager: playlistManager)
+                AppleSearchView(jscClient: jscClient, audioManager: audioManager, playlistManager: playlistManager)
                     .tabItem {
                         Image(systemName: "magnifyingglass")
-                        Text("YT Search")
+                        Text("Search")
                     }
                     .tag(0)
-                
-                AppleSearchView(jscClient: jscClient)
-                    .tabItem {
-                        Image(systemName: "applelogo")
-                        Text("Apple Search")
-                    }
-                    .tag(1)
                 
                 PlaylistsView(playlistManager: playlistManager, audioManager: audioManager)
                     .tabItem {
                         Image(systemName: "music.note.list")
                         Text("Playlists")
+                    }
+                    .tag(1)
+                
+                MusicSearchView(jscClient: jscClient, audioManager: audioManager, playlistManager: playlistManager)
+                    .tabItem {
+                        Image(systemName: "y.square")
+                        Text("Legacy YT")
                     }
                     .tag(2)
             }

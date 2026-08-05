@@ -3,16 +3,20 @@ import SwiftUI
 
 struct AppleSearchView: View {
     @ObservedObject var jscClient: JSCYoutubeClient
+    @ObservedObject var audioManager: AudioPlayerManager
+    @ObservedObject var playlistManager: PlaylistManager
     
     @State private var searchText: String = ""
     @State private var suggestions: [String] = []
     @State private var searchResults: AppleMusicSearchContainer = AppleMusicSearchContainer()
     @State private var isLoading: Bool = false
-    @State private var isSearchingSuggestions: Bool = false
     @State private var selectedCategory: SearchCategory = .top
     @State private var selectedTrackForPreview: AppleMusicTrack? = nil
     @State private var searchDebounceWorkItem: DispatchWorkItem? = nil
     @State private var isEditingSearch: Bool = false
+    @State private var resolvingTrackId: String? = nil
+    @State private var showPlaylistSheet: Bool = false
+    @State private var trackForPlaylist: AppleMusicTrack? = nil
     
     enum SearchCategory: String, CaseIterable, Identifiable {
         case top = "Top"
@@ -139,9 +143,20 @@ struct AppleSearchView: View {
                                                     .padding(.horizontal)
                                                 
                                                 ForEach(selectedCategory == .top ? Array(searchResults.songs.prefix(5)) : searchResults.songs) { track in
-                                                    SongRowView(track: track) {
-                                                        selectedTrackForPreview = track
-                                                    }
+                                                    SongRowView(
+                                                        track: track,
+                                                        isResolving: resolvingTrackId == track.id,
+                                                        onTap: {
+                                                            playAppleTrack(track)
+                                                        },
+                                                        onInfoTap: {
+                                                            selectedTrackForPreview = track
+                                                        },
+                                                        onAddToPlaylist: {
+                                                            trackForPlaylist = track
+                                                            showPlaylistSheet = true
+                                                        }
+                                                    )
                                                 }
                                             }
                                         }
@@ -156,7 +171,10 @@ struct AppleSearchView: View {
                                                     .padding(.horizontal)
                                                 
                                                 ForEach(selectedCategory == .top ? Array(searchResults.albums.prefix(4)) : searchResults.albums) { album in
-                                                    AlbumRowView(album: album)
+                                                    NavigationLink(destination: AppleAlbumDetailView(albumId: album.id, jscClient: jscClient, audioManager: audioManager, playlistManager: playlistManager)) {
+                                                        AlbumRowView(album: album)
+                                                    }
+                                                    .buttonStyle(PlainButtonStyle())
                                                 }
                                             }
                                         }
@@ -171,7 +189,10 @@ struct AppleSearchView: View {
                                                     .padding(.horizontal)
                                                 
                                                 ForEach(selectedCategory == .top ? Array(searchResults.artists.prefix(3)) : searchResults.artists) { artist in
-                                                    ArtistRowView(artist: artist)
+                                                    NavigationLink(destination: AppleArtistDetailView(artistId: artist.id, jscClient: jscClient, audioManager: audioManager, playlistManager: playlistManager)) {
+                                                        ArtistRowView(artist: artist)
+                                                    }
+                                                    .buttonStyle(PlainButtonStyle())
                                                 }
                                             }
                                         }
@@ -199,7 +220,7 @@ struct AppleSearchView: View {
                             Text("Apple Music Catalog Search")
                                 .font(.title2)
                                 .fontWeight(.bold)
-                            Text("Search songs, artists, and albums with real-time autocomplete suggestions.")
+                            Text("Search songs, artists, and albums with real-time autocomplete suggestions and instant entity resolution.")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
@@ -209,15 +230,20 @@ struct AppleSearchView: View {
                     }
                 }
             }
-            .navigationTitle("Apple Search")
+            .navigationTitle("Search")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(item: $selectedTrackForPreview) { track in
                 AppleTrackPreviewSheet(track: track)
             }
+            .sheet(isPresented: $showPlaylistSheet) {
+                if let track = trackForPlaylist {
+                    AddToPlaylistSheet(track: track, playlistManager: playlistManager)
+                }
+            }
         }
     }
     
-    // MARK: - Search Actions
+    // MARK: - Search & Play Actions
     
     private func onSearchTextChange(_ query: String) {
         searchDebounceWorkItem?.cancel()
@@ -260,29 +286,70 @@ struct AppleSearchView: View {
             }
         }
     }
+    
+    private func playAppleTrack(_ track: AppleMusicTrack) {
+        resolvingTrackId = track.id
+        jscClient.resolveAppleTrackToYouTube(track: track) { result in
+            DispatchQueue.main.async {
+                self.resolvingTrackId = nil
+                switch result {
+                case .success(let res):
+                    if !res.primaryVideoId.isEmpty {
+                        let ytTrack = Track(
+                            id: res.primaryVideoId,
+                            title: track.title,
+                            artist: track.artist,
+                            album: track.album,
+                            duration: track.durationFormatted,
+                            thumbnail: track.artworkUrl
+                        )
+                        self.audioManager.playTrack(ytTrack)
+                    } else {
+                        print("[RESOLVER] No candidate video found for track: \(track.title)")
+                    }
+                case .failure(let error):
+                    print("[RESOLVER ERROR]", error.localizedDescription)
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Row Subviews
 
 struct SongRowView: View {
     let track: AppleMusicTrack
+    let isResolving: Bool
+    let onTap: () -> Void
     let onInfoTap: () -> Void
+    let onAddToPlaylist: () -> Void
     
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: track.artworkUrl)) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } else {
+            ZStack {
+                AsyncImage(url: URL(string: track.artworkUrl)) { phase in
+                    if let image = phase.image {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } else {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.2))
+                            .overlay(Image(systemName: "music.note").foregroundColor(.gray))
+                    }
+                }
+                .frame(width: 56, height: 56)
+                .cornerRadius(8)
+                
+                if isResolving {
                     Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                        .overlay(Image(systemName: "music.note").foregroundColor(.gray))
+                        .fill(Color.black.opacity(0.4))
+                        .frame(width: 56, height: 56)
+                        .cornerRadius(8)
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 }
             }
-            .frame(width: 56, height: 56)
-            .cornerRadius(8)
             
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 4) {
@@ -310,201 +377,27 @@ struct SongRowView: View {
                 .font(.caption)
                 .foregroundColor(.secondary)
             
-            Button(action: onInfoTap) {
-                Image(systemName: "info.circle")
-                    .font(.title3)
-                    .foregroundColor(.red)
+            Menu {
+                Button(action: onTap) {
+                    Label("Play Track", systemImage: "play.circle")
+                }
+                Button(action: onAddToPlaylist) {
+                    Label("Add to Playlist", systemImage: "plus")
+                }
+                Button(action: onInfoTap) {
+                    Label("Resolution Debug Info", systemImage: "info.circle")
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.gray)
+                    .padding(6)
             }
-            .buttonStyle(PlainButtonStyle())
         }
         .padding(.horizontal)
         .padding(.vertical, 4)
-    }
-}
-
-struct AlbumRowView: View {
-    let album: AppleMusicAlbum
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            AsyncImage(url: URL(string: album.artworkUrl)) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } else {
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.2))
-                        .overlay(Image(systemName: "square.stack").foregroundColor(.gray))
-                }
-            }
-            .frame(width: 60, height: 60)
-            .cornerRadius(8)
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(album.title)
-                    .font(.body)
-                    .fontWeight(.semibold)
-                    .lineLimit(1)
-                
-                Text("\(album.artist) • \(album.releaseYear)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
-            }
-            
-            Spacer()
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 4)
-    }
-}
-
-struct ArtistRowView: View {
-    let artist: AppleMusicArtist
-    
-    var body: some View {
-        HStack(spacing: 14) {
-            AsyncImage(url: URL(string: artist.artworkUrl)) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } else {
-                    Circle()
-                        .fill(Color.gray.opacity(0.2))
-                        .overlay(Image(systemName: "person.fill").foregroundColor(.gray))
-                }
-            }
-            .frame(width: 54, height: 54)
-            .clipShape(Circle())
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(artist.name)
-                    .font(.body)
-                    .fontWeight(.semibold)
-                    .lineLimit(1)
-                
-                if !artist.genre.isEmpty {
-                    Text(artist.genre)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            
-            Spacer()
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 4)
-    }
-}
-
-// MARK: - Preview Detail Sheet
-
-struct AppleTrackPreviewSheet: View {
-    let track: AppleMusicTrack
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    AsyncImage(url: URL(string: track.artworkUrl)) { phase in
-                        if let image = phase.image {
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        } else {
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.3))
-                                .overlay(Image(systemName: "music.note").font(.largeTitle))
-                        }
-                    }
-                    .frame(width: 220, height: 220)
-                    .cornerRadius(16)
-                    .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
-                    
-                    VStack(spacing: 6) {
-                        HStack {
-                            Text(track.title)
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .multilineTextAlignment(.center)
-                            
-                            if track.isExplicit {
-                                Image(systemName: "e.square.fill")
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                        
-                        Text(track.artist)
-                            .font(.title3)
-                            .foregroundColor(.secondary)
-                        
-                        Text(track.album)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.horizontal)
-                    
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Apple Music Catalog Metadata")
-                            .font(.headline)
-                            .padding(.bottom, 4)
-                        
-                        MetadataRow(label: "ISRC Code", value: track.isrc.isEmpty ? "N/A" : track.isrc)
-                        MetadataRow(label: "Exact Duration", value: "\(track.durationMs) ms (\(track.durationFormatted))")
-                        MetadataRow(label: "Release Date", value: track.releaseDate.isEmpty ? "N/A" : track.releaseDate)
-                        MetadataRow(label: "Genre", value: track.genre.isEmpty ? "N/A" : track.genre)
-                        MetadataRow(label: "Apple Music ID", value: track.id)
-                    }
-                    .padding(16)
-                    .background(Color(UIColor.secondarySystemBackground))
-                    .cornerRadius(12)
-                    .padding(.horizontal)
-                    
-                    VStack(spacing: 8) {
-                        HStack {
-                            Image(systemName: "checkmark.seal.fill")
-                                .foregroundColor(.blue)
-                            Text("Phase 1 Preview Mode")
-                                .fontWeight(.semibold)
-                        }
-                        .font(.footnote)
-                        
-                        Text("In Phase 2, this track metadata will be used to score and match the exact audio stream on YouTube with high precision.")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 24)
-                    }
-                    .padding(.top, 8)
-                }
-                .padding(.vertical, 20)
-            }
-            .navigationTitle("Track Details")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button("Done") {
-                presentationMode.wrappedValue.dismiss()
-            })
-        }
-    }
-}
-
-struct MetadataRow: View {
-    let label: String
-    let value: String
-    
-    var body: some View {
-        HStack {
-            Text(label)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            Spacer()
-            Text(value)
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .foregroundColor(.primary)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onTap()
         }
     }
 }

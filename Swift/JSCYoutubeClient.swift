@@ -465,4 +465,336 @@ public class JSCYoutubeClient: ObservableObject {
         """
         context.evaluateScript(script)
     }
+    
+    public func resolveAppleTrackToYouTube(track: AppleMusicTrack, completion: @escaping (Result<ResolutionResult, Error>) -> Void) {
+        let recordingKey = track.recordingKey
+        if let cached = SongResolverCacheManager.shared.get(appleId: track.id, recordingKey: recordingKey) {
+            let res = ResolutionResult(
+                primaryVideoId: cached.primaryVideoId,
+                fallbackVideoIds: cached.fallbackVideoIds,
+                score: cached.score,
+                confidence: cached.confidence,
+                matchedCandidate: cached.matchedCandidate,
+                scoreBreakdown: cached.scoreBreakdown
+            )
+            completion(.success(res))
+            return
+        }
+        
+        ResolverCoordinator.shared.resolve(appleId: track.id, executeTask: { [weak self] innerCompletion in
+            guard let self = self else { return }
+            
+            let nativeResolveCB: @convention(block) (String, String) -> Void = { jsonStr, errMsg in
+                DispatchQueue.main.async {
+                    if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let result = try? JSONDecoder().decode(ResolutionResult.self, from: data) {
+                        SongResolverCacheManager.shared.set(appleId: track.id, recordingKey: recordingKey, result: result)
+                        innerCompletion(.success(result))
+                    } else if !errMsg.isEmpty {
+                        innerCompletion(.failure(NSError(domain: "JSCYoutubeClient", code: -30, userInfo: [NSLocalizedDescriptionKey: errMsg])))
+                    } else {
+                        SongResolverCacheManager.shared.setNotFound(appleId: track.id, recordingKey: recordingKey)
+                        innerCompletion(.success(ResolutionResult(primaryVideoId: "")))
+                    }
+                }
+            }
+            self.context.setObject(nativeResolveCB, forKeyedSubscript: "__nativeCompleteAMResolve" as NSString)
+            
+            let escapedTitle = track.title.replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "'", with: "\\'")
+            let escapedArtist = track.artist.replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "'", with: "\\'")
+            let escapedAlbum = track.album.replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "'", with: "\\'")
+            let isrc = track.isrc
+            let durationMs = track.durationMs
+            
+            let script = """
+            (async () => {
+                try {
+                    function normalize(str) {
+                        if (!str) return "";
+                        return str.toLowerCase()
+                            .replace(/\\(remastered[^)]*\\)/gi, "")
+                            .replace(/\\(explicit[^)]*\\)/gi, "")
+                            .replace(/\\(clean[^)]*\\)/gi, "")
+                            .replace(/\\(official audio[^)]*\\)/gi, "")
+                            .replace(/\\(official video[^)]*\\)/gi, "")
+                            .replace(/feat\\..*/gi, "")
+                            .replace(/ft\\..*/gi, "")
+                            .replace(/[^a-z0-9\\s]/gi, " ")
+                            .replace(/\\s+/g, " ")
+                            .trim();
+                    }
+                    
+                    const appleTrack = {
+                        title: "\(escapedTitle)",
+                        artist: "\(escapedArtist)",
+                        album: "\(escapedAlbum)",
+                        isrc: "\(isrc)",
+                        durationMs: \(durationMs)
+                    };
+                    
+                    const normAppleTitle = normalize(appleTrack.title);
+                    const normAppleArtist = normalize(appleTrack.artist);
+                    const normAppleAlbum = normalize(appleTrack.album);
+                    
+                    let candidates = [];
+                    let isrcFound = false;
+                    
+                    if (appleTrack.isrc && appleTrack.isrc.length > 5) {
+                        try {
+                            const isrcRes = await globalThis.ytInstance.music.search(appleTrack.isrc, { type: "song" });
+                            const isrcList = isrcRes.songs?.contents || isrcRes.results || [];
+                            if (isrcList.length > 0) {
+                                candidates.push(...isrcList);
+                                isrcFound = true;
+                            }
+                        } catch (e) {
+                            console.log("[JSC RESOLVER] ISRC search skipped/failed:", e.message);
+                        }
+                    }
+                    
+                    if (candidates.length === 0) {
+                        const q1 = `${appleTrack.artist} ${appleTrack.title}`;
+                        console.log("[JSC RESOLVER] Searching YT Music for:", q1);
+                        const res1 = await globalThis.ytInstance.music.search(q1, { type: "song" });
+                        const list1 = res1.songs?.contents || res1.results || [];
+                        candidates.push(...list1);
+                    }
+                    
+                    function scoreCandidate(c) {
+                        const ytTitle = c.title?.text || c.title || "";
+                        const ytArtist = c.author?.name || c.author || c.artists?.[0]?.name || "";
+                        const ytAlbum = c.album?.name || "";
+                        const normYtTitle = normalize(ytTitle);
+                        const normYtArtist = normalize(ytArtist);
+                        const normYtAlbum = normalize(ytAlbum);
+                        
+                        let score = 0;
+                        const bd = { title: 0, artist: 0, duration: 0, official: 0, album: 0, penalties: 0 };
+                        
+                        if (isrcFound && (normYtTitle.includes(normAppleTitle) || normYtArtist.includes(normAppleArtist))) {
+                            score += 500;
+                        }
+                        
+                        if (normYtTitle.includes(normAppleTitle) || normAppleTitle.includes(normYtTitle)) {
+                            bd.title = 50;
+                            score += 50;
+                        }
+                        
+                        if (normYtArtist.includes(normAppleArtist) || normAppleArtist.includes(normYtArtist) || normYtTitle.includes(normAppleArtist)) {
+                            bd.artist = 50;
+                            score += 50;
+                        }
+                        
+                        const appleDurSec = appleTrack.durationMs / 1000;
+                        const ytDurSec = c.duration?.seconds || (typeof c.duration === 'number' ? c.duration : 0);
+                        if (ytDurSec > 0) {
+                            const delta = Math.abs(appleDurSec - ytDurSec);
+                            if (delta <= 2) { bd.duration = 30; score += 30; }
+                            else if (delta <= 5) { bd.duration = 20; score += 20; }
+                            else if (delta > 15) { bd.duration = -40; score -= 40; }
+                        }
+                        
+                        if (normYtAlbum.length > 0) {
+                            if (normYtAlbum.includes(normAppleAlbum) || normAppleAlbum.includes(normYtAlbum)) {
+                                bd.album = 20;
+                                score += 20;
+                            } else {
+                                bd.album = -10;
+                                score -= 10;
+                            }
+                        }
+                        
+                        if (ytArtist.includes("- Topic") || c.author?.is_verified || c.author?.is_official_artist) {
+                            bd.official = 20;
+                            score += 20;
+                        }
+                        
+                        const lowerApple = appleTrack.title.toLowerCase();
+                        const lowerYt = ytTitle.toLowerCase();
+                        if (!lowerApple.includes("remix") && lowerYt.includes("remix")) { bd.penalties -= 40; score -= 40; }
+                        if (!lowerApple.includes("live") && lowerYt.includes("live")) { bd.penalties -= 50; score -= 50; }
+                        if (!lowerApple.includes("slowed") && (lowerYt.includes("slowed") || lowerYt.includes("reverb"))) { bd.penalties -= 50; score -= 50; }
+                        if (!lowerApple.includes("cover") && lowerYt.includes("cover")) { bd.penalties -= 40; score -= 40; }
+                        
+                        const videoId = c.id || c.video_id || "";
+                        const thumb = c.thumbnails?.[0]?.url || c.thumbnail || "";
+                        return {
+                            videoId: videoId,
+                            title: ytTitle,
+                            artist: ytArtist,
+                            duration: Math.round(ytDurSec),
+                            thumbnail: thumb,
+                            score: score,
+                            scoreBreakdown: bd
+                        };
+                    }
+                    
+                    const scored = candidates.map(scoreCandidate).filter(c => c.videoId).sort((a, b) => b.score - a.score);
+                    if (scored.length === 0) {
+                        __nativeCompleteAMResolve(JSON.stringify({ primaryVideoId: "", fallbackVideoIds: [], score: 0, confidence: "low" }), "");
+                        return;
+                    }
+                    
+                    const winner = scored[0];
+                    const fallbacks = scored.slice(1, 4).map(c => c.videoId);
+                    let confidence = "low";
+                    if (winner.score >= 150) confidence = "high";
+                    else if (winner.score >= 100) confidence = "medium";
+                    
+                    const res = {
+                        primaryVideoId: winner.videoId,
+                        fallbackVideoIds: fallbacks,
+                        score: winner.score,
+                        confidence: confidence,
+                        matchedCandidate: {
+                            videoId: winner.videoId,
+                            title: winner.title,
+                            artist: winner.artist,
+                            duration: winner.duration,
+                            thumbnail: winner.thumbnail
+                        },
+                        scoreBreakdown: winner.scoreBreakdown
+                    };
+                    
+                    console.log("[JSC RESOLVER SUCCESS] Winner videoId:", winner.videoId, "score:", winner.score, "confidence:", confidence);
+                    __nativeCompleteAMResolve(JSON.stringify(res), "");
+                } catch (err) {
+                    const msg = err.message || String(err);
+                    console.log("[JSC ERROR] AM Resolve failed:", msg);
+                    __nativeCompleteAMResolve("", msg);
+                }
+            })()
+            """
+            self.context.evaluateScript(script)
+        }, completion: completion)
+    }
+    
+    public func getAppleAlbumDetails(albumId: String, completion: @escaping (Result<AppleAlbumDetailContainer, Error>) -> Void) {
+        let nativeAlbumDetailsCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
+            DispatchQueue.main.async {
+                if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let container = try? JSONDecoder().decode(AppleAlbumDetailContainer.self, from: data) {
+                    completion(.success(container))
+                } else if !errMsg.isEmpty {
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -31, userInfo: [NSLocalizedDescriptionKey: errMsg])))
+                } else {
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -31, userInfo: [NSLocalizedDescriptionKey: "Album not found"])))
+                }
+            }
+        }
+        context.setObject(nativeAlbumDetailsCB, forKeyedSubscript: "__nativeCompleteAMAlbumDetails" as NSString)
+        
+        let script = """
+        (async () => {
+            try {
+                if (!globalThis.amInstance && globalThis.AppleMusic) {
+                    globalThis.amInstance = new globalThis.AppleMusic({ region: globalThis.Region.US, authType: globalThis.AuthType.Scraped });
+                    await globalThis.amInstance.init();
+                }
+                const albRes = await globalThis.amInstance.Albums.get({ id: "\(albumId)" });
+                const albObj = albRes?.data?.[0] || {};
+                const albAttr = albObj.attributes || {};
+                let artUrl = albAttr.artwork?.url || "";
+                if (artUrl) artUrl = artUrl.replace('{w}', '600').replace('{h}', '600').replace('{f}', 'jpg');
+                
+                const album = {
+                    id: albObj.id || "\(albumId)",
+                    title: albAttr.name || "",
+                    artist: albAttr.artistName || "",
+                    artworkUrl: artUrl,
+                    trackCount: albAttr.trackCount || 0,
+                    releaseYear: albAttr.releaseDate ? albAttr.releaseDate.substring(0, 4) : ""
+                };
+                
+                const tracksRes = await globalThis.amInstance.Albums.getRelationship({ id: "\(albumId)", relationship: "tracks" });
+                const trackList = tracksRes?.data || [];
+                const tracks = [];
+                for (const tr of trackList) {
+                    const attr = tr.attributes || {};
+                    let trArtUrl = attr.artwork?.url || artUrl;
+                    if (trArtUrl) trArtUrl = trArtUrl.replace('{w}', '300').replace('{h}', '300').replace('{f}', 'jpg');
+                    tracks.push({
+                        id: tr.id || attr.playParams?.id || "",
+                        title: attr.name || "",
+                        artist: attr.artistName || album.artist,
+                        album: album.title,
+                        durationMs: attr.durationInMillis || 0,
+                        artworkUrl: trArtUrl,
+                        releaseDate: attr.releaseDate || albAttr.releaseDate || "",
+                        isrc: attr.isrc || "",
+                        genre: Array.isArray(attr.genreNames) ? attr.genreNames[0] || "" : "",
+                        isExplicit: attr.contentRating === 'explicit'
+                    });
+                }
+                
+                __nativeCompleteAMAlbumDetails(JSON.stringify({ album, tracks }), "");
+            } catch (err) {
+                const msg = err.message || String(err);
+                console.log("[JSC ERROR] AM Album Details failed:", msg);
+                __nativeCompleteAMAlbumDetails("", msg);
+            }
+        })()
+        """
+        context.evaluateScript(script)
+    }
+    
+    public func getAppleArtistDetails(artistId: String, completion: @escaping (Result<AppleArtistDetailContainer, Error>) -> Void) {
+        let nativeArtistDetailsCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
+            DispatchQueue.main.async {
+                if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let container = try? JSONDecoder().decode(AppleArtistDetailContainer.self, from: data) {
+                    completion(.success(container))
+                } else if !errMsg.isEmpty {
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -32, userInfo: [NSLocalizedDescriptionKey: errMsg])))
+                } else {
+                    completion(.failure(NSError(domain: "JSCYoutubeClient", code: -32, userInfo: [NSLocalizedDescriptionKey: "Artist not found"])))
+                }
+            }
+        }
+        context.setObject(nativeArtistDetailsCB, forKeyedSubscript: "__nativeCompleteAMArtistDetails" as NSString)
+        
+        let script = """
+        (async () => {
+            try {
+                if (!globalThis.amInstance && globalThis.AppleMusic) {
+                    globalThis.amInstance = new globalThis.AppleMusic({ region: globalThis.Region.US, authType: globalThis.AuthType.Scraped });
+                    await globalThis.amInstance.init();
+                }
+                const artRes = await globalThis.amInstance.Artists.get({ id: "\(artistId)" });
+                const artObj = artRes?.data?.[0] || {};
+                const artAttr = artObj.attributes || {};
+                let artUrl = artAttr.artwork?.url || "";
+                if (artUrl) artUrl = artUrl.replace('{w}', '600').replace('{h}', '600').replace('{f}', 'jpg');
+                
+                const artist = {
+                    id: artObj.id || "\(artistId)",
+                    name: artAttr.name || "",
+                    artworkUrl: artUrl,
+                    genre: Array.isArray(artAttr.genreNames) ? artAttr.genreNames[0] || "" : ""
+                };
+                
+                const albumsRes = await globalThis.amInstance.Artists.getRelationship({ id: "\(artistId)", relationship: "albums" });
+                const albumList = albumsRes?.data || [];
+                const albums = [];
+                for (const alb of albumList) {
+                    const attr = alb.attributes || {};
+                    let aUrl = attr.artwork?.url || "";
+                    if (aUrl) aUrl = aUrl.replace('{w}', '300').replace('{h}', '300').replace('{f}', 'jpg');
+                    albums.push({
+                        id: alb.id || "",
+                        title: attr.name || "",
+                        artist: artist.name,
+                        artworkUrl: aUrl,
+                        trackCount: attr.trackCount || 0,
+                        releaseYear: attr.releaseDate ? attr.releaseDate.substring(0, 4) : ""
+                    });
+                }
+                
+                __nativeCompleteAMArtistDetails(JSON.stringify({ artist, topSongs: [], albums }), "");
+            } catch (err) {
+                const msg = err.message || String(err);
+                console.log("[JSC ERROR] AM Artist Details failed:", msg);
+                __nativeCompleteAMArtistDetails("", msg);
+            }
+        })()
+        """
+        context.evaluateScript(script)
+    }
 }

@@ -24,6 +24,10 @@
 		A100001129F0000100000011 /* LocalAudioProxyServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001129F0000100000011 /* LocalAudioProxyServer.swift */; };
 		A100001429F0000100000014 /* AppleMusicSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001429F0000100000014 /* AppleMusicSearchResult.swift */; };
 		A100001529F0000100000015 /* AppleSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001529F0000100000015 /* AppleSearchView.swift */; };
+		A100001629F0000100000016 /* SongResolverCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001629F0000100000016 /* SongResolverCacheManager.swift */; };
+		A100001729F0000100000017 /* ResolverCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001729F0000100000017 /* ResolverCoordinator.swift */; };
+		A100001829F0000100000018 /* AppleAlbumDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001829F0000100000018 /* AppleAlbumDetailView.swift */; };
+		A100001929F0000100000019 /* AppleArtistDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001929F0000100000019 /* AppleArtistDetailView.swift */; };
 		A100000D29F000010000000D /* runtime.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B100000D29F000010000000D /* runtime.bundle.js */; };
 		A100000E29F000010000000E /* polyfills in Resources */ = {isa = PBXBuildFile; fileRef = B100000E29F000010000000E /* polyfills */; };
 /* End PBXBuildFile section */
@@ -47,6 +51,10 @@
 		B100001129F0000100000011 /* LocalAudioProxyServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocalAudioProxyServer.swift; path = Swift/LocalAudioProxyServer.swift; sourceTree = "<group>"; };
 		B100001429F0000100000014 /* AppleMusicSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicSearchResult.swift; sourceTree = "<group>"; };
 		B100001529F0000100000015 /* AppleSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSearchView.swift; sourceTree = "<group>"; };
+		B100001629F0000100000016 /* SongResolverCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongResolverCacheManager.swift; sourceTree = "<group>"; };
+		B100001729F0000100000017 /* ResolverCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResolverCoordinator.swift; sourceTree = "<group>"; };
+		B100001829F0000100000018 /* AppleAlbumDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleAlbumDetailView.swift; sourceTree = "<group>"; };
+		B100001929F0000100000019 /* AppleArtistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleArtistDetailView.swift; sourceTree = "<group>"; };
 		B100000D29F000010000000D /* runtime.bundle.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = runtime.bundle.js; sourceTree = "<group>"; };
 		B100000E29F000010000000E /* polyfills */ = {isa = PBXFileReference; lastKnownFileType = folder; path = polyfills; sourceTree = "<group>"; };
 		B100000F29F000010000000F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -105,6 +113,8 @@
 				B100000429F0000100000004 /* AudioPlayerManager.swift */,
 				B100001329F0000100000013 /* YTStreamResourceLoader.swift */,
 				B100000529F0000100000005 /* PlaylistManager.swift */,
+				B100001629F0000100000016 /* SongResolverCacheManager.swift */,
+				B100001729F0000100000017 /* ResolverCoordinator.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -118,6 +128,8 @@
 				B100000929F0000100000009 /* PlayerDetailView.swift */,
 				B100000A29F000010000000A /* MiniPlayerView.swift */,
 				B100001529F0000100000015 /* AppleSearchView.swift */,
+				B100001829F0000100000018 /* AppleAlbumDetailView.swift */,
+				B100001929F0000100000019 /* AppleArtistDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -209,6 +221,10 @@
 				A100001129F0000100000011 /* LocalAudioProxyServer.swift in Sources */,
 				A100001429F0000100000014 /* AppleMusicSearchResult.swift in Sources */,
 				A100001529F0000100000015 /* AppleSearchView.swift in Sources */,
+				A100001629F0000100000016 /* SongResolverCacheManager.swift in Sources */,
+				A100001729F0000100000017 /* ResolverCoordinator.swift in Sources */,
+				A100001829F0000100000018 /* AppleAlbumDetailView.swift in Sources */,
+				A100001929F0000100000019 /* AppleArtistDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
