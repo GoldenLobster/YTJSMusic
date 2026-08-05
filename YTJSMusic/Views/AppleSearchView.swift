@@ -401,3 +401,71 @@ struct SongRowView: View {
         }
     }
 }
+
+// MARK: - Track Preview Sheet
+
+struct AppleTrackPreviewSheet: View {
+    let track: AppleMusicTrack
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        NavigationView {
+            List {
+                Section(header: Text("Track Details")) {
+                    HStack {
+                        Text("Title")
+                        Spacer()
+                        Text(track.title).foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Text("Artist")
+                        Spacer()
+                        Text(track.artist).foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Text("Album")
+                        Spacer()
+                        Text(track.album).foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Text("Duration")
+                        Spacer()
+                        Text(track.durationFormatted).foregroundColor(.secondary)
+                    }
+                    if !track.isrc.isEmpty {
+                        HStack {
+                            Text("ISRC")
+                            Spacer()
+                            Text(track.isrc).font(.caption).foregroundColor(.secondary)
+                        }
+                    }
+                    if !track.genre.isEmpty {
+                        HStack {
+                            Text("Genre")
+                            Spacer()
+                            Text(track.genre).foregroundColor(.secondary)
+                        }
+                    }
+                    HStack {
+                        Text("Explicit")
+                        Spacer()
+                        Text(track.isExplicit ? "Yes" : "No").foregroundColor(.secondary)
+                    }
+                }
+                
+                Section(header: Text("Apple Track ID")) {
+                    Text(track.id)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+            }
+            .listStyle(GroupedListStyle())
+            .navigationTitle("Track Info")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: Button("Done") {
+                presentationMode.wrappedValue.dismiss()
+            })
+        }
+    }
+}
+
