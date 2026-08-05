@@ -322,7 +322,7 @@ public class JSCYoutubeClient: ObservableObject {
     public func searchAppleMusicSuggestions(query: String, completion: @escaping (Result<[String], Error>) -> Void) {
         let escapedQuery = query.replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "'", with: "\\'")
         
-        let nativeSuggestionsCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
+        let nativeSuggestionsCB: @convention(block) (String, String) -> Void = { jsonStr, errMsg in
             DispatchQueue.main.async {
                 if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let suggestions = try? JSONDecoder().decode([String].self, from: data) {
                     completion(.success(suggestions))
@@ -371,7 +371,7 @@ public class JSCYoutubeClient: ObservableObject {
     public func searchAppleMusic(query: String, completion: @escaping (Result<AppleMusicSearchContainer, Error>) -> Void) {
         let escapedQuery = query.replacingOccurrences(of: "\"", with: "\\\"").replacingOccurrences(of: "'", with: "\\'")
         
-        let nativeAMSearchCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
+        let nativeAMSearchCB: @convention(block) (String, String) -> Void = { jsonStr, errMsg in
             DispatchQueue.main.async {
                 if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let container = try? JSONDecoder().decode(AppleMusicSearchContainer.self, from: data) {
                     completion(.success(container))
@@ -669,7 +669,7 @@ public class JSCYoutubeClient: ObservableObject {
     }
     
     public func getAppleAlbumDetails(albumId: String, completion: @escaping (Result<AppleAlbumDetailContainer, Error>) -> Void) {
-        let nativeAlbumDetailsCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
+        let nativeAlbumDetailsCB: @convention(block) (String, String) -> Void = { jsonStr, errMsg in
             DispatchQueue.main.async {
                 if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let container = try? JSONDecoder().decode(AppleAlbumDetailContainer.self, from: data) {
                     completion(.success(container))
@@ -737,7 +737,7 @@ public class JSCYoutubeClient: ObservableObject {
     }
     
     public func getAppleArtistDetails(artistId: String, completion: @escaping (Result<AppleArtistDetailContainer, Error>) -> Void) {
-        let nativeArtistDetailsCB: @convention(block) (String, String) -> Void = { [weak self] jsonStr, errMsg in
+        let nativeArtistDetailsCB: @convention(block) (String, String) -> Void = { jsonStr, errMsg in
             DispatchQueue.main.async {
                 if !jsonStr.isEmpty, let data = jsonStr.data(using: .utf8), let container = try? JSONDecoder().decode(AppleArtistDetailContainer.self, from: data) {
                     completion(.success(container))
