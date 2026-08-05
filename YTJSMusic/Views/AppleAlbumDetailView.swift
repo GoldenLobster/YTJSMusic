@@ -109,7 +109,8 @@ struct AppleAlbumDetailView: View {
                     
                     // Tracks List
                     LazyVStack(spacing: 0) {
-                        ForEach(Array(container.tracks.enumerated()), id: \.element.id) { index, track in
+                        ForEach(0..<container.tracks.count, id: \.self) { index in
+                            let track = container.tracks[index]
                             HStack(spacing: 14) {
                                 Text("\(index + 1)")
                                     .font(.subheadline)

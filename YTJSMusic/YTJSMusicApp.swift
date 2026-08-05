@@ -69,7 +69,8 @@ struct YTJSMusicApp: App {
                         ScrollViewReader { proxy in
                             ScrollView {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    ForEach(Array(logger.logs.enumerated()), id: \.offset) { idx, log in
+                                    ForEach(0..<logger.logs.count, id: \.self) { idx in
+                                        let log = logger.logs[idx]
                                         Text(log)
                                             .font(.system(size: 11, design: .monospaced))
                                             .foregroundColor(log.contains("ERROR") || log.contains("Failed") ? .red : .primary)

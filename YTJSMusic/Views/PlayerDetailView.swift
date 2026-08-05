@@ -212,7 +212,8 @@ struct DebugLogsView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 4) {
-                        ForEach(Array(SystemLogger.shared.logs.enumerated()), id: \.offset) { idx, log in
+                        ForEach(0..<SystemLogger.shared.logs.count, id: \.self) { idx in
+                            let log = SystemLogger.shared.logs[idx]
                             Text(log)
                                 .font(.system(size: 11, design: .monospaced))
                                 .foregroundColor(log.contains("ERROR") || log.contains("403") || log.contains("Failed") ? .red : (log.contains("PROXY") ? .blue : .primary))
