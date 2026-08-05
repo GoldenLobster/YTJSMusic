@@ -78,7 +78,7 @@ public class SongResolverCacheManager {
         
         // 1. Check manual overrides
         if let overrideVideoId = manualOverrides[appleId] {
-            return CacheRecord(primaryVideoId: overrideVideoId, fallbackVideoIds: [], score: 500, confidence: .high, status: "resolved")
+            return CacheRecord(primaryVideoId: overrideVideoId, fallbackVideoIds: [], score: 500, confidence: .high, status: "resolved", scoreBreakdown: ScoreBreakdown(), matchedCandidate: nil, timestamp: Date().timeIntervalSince1970)
         }
         
         // 2. Check appleId direct hit
@@ -121,6 +121,8 @@ public class SongResolverCacheManager {
             score: 0,
             confidence: .low,
             status: "not_found",
+            scoreBreakdown: ScoreBreakdown(),
+            matchedCandidate: nil,
             timestamp: Date().timeIntervalSince1970
         )
         
