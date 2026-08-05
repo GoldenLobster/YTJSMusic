@@ -82,9 +82,9 @@ struct YTJSMusicApp: App {
                             }
                             .background(Color(UIColor.secondarySystemBackground))
                             .cornerRadius(10)
-                            .onChange(of: logger.logs.count) { newCount in
+                            .onChange(of: logger.logs.count, perform: { newCount in
                                 proxy.scrollTo(newCount - 1, anchor: .bottom)
-                            }
+                            })
                         }
                     }
                     .padding(24)

@@ -53,9 +53,9 @@ struct AppleSearchView: View {
                         })
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
-                        .onChange(of: searchText) { newValue in
+                        .onChange(of: searchText, perform: { newValue in
                             onSearchTextChange(newValue)
-                        }
+                        })
                         
                         if !searchText.isEmpty {
                             Button(action: {
@@ -212,7 +212,7 @@ struct AppleSearchView: View {
                         }
                     } else if !searchText.isEmpty {
                         VStack(spacing: 12) {
-                            Image(systemName: "music.note.slash")
+                            Image(systemName: "music.note")
                                 .font(.system(size: 44))
                                 .foregroundColor(.gray)
                             Text("No results for \"\(searchText)\"")
