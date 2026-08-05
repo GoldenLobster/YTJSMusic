@@ -552,7 +552,7 @@ public class JSCYoutubeClient: ObservableObject {
                     }
                     
                     if (candidates.length === 0) {
-                        const q1 = `${appleTrack.artist} ${appleTrack.title}`;
+                        const q1 = appleTrack.artist + " " + appleTrack.title;
                         console.log("[JSC RESOLVER] Searching YT Music for:", q1);
                         const res1 = await globalThis.ytInstance.music.search(q1, { type: "song" });
                         const list1 = res1.songs?.contents || res1.results || [];
