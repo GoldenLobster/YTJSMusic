@@ -246,8 +246,20 @@ public class AudioPlayerManager: ObservableObject {
         // Prefer exact metadata duration from YouTube Music API ("3:30" -> 210.0s)
         self.duration = track.durationInSeconds
         
-        let (asset, loader) = YTStreamResourceLoader.makeAsset(for: url)
+        let cacheKey = AudioStreamCacheKey(videoID: track.id, itag: 140, mimeType: "audio/mp4", codec: "mp4a.40.2", container: "m4a")
+        let loader = YTStreamResourceLoader(streamURL: url, track: track, cacheKey: cacheKey, jscClient: jscClient)
         streamResourceLoader = loader  // retain strongly
+        
+        guard let customURL = loader.getCustomSchemeURL() else {
+            let errLog = "[AUDIO MANAGER ERROR] Failed to construct custom scheme URL"
+            print(errLog)
+            SystemLogger.shared.append(errLog)
+            self.isLoading = false
+            return
+        }
+        
+        let asset = AVURLAsset(url: customURL)
+        asset.resourceLoader.setDelegate(loader, queue: DispatchQueue.main)
         
         let playMsg = "[AUDIO MANAGER] Playing via YTStreamResourceLoader: \(url.host ?? "googlevideo.com")"
         print(playMsg)
@@ -262,7 +274,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on playerItem status (readyToPlay vs failed)
-        statusObserverToken = playerItem.observe(\AVPlayerItem.status, options: [.new, .initial]) { [weak self] item, change in
+        statusObserverToken = playerItem.observe(\AVPlayerItem.status, options: NSKeyValueObservingOptions([.new, .initial])) { [weak self] (item: AVPlayerItem, change: NSKeyValueObservedChange<AVPlayerItem.Status>) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 switch item.status {
@@ -301,7 +313,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on playerItem duration metadata updates (fallback if metadata duration was 0)
-        durationObserverToken = playerItem.observe(\AVPlayerItem.duration, options: [.new]) { [weak self] item, change in
+        durationObserverToken = playerItem.observe(\AVPlayerItem.duration, options: NSKeyValueObservingOptions([.new])) { [weak self] (item: AVPlayerItem, change: NSKeyValueObservedChange<CMTime>) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if self.duration == 0 {
@@ -315,7 +327,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on buffer likelihood - resumes play automatically after seeking or buffering
-        likelyToKeepUpObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] item, change in
+        likelyToKeepUpObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: NSKeyValueObservingOptions([.new])) { [weak self] (item: AVPlayerItem, change: NSKeyValueObservedChange<Bool>) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if item.isPlaybackLikelyToKeepUp {
@@ -328,7 +340,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on buffer empty state
-        bufferEmptyObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackBufferEmpty, options: [.new]) { [weak self] item, change in
+        bufferEmptyObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackBufferEmpty, options: NSKeyValueObservingOptions([.new])) { [weak self] (item: AVPlayerItem, change: NSKeyValueObservedChange<Bool>) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if item.isPlaybackBufferEmpty {
