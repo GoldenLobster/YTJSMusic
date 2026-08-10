@@ -164,10 +164,10 @@ struct TrackRow: View {
                     Label("Play Now", systemImage: "play.circle")
                 }
                 Button(action: onPlayNext) {
-                    Label("Play Next", systemImage: "text.insert")
+                    Label("Play Next", systemImage: "text.badge.plus")
                 }
                 Button(action: onAppendQueue) {
-                    Label("Add to Queue", systemImage: "text.append")
+                    Label("Add to Queue", systemImage: "plus.circle")
                 }
                 Button(action: onAddToPlaylist) {
                     Label("Add to Playlist", systemImage: "plus")

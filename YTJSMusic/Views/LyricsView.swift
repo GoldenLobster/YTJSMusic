@@ -47,7 +47,7 @@ struct LyricsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if isInstrumental {
                     VStack(spacing: 16) {
-                        Image(systemName: "guitars.fill")
+                        Image(systemName: "music.mic")
                             .font(.system(size: 56))
                             .foregroundColor(.white.opacity(0.8))
                         Text("This track is instrumental")
@@ -94,13 +94,13 @@ struct LyricsView: View {
                                     triggerUserScrollLockout()
                                 }
                             )
-                            .onChange(of: activeId) { newActiveId in
+                            .onChange(of: activeId, perform: { newActiveId in
                                 if isSynced && !isUserScrolling, let id = newActiveId {
                                     withAnimation(.easeInOut(duration: 0.4)) {
                                         proxy.scrollTo(id, anchor: .center)
                                     }
                                 }
-                            }
+                            })
                             
                             // Re-sync Pill when user scrolled away
                             if isUserScrolling && isSynced {
@@ -147,9 +147,9 @@ struct LyricsView: View {
         .onAppear {
             loadLyricsForCurrentTrack()
         }
-        .onChange(of: audioManager.currentTrack?.id) { _ in
+        .onChange(of: audioManager.currentTrack?.id, perform: { _ in
             loadLyricsForCurrentTrack()
-        }
+        })
     }
     
     private func currentActiveLyricId() -> UUID? {

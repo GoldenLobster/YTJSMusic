@@ -3,6 +3,7 @@ import Foundation
 import AVFoundation
 import MediaPlayer
 import Combine
+import SwiftUI
 
 public class AudioPlayerManager: ObservableObject {
     @Published public var currentTrack: Track?
