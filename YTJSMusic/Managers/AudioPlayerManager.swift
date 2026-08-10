@@ -262,7 +262,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on playerItem status (readyToPlay vs failed)
-        statusObserverToken = playerItem.observe(\AVPlayerItem.status, options: [NSKeyValueObservingOptions.new, NSKeyValueObservingOptions.initial]) { [weak self] (item: AVPlayerItem, _: NSKeyValueObservedChange<AVPlayerItem.Status>) in
+        statusObserverToken = playerItem.observe(\AVPlayerItem.status, options: [.new, .initial]) { [weak self] item, _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 switch item.status {
@@ -301,7 +301,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on playerItem duration metadata updates (fallback if metadata duration was 0)
-        durationObserverToken = playerItem.observe(\AVPlayerItem.duration, options: [NSKeyValueObservingOptions.new]) { [weak self] (item: AVPlayerItem, _: NSKeyValueObservedChange<CMTime>) in
+        durationObserverToken = playerItem.observe(\AVPlayerItem.duration, options: [.new]) { [weak self] item, _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if self.duration == 0 {
@@ -315,7 +315,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on buffer likelihood - resumes play automatically after seeking or buffering
-        likelyToKeepUpObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: [NSKeyValueObservingOptions.new]) { [weak self] (item: AVPlayerItem, _: NSKeyValueObservedChange<Bool>) in
+        likelyToKeepUpObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] item, _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if item.isPlaybackLikelyToKeepUp {
@@ -328,7 +328,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on buffer empty state
-        bufferEmptyObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackBufferEmpty, options: [NSKeyValueObservingOptions.new]) { [weak self] (item: AVPlayerItem, _: NSKeyValueObservedChange<Bool>) in
+        bufferEmptyObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackBufferEmpty, options: [.new]) { [weak self] item, _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if item.isPlaybackBufferEmpty {
