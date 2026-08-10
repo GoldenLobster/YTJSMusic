@@ -90,24 +90,31 @@ public class LrclibService: ObservableObject {
             }
             
             let trackDur = track.durationInSeconds
-            let bestCandidate = candidates.compactMap { c -> (candidate: LrclibResponse, score: Double)? in
+            var bestCandidate: LrclibResponse? = nil
+            var highestScore: Double = -999999.0
+            
+            for c in candidates {
                 var score: Double = 0.0
                 let candidateDur = c.duration ?? 0.0
                 
                 if trackDur > 0 && candidateDur > 0 {
                     let delta = abs(candidateDur - trackDur)
-                    if delta > 15.0 { return nil } // Exclude if outside 15-second tolerance
+                    if delta > 15.0 { continue } // Exclude if outside 15-second tolerance
                     score -= (delta * 2.0)
                 }
                 
-                if c.syncedLyrics != nil && !(c.syncedLyrics?.isEmpty ?? true) {
+                if let synced = c.syncedLyrics, !synced.isEmpty {
                     score += 50.0
                 }
                 if let cArtist = c.artistName, cArtist.lowercased().contains(artistName.lowercased()) {
                     score += 30.0
                 }
-                return (c, score)
-            }.max(by: { $0.score < $1.score })?.candidate
+                
+                if score > highestScore {
+                    highestScore = score
+                    bestCandidate = c
+                }
+            }
             
             if let winner = bestCandidate {
                 self?.cache[cacheKey] = winner

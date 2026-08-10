@@ -109,7 +109,7 @@ struct QueueView: View {
                                 }
                             }
                             .onDelete { offsets in
-                                for offset in offsets {
+                                for offset in offsets.sorted(by: >) {
                                     audioManager.removeUpcomingTrack(atRelativeIndex: offset)
                                 }
                             }
