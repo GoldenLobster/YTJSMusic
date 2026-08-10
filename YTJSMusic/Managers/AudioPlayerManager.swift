@@ -242,6 +242,8 @@ public class AudioPlayerManager: ObservableObject {
     private func startAVPlayer(url: URL, track: Track) {
         removeObservers()
         streamResourceLoader = nil  // release previous loader
+        isTransitioningTrack = false
+        hasPrefetchedNextTrack = false
         
         // Prefer exact metadata duration from YouTube Music API ("3:30" -> 210.0s)
         self.duration = track.durationInSeconds
@@ -375,9 +377,13 @@ public class AudioPlayerManager: ObservableObject {
         handleTrackEnded()
     }
     
+    private var isTransitioningTrack: Bool = false
+    
     private func handleTrackEnded() {
         DispatchQueue.main.async { [weak self] in
-            self?.nextTrack()
+            guard let self = self, !self.isTransitioningTrack else { return }
+            self.isTransitioningTrack = true
+            self.nextTrack()
         }
     }
     
@@ -438,11 +444,25 @@ public class AudioPlayerManager: ObservableObject {
                 
                 var req = URLRequest(url: url)
                 req.setValue("bytes=0-\(fetchBytes - 1)", forHTTPHeaderField: "Range")
-                URLSession.shared.dataTask(with: req) { data, _, _ in
+                URLSession.shared.dataTask(with: req) { data, response, _ in
                     if let data = data, !data.isEmpty {
+                        var totalLen: Int64 = 0
+                        if let http = response as? HTTPURLResponse {
+                            for (k, v) in http.allHeaderFields {
+                                if "\(k)".lowercased() == "content-range",
+                                   let totalStr = "\(v)".components(separatedBy: "/").last,
+                                   let parsed = Int64(totalStr.trimmingCharacters(in: .whitespaces)), parsed > 0 {
+                                    totalLen = parsed
+                                    break
+                                }
+                            }
+                        }
                         Task {
                             await AudioStreamCacheManager.shared.writeChunk(key: cacheKey, range: range, data: data, isPrefetch: true)
-                            SystemLogger.shared.append("[PREFETCH LEVEL 2 SUCCESS] Cached \(data.count) initial bytes for '\(track.title)'")
+                            if totalLen > 0 {
+                                await AudioStreamCacheManager.shared.updateContentLength(key: cacheKey, length: totalLen)
+                            }
+                            SystemLogger.shared.append("[PREFETCH LEVEL 2 SUCCESS] Cached \(data.count) initial bytes (total \(totalLen)b) for '\(track.title)'")
                         }
                     }
                 }.resume()

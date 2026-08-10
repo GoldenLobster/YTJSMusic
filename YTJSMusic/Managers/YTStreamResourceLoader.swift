@@ -59,6 +59,19 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         if let info = infoReq {
             info.isByteRangeAccessSupported = true
             info.contentType = cacheKey.mimeType.contains("opus") ? "audio/webm" : "com.apple.m4a-audio"
+            
+            class ReadLengthBox { var length: Int64 = 0 }
+            let lenSema = DispatchSemaphore(value: 0)
+            let lenBox = ReadLengthBox()
+            let key = self.cacheKey
+            Task {
+                lenBox.length = await AudioStreamCacheManager.shared.getContentLength(key: key)
+                lenSema.signal()
+            }
+            _ = lenSema.wait(timeout: .now() + 1.0)
+            if lenBox.length > 0 {
+                info.contentLength = lenBox.length
+            }
         }
         
         guard let dr = dataReq else {
@@ -180,12 +193,18 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         }
         
         // Populate Content-Length if provided
-        if let info = loadingRequest.contentInformationRequest, let headers = responseHeaders {
+        if let headers = responseHeaders {
             for (k, v) in headers {
                 if "\(k)".lowercased() == "content-range" {
                     if let totalStr = "\(v)".components(separatedBy: "/").last,
                        let total = Int64(totalStr.trimmingCharacters(in: .whitespaces)), total > 0 {
-                        info.contentLength = total
+                        if let info = loadingRequest.contentInformationRequest {
+                            info.contentLength = total
+                        }
+                        let saveKey = cacheKey
+                        Task {
+                            await AudioStreamCacheManager.shared.updateContentLength(key: saveKey, length: total)
+                        }
                     }
                     break
                 }

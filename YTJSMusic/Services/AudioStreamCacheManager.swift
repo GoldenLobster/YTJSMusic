@@ -4,8 +4,17 @@ import Foundation
 public struct CacheStreamEntry: Codable {
     public let streamKey: String
     public var totalBytes: Int64
+    public var contentLength: Int64
     public var lastAccessDate: Date
     public var cachedRanges: [String] // Array of "start-end" strings
+    
+    public init(streamKey: String, totalBytes: Int64, contentLength: Int64 = 0, lastAccessDate: Date, cachedRanges: [String]) {
+        self.streamKey = streamKey
+        self.totalBytes = totalBytes
+        self.contentLength = contentLength
+        self.lastAccessDate = lastAccessDate
+        self.cachedRanges = cachedRanges
+    }
 }
 
 public actor AudioStreamCacheManager {
@@ -42,6 +51,20 @@ public actor AudioStreamCacheManager {
     private func saveIndex() {
         guard let data = try? JSONEncoder().encode(streamEntries) else { return }
         try? data.write(to: metadataFileURL, options: .atomic)
+    }
+    
+    public func updateContentLength(key: AudioStreamCacheKey, length: Int64) {
+        guard length > 0 else { return }
+        let streamKey = key.storageString
+        var entry = streamEntries[streamKey] ?? CacheStreamEntry(streamKey: streamKey, totalBytes: 0, contentLength: length, lastAccessDate: Date(), cachedRanges: [])
+        entry.contentLength = length
+        streamEntries[streamKey] = entry
+        saveIndex()
+    }
+    
+    public func getContentLength(key: AudioStreamCacheKey) -> Int64 {
+        let streamKey = key.storageString
+        return streamEntries[streamKey]?.contentLength ?? 0
     }
     
     public func readChunk(key: AudioStreamCacheKey, requestedRange: NSRange) -> Data? {
