@@ -21,4 +21,12 @@ public struct AudioStreamCacheKey: Hashable, Codable {
         let safeContainer = container.replacingOccurrences(of: "/", with: "_")
         return "\(videoID)_\(itag)_\(safeCodec)_\(safeContainer)"
     }
+    
+    public var cacheURL: URL {
+        var comps = URLComponents()
+        comps.scheme = "ytaudio"
+        comps.host = "cached"
+        comps.path = "/\(storageString)"
+        return comps.url!
+    }
 }

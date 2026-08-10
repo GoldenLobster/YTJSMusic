@@ -45,12 +45,14 @@ public actor AudioStreamCacheManager {
            let data = try? Data(contentsOf: metaURL),
            let decoded = try? JSONDecoder().decode([String: CacheStreamEntry].self, from: data) {
             self.streamEntries = decoded
+            AudioStreamCacheIndex.shared.updateEntries(decoded)
         }
     }
     
     private func saveIndex() {
         guard let data = try? JSONEncoder().encode(streamEntries) else { return }
         try? data.write(to: metadataFileURL, options: .atomic)
+        AudioStreamCacheIndex.shared.updateEntries(streamEntries)
     }
     
     public func updateContentLength(key: AudioStreamCacheKey, length: Int64) {
@@ -59,6 +61,7 @@ public actor AudioStreamCacheManager {
         var entry = streamEntries[streamKey] ?? CacheStreamEntry(streamKey: streamKey, totalBytes: 0, contentLength: length, lastAccessDate: Date(), cachedRanges: [])
         entry.contentLength = length
         streamEntries[streamKey] = entry
+        AudioStreamCacheIndex.shared.updateEntry(entry)
         saveIndex()
     }
     

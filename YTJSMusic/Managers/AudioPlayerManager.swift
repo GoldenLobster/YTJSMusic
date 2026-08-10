@@ -197,6 +197,8 @@ public class AudioPlayerManager: ObservableObject {
         }
     }
     
+    private var currentTrace: PlaybackStartupTrace?
+    
     private func loadAndPlayCurrentTrack() {
         guard currentIndex >= 0, currentIndex < queue.count else { return }
         let track = queue[currentIndex]
@@ -208,6 +210,27 @@ public class AudioPlayerManager: ObservableObject {
         self.lastPlayerError = nil
         self.hasPrefetchedNextTrack = false
         
+        var trace = PlaybackStartupTrace(trackID: track.id)
+        trace.t1PlayInvoked = CACurrentMediaTime()
+        self.currentTrace = trace
+        
+        // 1. Check AudioStreamCacheIndex for playable stream (0ms network delay)
+        if let cachedInfo = AudioStreamCacheIndex.shared.cachedPlayableStream(for: track.id, capabilities: .defaultAVPlayer) {
+            trace.t2CacheLookup = CACurrentMediaTime()
+            let ref = CachedStreamReference(key: cachedInfo.key, contentLength: cachedInfo.contentLength, mimeType: cachedInfo.mimeType, coverage: cachedInfo.coverage)
+            let source = StreamSource.cached(ref)
+            trace.source = source
+            trace.coverage = cachedInfo.coverage
+            
+            let bypassMsg = "[AUDIO MANAGER CACHE BYPASS] Playable stream found in cache (\(cachedInfo.key.codec)). Starting local playback..."
+            print(bypassMsg)
+            SystemLogger.shared.append(bypassMsg)
+            
+            self.startAVPlayer(source: source, track: track, trace: trace)
+            return
+        }
+        
+        // 2. Uncached track: resolve stream URL via YouTube.js
         let msg = "[AUDIO MANAGER] Requesting stream URL for '\(track.title)' (\(track.id))..."
         print(msg)
         SystemLogger.shared.append(msg)
@@ -215,6 +238,7 @@ public class AudioPlayerManager: ObservableObject {
         jscClient.getAudioStreamUrl(videoId: track.id) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }
+                self.currentTrace?.t2CacheLookup = CACurrentMediaTime()
                 switch result {
                 case .success(let streamUrl):
                     let resLog = "[AUDIO MANAGER] Resolved stream URL (\(streamUrl.count) chars)"
@@ -225,21 +249,34 @@ public class AudioPlayerManager: ObservableObject {
                         self.isLoading = false
                         self.lastPlayerError = "Empty stream URL returned from YouTube.js"
                         SystemLogger.shared.append("[AUDIO MANAGER ERROR] Empty stream URL returned")
+                        self.currentTrace?.result = .failed
+                        self.currentTrace?.printSummary()
                         return
                     }
-                    self.startAVPlayer(url: url, track: track)
+                    
+                    let defaultKey = AudioStreamCacheKey(videoID: track.id, itag: 140, mimeType: "audio/mp4; codecs=\"mp4a.40.2\"", codec: "mp4a.40.2", container: "m4a")
+                    let ref = RemoteStreamReference(key: defaultKey, initialURL: url)
+                    let source = StreamSource.remote(ref)
+                    if var tr = self.currentTrace {
+                        tr.source = source
+                        tr.coverage = .none
+                        self.currentTrace = tr
+                        self.startAVPlayer(source: source, track: track, trace: tr)
+                    }
                 case .failure(let error):
                     let errLog = "[AUDIO MANAGER ERROR] Failed to get audio stream URL: \(error.localizedDescription)"
                     print(errLog)
                     SystemLogger.shared.append(errLog)
                     self.isLoading = false
                     self.lastPlayerError = error.localizedDescription
+                    self.currentTrace?.result = .failed
+                    self.currentTrace?.printSummary()
                 }
             }
         }
     }
     
-    private func startAVPlayer(url: URL, track: Track) {
+    private func startAVPlayer(source: StreamSource, track: Track, trace: PlaybackStartupTrace) {
         removeObservers()
         streamResourceLoader = nil  // release previous loader
         isTransitioningTrack = false
@@ -248,31 +285,37 @@ public class AudioPlayerManager: ObservableObject {
         // Prefer exact metadata duration from YouTube Music API ("3:30" -> 210.0s)
         self.duration = track.durationInSeconds
         
-        let cacheKey = AudioStreamCacheKey(videoID: track.id, itag: 140, mimeType: "audio/mp4", codec: "mp4a.40.2", container: "m4a")
-        let loader = YTStreamResourceLoader(streamURL: url, track: track, cacheKey: cacheKey, jscClient: jscClient)
+        let loader = YTStreamResourceLoader(streamSource: source, track: track, jscClient: jscClient)
+        loader.trace = trace
         streamResourceLoader = loader  // retain strongly
         
-        guard let customURL = loader.getCustomSchemeURL() else {
-            let errLog = "[AUDIO MANAGER ERROR] Failed to construct custom scheme URL"
-            print(errLog)
-            SystemLogger.shared.append(errLog)
-            self.isLoading = false
-            return
-        }
-        
+        let customURL = loader.customSchemeURL
         let asset = AVURLAsset(url: customURL)
         asset.resourceLoader.setDelegate(loader, queue: DispatchQueue.main)
         
-        let playMsg = "[AUDIO MANAGER] Playing via YTStreamResourceLoader: \(url.host ?? "googlevideo.com")"
+        var mutTrace = trace
+        mutTrace.t3ItemCreated = CACurrentMediaTime()
+        self.currentTrace = mutTrace
+        
+        let playMsg = "[AUDIO MANAGER] Playing via YTStreamResourceLoader: \(customURL.absoluteString)"
         print(playMsg)
         SystemLogger.shared.append(playMsg)
         
         let playerItem = AVPlayerItem(asset: asset)
+        if case .cached = source {
+            playerItem.preferredForwardBufferDuration = 0.5
+        }
+        
         if player == nil {
             player = AVPlayer(playerItem: playerItem)
-            player?.automaticallyWaitsToMinimizeStalling = true
         } else {
             player?.replaceCurrentItem(with: playerItem)
+        }
+        
+        if case .cached = source {
+            player?.automaticallyWaitsToMinimizeStalling = false
+        } else {
+            player?.automaticallyWaitsToMinimizeStalling = true
         }
         
         // KVO observer on playerItem status (readyToPlay vs failed)
@@ -293,6 +336,19 @@ public class AudioPlayerManager: ObservableObject {
                         }
                     }
                     self.updateNowPlayingInfo()
+                    
+                    if var tr = self.currentTrace, tr.t6ReadyToPlay == nil {
+                        tr.t6ReadyToPlay = CACurrentMediaTime()
+                        tr.t7AVPlayerPlaying = CACurrentMediaTime()
+                        tr.result = .playing
+                        if let ldrTr = self.streamResourceLoader?.trace {
+                            tr.networkRequests = ldrTr.networkRequests
+                            tr.bytesServedFromDisk = ldrTr.bytesServedFromDisk
+                            tr.bytesFetchedFromCDN = ldrTr.bytesFetchedFromCDN
+                        }
+                        tr.printSummary()
+                        self.currentTrace = tr
+                    }
                 case .failed:
                     self.isLoading = false
                     self.isPlaying = false
@@ -306,6 +362,11 @@ public class AudioPlayerManager: ObservableObject {
                         SystemLogger.shared.append(failMsg)
                     }
                     self.lastPlayerError = errDesc
+                    
+                    if var tr = self.currentTrace {
+                        tr.result = .failed
+                        tr.printSummary()
+                    }
                 case .unknown:
                     break
                 @unknown default:

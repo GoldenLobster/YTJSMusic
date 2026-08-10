@@ -39,6 +39,11 @@
 		A100002829F0000100000028 /* AudioPlaybackBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002829F0000100000028 /* AudioPlaybackBackend.swift */; };
 		A100002929F0000100000029 /* AVPlayerPlaybackBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002929F0000100000029 /* AVPlayerPlaybackBackend.swift */; };
 		A100002A29F000010000002A /* CacheSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002A29F000010000002A /* CacheSettingsView.swift */; };
+		A100002B29F000010000002B /* AudioPlaybackCapabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002B29F000010000002B /* AudioPlaybackCapabilities.swift */; };
+		A100002C29F000010000002C /* StreamSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002C29F000010000002C /* StreamSource.swift */; };
+		A100002D29F000010000002D /* PlaybackStartupTrace.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002D29F000010000002D /* PlaybackStartupTrace.swift */; };
+		A100002E29F000010000002E /* AudioStreamCacheIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002E29F000010000002E /* AudioStreamCacheIndex.swift */; };
+		A100002F29F000010000002F /* AudioStreamCacheDiskReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002F29F000010000002F /* AudioStreamCacheDiskReader.swift */; };
 		A100000D29F000010000000D /* runtime.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B100000D29F000010000000D /* runtime.bundle.js */; };
 		A100000E29F000010000000E /* polyfills in Resources */ = {isa = PBXBuildFile; fileRef = B100000E29F000010000000E /* polyfills */; };
 /* End PBXBuildFile section */
@@ -77,6 +82,11 @@
 		B100002829F0000100000028 /* AudioPlaybackBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackBackend.swift; sourceTree = "<group>"; };
 		B100002929F0000100000029 /* AVPlayerPlaybackBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerPlaybackBackend.swift; sourceTree = "<group>"; };
 		B100002A29F000010000002A /* CacheSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheSettingsView.swift; sourceTree = "<group>"; };
+		B100002B29F000010000002B /* AudioPlaybackCapabilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaybackCapabilities.swift; sourceTree = "<group>"; };
+		B100002C29F000010000002C /* StreamSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamSource.swift; sourceTree = "<group>"; };
+		B100002D29F000010000002D /* PlaybackStartupTrace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackStartupTrace.swift; sourceTree = "<group>"; };
+		B100002E29F000010000002E /* AudioStreamCacheIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamCacheIndex.swift; sourceTree = "<group>"; };
+		B100002F29F000010000002F /* AudioStreamCacheDiskReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamCacheDiskReader.swift; sourceTree = "<group>"; };
 		B100000D29F000010000000D /* runtime.bundle.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = runtime.bundle.js; sourceTree = "<group>"; };
 		B100000E29F000010000000E /* polyfills */ = {isa = PBXFileReference; lastKnownFileType = folder; path = polyfills; sourceTree = "<group>"; };
 		B100000F29F000010000000F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -128,6 +138,9 @@
 				B100001429F0000100000014 /* AppleMusicSearchResult.swift */,
 				B100002029F0000100000020 /* LrclibModels.swift */,
 				B100002529F0000100000025 /* AudioStreamCacheKey.swift */,
+				B100002B29F000010000002B /* AudioPlaybackCapabilities.swift */,
+				B100002C29F000010000002C /* StreamSource.swift */,
+				B100002D29F000010000002D /* PlaybackStartupTrace.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -153,6 +166,8 @@
 				B100002229F0000100000022 /* LrclibService.swift */,
 				B100002629F0000100000026 /* NetworkPathMonitor.swift */,
 				B100002729F0000100000027 /* AudioStreamCacheManager.swift */,
+				B100002E29F000010000002E /* AudioStreamCacheIndex.swift */,
+				B100002F29F000010000002F /* AudioStreamCacheDiskReader.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -277,6 +292,11 @@
 				A100002829F0000100000028 /* AudioPlaybackBackend.swift in Sources */,
 				A100002929F0000100000029 /* AVPlayerPlaybackBackend.swift in Sources */,
 				A100002A29F000010000002A /* CacheSettingsView.swift in Sources */,
+				A100002B29F000010000002B /* AudioPlaybackCapabilities.swift in Sources */,
+				A100002C29F000010000002C /* StreamSource.swift in Sources */,
+				A100002D29F000010000002D /* PlaybackStartupTrace.swift in Sources */,
+				A100002E29F000010000002E /* AudioStreamCacheIndex.swift in Sources */,
+				A100002F29F000010000002F /* AudioStreamCacheDiskReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

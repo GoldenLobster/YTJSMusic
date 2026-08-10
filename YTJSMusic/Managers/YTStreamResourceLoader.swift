@@ -7,13 +7,17 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     private static let chunkSize: Int64 = 256 * 1024  // 256KB sub-chunks
     private static let userAgent = "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X; en_US)"
     
-    private var streamURL: URL
+    private let resourceLoaderQueue = DispatchQueue(label: "com.ytjsmusic.resourceloader", qos: .userInitiated)
+    
+    public let streamSource: StreamSource
+    private var remoteURL: URL?
     private let track: Track
-    private let cacheKey: AudioStreamCacheKey
     private let jscClient: JSCYoutubeClient
     
     private var activeTasks: [ObjectIdentifier: URLSessionDataTask] = [:]
     private let lock = NSLock()
+    
+    public var trace: PlaybackStartupTrace?
     
     private lazy var session: URLSession = {
         let config = URLSessionConfiguration.ephemeral
@@ -21,30 +25,40 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         return URLSession(configuration: config)
     }()
     
-    public init(streamURL: URL, track: Track, cacheKey: AudioStreamCacheKey, jscClient: JSCYoutubeClient) {
-        self.streamURL = streamURL
+    public init(streamSource: StreamSource, track: Track, jscClient: JSCYoutubeClient) {
+        self.streamSource = streamSource
         self.track = track
-        self.cacheKey = cacheKey
         self.jscClient = jscClient
+        switch streamSource {
+        case .cached:
+            self.remoteURL = nil
+        case .remote(let ref):
+            self.remoteURL = ref.initialURL
+        }
         super.init()
     }
     
-    public func getCustomSchemeURL() -> URL? {
-        var comps = URLComponents(url: streamURL, resolvingAgainstBaseURL: false) ?? URLComponents()
-        comps.scheme = Self.scheme
-        return comps.url
+    public var customSchemeURL: URL {
+        switch streamSource {
+        case .cached(let ref):
+            return ref.key.cacheURL
+        case .remote(let ref):
+            var comps = URLComponents(url: ref.initialURL, resolvingAgainstBaseURL: false) ?? URLComponents()
+            comps.scheme = Self.scheme
+            return comps.url ?? ref.initialURL
+        }
     }
     
     public func resourceLoader(_ resourceLoader: AVAssetResourceLoader,
-                               shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                                shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+        resourceLoaderQueue.async { [weak self] in
             self?.perform(loadingRequest)
         }
         return true
     }
     
     public func resourceLoader(_ resourceLoader: AVAssetResourceLoader,
-                               didCancel loadingRequest: AVAssetResourceLoadingRequest) {
+                                didCancel loadingRequest: AVAssetResourceLoadingRequest) {
         let key = ObjectIdentifier(loadingRequest)
         lock.lock()
         activeTasks[key]?.cancel()
@@ -53,24 +67,22 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     }
     
     private func perform(_ loadingRequest: AVAssetResourceLoadingRequest) {
+        if trace?.t4FirstResourceRequest == nil {
+            trace?.t4FirstResourceRequest = CACurrentMediaTime()
+        }
+        
         let infoReq = loadingRequest.contentInformationRequest
         let dataReq = loadingRequest.dataRequest
+        let cacheKey = streamSource.key
         
         if let info = infoReq {
             info.isByteRangeAccessSupported = true
             info.contentType = cacheKey.mimeType.contains("opus") ? "audio/webm" : "com.apple.m4a-audio"
             
-            class ReadLengthBox { var length: Int64 = 0 }
-            let lenSema = DispatchSemaphore(value: 0)
-            let lenBox = ReadLengthBox()
-            let key = self.cacheKey
-            Task {
-                lenBox.length = await AudioStreamCacheManager.shared.getContentLength(key: key)
-                lenSema.signal()
-            }
-            _ = lenSema.wait(timeout: .now() + 1.0)
-            if lenBox.length > 0 {
-                info.contentLength = lenBox.length
+            if let cachedInfo = AudioStreamCacheIndex.shared.getStreamInfo(key: cacheKey), cachedInfo.contentLength > 0 {
+                info.contentLength = cachedInfo.contentLength
+            } else if case .remote(let ref) = streamSource, let total = ref.contentLength, total > 0 {
+                info.contentLength = total
             }
         }
         
@@ -83,38 +95,61 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         let fetchLength = Int(Swift.min(Int64(dr.requestedLength), Self.chunkSize))
         let requestedRange = NSRange(location: requestedStart, length: fetchLength)
         
-        // 1. Try reading from AudioStreamCacheManager
-        class ReadDataBox {
-            var data: Data? = nil
-        }
-        let semaphore = DispatchSemaphore(value: 0)
-        let box = ReadDataBox()
-        let key = self.cacheKey
-        
-        Task {
-            box.data = await AudioStreamCacheManager.shared.readChunk(key: key, requestedRange: requestedRange)
-            semaphore.signal()
-        }
-        _ = semaphore.wait(timeout: .now() + 2.0)
-        
-        if let data = box.data, !data.isEmpty {
-            SystemLogger.shared.append("[CACHE HIT] Served \(data.count) bytes from disk for offset \(requestedStart)")
-            dr.respond(with: data)
-            if !loadingRequest.isCancelled { loadingRequest.finishLoading() }
+        // 1. Try synchronous reading via AudioStreamCacheDiskReader
+        if let result = AudioStreamCacheDiskReader.shared.readChunkSync(key: cacheKey, requestedRange: requestedRange), !result.data.isEmpty {
+            if trace?.t5FirstBytesSupplied == nil {
+                trace?.t5FirstBytesSupplied = CACurrentMediaTime()
+            }
+            trace?.bytesServedFromDisk += Int64(result.data.count)
+            SystemLogger.shared.append("[CACHE HIT] Served \(result.data.count) bytes from disk for offset \(requestedStart)")
+            dr.respond(with: result.data)
+            
+            if result.isCompleteRequest {
+                if !loadingRequest.isCancelled { loadingRequest.finishLoading() }
+                return
+            }
+            
+            // If partial chunk served, update requestedRange for remaining missing bytes
+            let servedLength = result.data.count
+            let remainingRange = NSRange(location: requestedStart + servedLength, length: fetchLength - servedLength)
+            fetchBytesFromCDN(loadingRequest: loadingRequest, requestedRange: remainingRange, retryAttempt: 0)
             return
         }
         
-        // 2. Uncached range: Fetch from YouTube CDN with 403 Re-resolution & Backoff
+        // 2. Uncached range: Fetch from YouTube CDN
         fetchBytesFromCDN(loadingRequest: loadingRequest, requestedRange: requestedRange, retryAttempt: 0)
     }
     
     private func fetchBytesFromCDN(loadingRequest: AVAssetResourceLoadingRequest, requestedRange: NSRange, retryAttempt: Int) {
         guard !loadingRequest.isCancelled, let dr = loadingRequest.dataRequest else { return }
+        let cacheKey = streamSource.key
+        
+        // If remoteURL is nil (cached scheme fallback), resolve URL on demand
+        if remoteURL == nil {
+            let resSema = DispatchSemaphore(value: 0)
+            var freshURL: URL? = nil
+            jscClient.getAudioStreamUrl(videoId: track.id) { result in
+                if case .success(let streamUrlStr) = result, let url = URL(string: streamUrlStr) {
+                    freshURL = url
+                }
+                resSema.signal()
+            }
+            _ = resSema.wait(timeout: .now() + 10.0)
+            if let newURL = freshURL {
+                self.remoteURL = newURL
+            } else {
+                let err = NSError(domain: "YTStreamLoader", code: 404, userInfo: [NSLocalizedDescriptionKey: "Failed to resolve CDN fallback URL"])
+                loadingRequest.finishLoading(with: err)
+                return
+            }
+        }
+        
+        guard let url = remoteURL else { return }
         
         let reqStart = requestedRange.location
         let reqEnd = requestedRange.location + requestedRange.length - 1
         
-        var req = URLRequest(url: streamURL, timeoutInterval: 15)
+        var req = URLRequest(url: url, timeoutInterval: 15)
         req.httpMethod = "GET"
         req.setValue("bytes=\(reqStart)-\(reqEnd)", forHTTPHeaderField: "Range")
         req.setValue(Self.userAgent, forHTTPHeaderField: "User-Agent")
@@ -126,6 +161,8 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         var responseHeaders: [AnyHashable: Any]?
         
         let key = ObjectIdentifier(loadingRequest)
+        trace?.networkRequests += 1
+        
         let task = session.dataTask(with: req) { [weak self] data, response, error in
             if let http = response as? HTTPURLResponse {
                 statusCode = http.statusCode
@@ -166,7 +203,7 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
             
             if let newURL = freshURL {
                 SystemLogger.shared.append("[STREAM LOADER 403 FIXED] Re-resolved fresh URL. Retrying byte fetch...")
-                self.streamURL = newURL
+                self.remoteURL = newURL
                 fetchBytesFromCDN(loadingRequest: loadingRequest, requestedRange: requestedRange, retryAttempt: retryAttempt + 1)
                 return
             }
@@ -174,7 +211,7 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         
         // 4. Exponential Backoff for Transient Network Failure
         if (taskError != nil || statusCode >= 500) && retryAttempt < 3 {
-            let backoffDelay = pow(2.0, Double(retryAttempt)) * 0.5 // 0.5s, 1s, 2s
+            let backoffDelay = pow(2.0, Double(retryAttempt)) * 0.5
             SystemLogger.shared.append("[STREAM LOADER BACKOFF] Transient error (HTTP \(statusCode)). Retrying in \(backoffDelay)s...")
             Thread.sleep(forTimeInterval: backoffDelay)
             fetchBytesFromCDN(loadingRequest: loadingRequest, requestedRange: requestedRange, retryAttempt: retryAttempt + 1)
@@ -212,6 +249,10 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         }
         
         if let data = fetchedData, !data.isEmpty {
+            if trace?.t5FirstBytesSupplied == nil {
+                trace?.t5FirstBytesSupplied = CACurrentMediaTime()
+            }
+            trace?.bytesFetchedFromCDN += Int64(data.count)
             dr.respond(with: data)
             
             // Save newly fetched data to AudioStreamCacheManager
