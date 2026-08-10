@@ -28,6 +28,11 @@
 		A100001729F0000100000017 /* ResolverCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001729F0000100000017 /* ResolverCoordinator.swift */; };
 		A100001829F0000100000018 /* AppleAlbumDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001829F0000100000018 /* AppleAlbumDetailView.swift */; };
 		A100001929F0000100000019 /* AppleArtistDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001929F0000100000019 /* AppleArtistDetailView.swift */; };
+		A100002029F0000100000020 /* LrclibModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002029F0000100000020 /* LrclibModels.swift */; };
+		A100002129F0000100000021 /* LrcParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002129F0000100000021 /* LrcParser.swift */; };
+		A100002229F0000100000022 /* LrclibService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002229F0000100000022 /* LrclibService.swift */; };
+		A100002329F0000100000023 /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002329F0000100000023 /* QueueView.swift */; };
+		A100002429F0000100000024 /* LyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002429F0000100000024 /* LyricsView.swift */; };
 		A100000D29F000010000000D /* runtime.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B100000D29F000010000000D /* runtime.bundle.js */; };
 		A100000E29F000010000000E /* polyfills in Resources */ = {isa = PBXBuildFile; fileRef = B100000E29F000010000000E /* polyfills */; };
 /* End PBXBuildFile section */
@@ -55,6 +60,11 @@
 		B100001729F0000100000017 /* ResolverCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResolverCoordinator.swift; sourceTree = "<group>"; };
 		B100001829F0000100000018 /* AppleAlbumDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleAlbumDetailView.swift; sourceTree = "<group>"; };
 		B100001929F0000100000019 /* AppleArtistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleArtistDetailView.swift; sourceTree = "<group>"; };
+		B100002029F0000100000020 /* LrclibModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LrclibModels.swift; sourceTree = "<group>"; };
+		B100002129F0000100000021 /* LrcParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LrcParser.swift; path = Services/LrcParser.swift; sourceTree = "<group>"; };
+		B100002229F0000100000022 /* LrclibService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LrclibService.swift; path = Services/LrclibService.swift; sourceTree = "<group>"; };
+		B100002329F0000100000023 /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
+		B100002429F0000100000024 /* LyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsView.swift; sourceTree = "<group>"; };
 		B100000D29F000010000000D /* runtime.bundle.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = runtime.bundle.js; sourceTree = "<group>"; };
 		B100000E29F000010000000E /* polyfills */ = {isa = PBXFileReference; lastKnownFileType = folder; path = polyfills; sourceTree = "<group>"; };
 		B100000F29F000010000000F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -90,6 +100,7 @@
 				B100000129F0000100000001 /* YTJSMusicApp.swift */,
 				F100000129F0000100000001 /* Models */,
 				F100000229F0000100000002 /* Managers */,
+				F100000429F0000100000004 /* Services */,
 				F100000329F0000100000003 /* Views */,
 				B100000F29F000010000000F /* Info.plist */,
 			);
@@ -103,6 +114,7 @@
 				B100000329F0000100000003 /* Playlist.swift */,
 				B100001229F0000100000012 /* SystemLogger.swift */,
 				B100001429F0000100000014 /* AppleMusicSearchResult.swift */,
+				B100002029F0000100000020 /* LrclibModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -119,6 +131,15 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
+		F100000429F0000100000004 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B100002129F0000100000021 /* LrcParser.swift */,
+				B100002229F0000100000022 /* LrclibService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		F100000329F0000100000003 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +151,8 @@
 				B100001529F0000100000015 /* AppleSearchView.swift */,
 				B100001829F0000100000018 /* AppleAlbumDetailView.swift */,
 				B100001929F0000100000019 /* AppleArtistDetailView.swift */,
+				B100002329F0000100000023 /* QueueView.swift */,
+				B100002429F0000100000024 /* LyricsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -225,6 +248,11 @@
 				A100001729F0000100000017 /* ResolverCoordinator.swift in Sources */,
 				A100001829F0000100000018 /* AppleAlbumDetailView.swift in Sources */,
 				A100001929F0000100000019 /* AppleArtistDetailView.swift in Sources */,
+				A100002029F0000100000020 /* LrclibModels.swift in Sources */,
+				A100002129F0000100000021 /* LrcParser.swift in Sources */,
+				A100002229F0000100000022 /* LrclibService.swift in Sources */,
+				A100002329F0000100000023 /* QueueView.swift in Sources */,
+				A100002429F0000100000024 /* LyricsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
