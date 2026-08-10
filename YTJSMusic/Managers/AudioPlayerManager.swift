@@ -14,9 +14,9 @@ public class AudioPlayerManager: ObservableObject {
     @Published public var isRepeat: Bool = false
     @Published public var lastPlayerError: String? = nil
     
-    public var queue: [Track] = []
+    @Published public var queue: [Track] = []
+    @Published public var currentIndex: Int = 0
     private var originalQueue: [Track] = []
-    private var currentIndex: Int = 0
     
     private var player: AVPlayer?
     private var timeObserverToken: Any?
@@ -67,6 +67,55 @@ public class AudioPlayerManager: ObservableObject {
     
     public func playTrack(track: Track) {
         playQueue(tracks: [track], startIndex: 0)
+    }
+    
+    public func playNext(track: Track) {
+        if queue.isEmpty {
+            playTrack(track: track)
+        } else {
+            let insertIndex = min(currentIndex + 1, queue.count)
+            queue.insert(track, at: insertIndex)
+            originalQueue.append(track)
+        }
+    }
+    
+    public func appendQueue(track: Track) {
+        if queue.isEmpty {
+            playTrack(track: track)
+        } else {
+            queue.append(track)
+            originalQueue.append(track)
+        }
+    }
+    
+    public func jumpToQueueTrack(at index: Int) {
+        guard index >= 0, index < queue.count else { return }
+        currentIndex = index
+        loadAndPlayCurrentTrack()
+    }
+    
+    public var upcomingQueue: [Track] {
+        guard !queue.isEmpty, currentIndex + 1 < queue.count else { return [] }
+        return Array(queue[(currentIndex + 1)...])
+    }
+    
+    public func removeUpcomingTrack(atRelativeIndex relIndex: Int) {
+        let absIndex = currentIndex + 1 + relIndex
+        guard absIndex > currentIndex, absIndex < queue.count else { return }
+        queue.remove(at: absIndex)
+    }
+    
+    public func reorderUpcomingQueue(fromOffsets source: IndexSet, toOffset destination: Int) {
+        var upcoming = upcomingQueue
+        upcoming.move(fromOffsets: source, toOffset: destination)
+        var newQueue = Array(queue[0...currentIndex])
+        newQueue.append(contentsOf: upcoming)
+        queue = newQueue
+    }
+    
+    public func clearUpcomingQueue() {
+        guard !queue.isEmpty, currentIndex < queue.count else { return }
+        queue = Array(queue[0...currentIndex])
     }
     
     public func togglePlayPause() {

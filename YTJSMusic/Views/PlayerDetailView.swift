@@ -8,9 +8,11 @@ struct PlayerDetailView: View {
     @State private var isEditingSlider: Bool = false
     @State private var editingSliderValue: Double = 0.0
     @State private var showDebugLogs: Bool = false
+    @State private var showLyrics: Bool = false
+    @State private var showQueue: Bool = false
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 16) {
             // Top Bar
             HStack {
                 Button(action: {
@@ -21,7 +23,7 @@ struct PlayerDetailView: View {
                         .foregroundColor(.primary)
                 }
                 Spacer()
-                Text("Now Playing")
+                Text(showLyrics ? "Lyrics" : "Now Playing")
                     .font(.headline)
                     .foregroundColor(.secondary)
                 Spacer()
@@ -61,42 +63,49 @@ struct PlayerDetailView: View {
                 .padding(.horizontal)
             }
             
-            Spacer()
-            
-            // Artwork
-            if let track = audioManager.currentTrack {
-                AsyncImage(url: URL(string: track.thumbnail)) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } else {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.3))
-                            .overlay(Image(systemName: "music.note").font(.largeTitle))
+            // Central Content: Artwork vs Synchronized Lyrics
+            if showLyrics {
+                LyricsView(audioManager: audioManager)
+                    .cornerRadius(16)
+                    .padding(.horizontal, 8)
+                    .transition(.opacity)
+            } else {
+                Spacer()
+                
+                if let track = audioManager.currentTrack {
+                    AsyncImage(url: URL(string: track.thumbnail)) { phase in
+                        if let image = phase.image {
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        } else {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .overlay(Image(systemName: "music.note").font(.largeTitle))
+                        }
                     }
+                    .frame(width: 260, height: 260)
+                    .cornerRadius(16)
+                    .shadow(color: Color.black.opacity(0.25), radius: 12, x: 0, y: 6)
                 }
-                .frame(width: 260, height: 260)
-                .cornerRadius(16)
-                .shadow(color: Color.black.opacity(0.25), radius: 12, x: 0, y: 6)
-            }
-            
-            Spacer()
-            
-            // Track Info
-            if let track = audioManager.currentTrack {
-                VStack(spacing: 6) {
-                    Text(track.title)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                        .padding(.horizontal)
-                    
-                    Text(track.artist)
-                        .font(.body)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
+                
+                Spacer()
+                
+                // Track Info
+                if let track = audioManager.currentTrack {
+                    VStack(spacing: 6) {
+                        Text(track.title)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
+                            .padding(.horizontal)
+                        
+                        Text(track.artist)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                    }
                 }
             }
             
@@ -133,7 +142,7 @@ struct PlayerDetailView: View {
                 .padding(.horizontal, 20)
             }
             
-            // Player Controls
+            // Primary Playback Controls
             HStack(spacing: 36) {
                 Button(action: {
                     audioManager.toggleShuffle()
@@ -186,11 +195,51 @@ struct PlayerDetailView: View {
                         .foregroundColor(audioManager.isRepeat ? .red : .gray)
                 }
             }
-            .padding(.bottom, 32)
+            
+            // Bottom Feature Toolbar (Lyrics & Queue)
+            HStack {
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showLyrics.toggle()
+                    }
+                }) {
+                    Image(systemName: showLyrics ? "quote.bubble.fill" : "quote.bubble")
+                        .font(.title2)
+                        .foregroundColor(showLyrics ? .red : .gray)
+                        .padding(10)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    showQueue = true
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "list.bullet")
+                            .font(.title2)
+                        if !audioManager.upcomingQueue.isEmpty {
+                            Text("\(audioManager.upcomingQueue.count)")
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                                .padding(5)
+                                .background(Color.red)
+                                .foregroundColor(.white)
+                                .clipShape(Circle())
+                        }
+                    }
+                    .foregroundColor(.gray)
+                    .padding(10)
+                }
+            }
+            .padding(.horizontal, 24)
+            .padding(.bottom, 12)
         }
         .background(Color(UIColor.systemBackground).ignoresSafeArea())
         .sheet(isPresented: $showDebugLogs) {
             DebugLogsView()
+        }
+        .sheet(isPresented: $showQueue) {
+            QueueView(audioManager: audioManager)
         }
     }
     

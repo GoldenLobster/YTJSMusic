@@ -30,4 +30,11 @@ public struct Track: Identifiable, Codable, Equatable, Hashable {
         }
         return 0.0
     }
+    
+    public var recordingKey: String {
+        let normArtist = artist.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        let normTitle = title.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        let durSec = Int(durationInSeconds)
+        return "\(normArtist)|\(normTitle)|\(durSec)"
+    }
 }

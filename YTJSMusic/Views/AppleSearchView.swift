@@ -159,6 +159,12 @@ struct AppleSearchView: View {
                                                         onTap: {
                                                             playAppleTrack(track)
                                                         },
+                                                        onPlayNext: {
+                                                            resolveAndPlayNext(track)
+                                                        },
+                                                        onAppendQueue: {
+                                                            resolveAndAppendQueue(track)
+                                                        },
                                                         onInfoTap: {
                                                             activeSheet = .preview(track)
                                                         },
@@ -322,6 +328,46 @@ struct AppleSearchView: View {
             }
         }
     }
+    
+    private func resolveAndPlayNext(_ track: AppleMusicTrack) {
+        resolvingTrackId = track.id
+        jscClient.resolveAppleTrackToYouTube(track: track) { result in
+            DispatchQueue.main.async {
+                self.resolvingTrackId = nil
+                if case .success(let res) = result, !res.primaryVideoId.isEmpty {
+                    let ytTrack = Track(
+                        id: res.primaryVideoId,
+                        title: track.title,
+                        artist: track.artist,
+                        album: track.album,
+                        duration: track.durationFormatted,
+                        thumbnail: track.artworkUrl
+                    )
+                    self.audioManager.playNext(track: ytTrack)
+                }
+            }
+        }
+    }
+    
+    private func resolveAndAppendQueue(_ track: AppleMusicTrack) {
+        resolvingTrackId = track.id
+        jscClient.resolveAppleTrackToYouTube(track: track) { result in
+            DispatchQueue.main.async {
+                self.resolvingTrackId = nil
+                if case .success(let res) = result, !res.primaryVideoId.isEmpty {
+                    let ytTrack = Track(
+                        id: res.primaryVideoId,
+                        title: track.title,
+                        artist: track.artist,
+                        album: track.album,
+                        duration: track.durationFormatted,
+                        thumbnail: track.artworkUrl
+                    )
+                    self.audioManager.appendQueue(track: ytTrack)
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Row Subviews
@@ -330,6 +376,8 @@ struct SongRowView: View {
     let track: AppleMusicTrack
     let isResolving: Bool
     let onTap: () -> Void
+    let onPlayNext: () -> Void
+    let onAppendQueue: () -> Void
     let onInfoTap: () -> Void
     let onAddToPlaylist: () -> Void
     
@@ -389,6 +437,12 @@ struct SongRowView: View {
             Menu {
                 Button(action: onTap) {
                     Label("Play Track", systemImage: "play.circle")
+                }
+                Button(action: onPlayNext) {
+                    Label("Play Next", systemImage: "text.insert")
+                }
+                Button(action: onAppendQueue) {
+                    Label("Add to Queue", systemImage: "text.append")
                 }
                 Button(action: onAddToPlaylist) {
                     Label("Add to Playlist", systemImage: "plus")

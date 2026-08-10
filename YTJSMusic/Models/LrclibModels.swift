@@ -1,0 +1,38 @@
+// YTJSMusic/Models/LrclibModels.swift
+import Foundation
+
+public struct LrclibResponse: Codable, Equatable {
+    public let id: Int?
+    public let name: String?
+    public let trackName: String?
+    public let artistName: String?
+    public let albumName: String?
+    public let duration: Double?
+    public let instrumental: Bool?
+    public let plainLyrics: String?
+    public let syncedLyrics: String?
+    
+    public init(id: Int? = nil, name: String? = nil, trackName: String? = nil, artistName: String? = nil, albumName: String? = nil, duration: Double? = nil, instrumental: Bool? = nil, plainLyrics: String? = nil, syncedLyrics: String? = nil) {
+        self.id = id
+        self.name = name
+        self.trackName = trackName
+        self.artistName = artistName
+        self.albumName = albumName
+        self.duration = duration
+        self.instrumental = instrumental
+        self.plainLyrics = plainLyrics
+        self.syncedLyrics = syncedLyrics
+    }
+}
+
+public struct LyricLine: Identifiable, Equatable, Hashable {
+    public let id: UUID
+    public let timestamp: Double
+    public let text: String
+    
+    public init(id: UUID = UUID(), timestamp: Double, text: String) {
+        self.id = id
+        self.timestamp = timestamp
+        self.text = text
+    }
+}

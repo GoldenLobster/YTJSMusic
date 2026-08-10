@@ -79,6 +79,12 @@ struct MusicSearchView: View {
                                 onPlay: {
                                     audioManager.playQueue(tracks: searchResults, startIndex: searchResults.firstIndex(of: track) ?? 0)
                                 },
+                                onPlayNext: {
+                                    audioManager.playNext(track: track)
+                                },
+                                onAppendQueue: {
+                                    audioManager.appendQueue(track: track)
+                                },
                                 onAddToPlaylist: {
                                     selectedTrackForPlaylist = track
                                     showPlaylistSheet = true
@@ -121,6 +127,8 @@ struct TrackRow: View {
     let track: Track
     let isCurrent: Bool
     let onPlay: () -> Void
+    let onPlayNext: () -> Void
+    let onAppendQueue: () -> Void
     let onAddToPlaylist: () -> Void
     
     var body: some View {
@@ -151,12 +159,24 @@ struct TrackRow: View {
             
             Spacer()
             
-            Button(action: onAddToPlaylist) {
-                Image(systemName: "plus.circle")
-                    .font(.title3)
-                    .foregroundColor(.secondary)
+            Menu {
+                Button(action: onPlay) {
+                    Label("Play Now", systemImage: "play.circle")
+                }
+                Button(action: onPlayNext) {
+                    Label("Play Next", systemImage: "text.insert")
+                }
+                Button(action: onAppendQueue) {
+                    Label("Add to Queue", systemImage: "text.append")
+                }
+                Button(action: onAddToPlaylist) {
+                    Label("Add to Playlist", systemImage: "plus")
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.gray)
+                    .padding(8)
             }
-            .buttonStyle(BorderlessButtonStyle())
         }
         .contentShape(Rectangle())
         .onTapGesture {
