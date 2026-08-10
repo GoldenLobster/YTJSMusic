@@ -107,6 +107,7 @@ public class AudioPlayerManager: ObservableObject {
     }
     
     public func reorderUpcomingQueue(fromOffsets source: IndexSet, toOffset destination: Int) {
+        guard !queue.isEmpty, currentIndex < queue.count else { return }
         var upcoming = upcomingQueue
         upcoming.move(fromOffsets: source, toOffset: destination)
         var newQueue = Array(queue[0...currentIndex])

@@ -70,8 +70,7 @@ struct QueueView: View {
                                 .foregroundColor(.secondary)
                                 .padding(.vertical, 8)
                         } else {
-                            ForEach(0..<upcoming.count, id: \.self) { idx in
-                                let track = upcoming[idx]
+                            ForEach(upcoming) { track in
                                 HStack(spacing: 12) {
                                     AsyncImage(url: URL(string: track.thumbnail)) { phase in
                                         if let img = phase.image {
@@ -105,7 +104,9 @@ struct QueueView: View {
                                 .padding(.vertical, 2)
                                 .contentShape(Rectangle())
                                 .onTapGesture {
-                                    audioManager.jumpToQueueTrack(at: audioManager.currentIndex + 1 + idx)
+                                    if let idx = upcoming.firstIndex(of: track) {
+                                        audioManager.jumpToQueueTrack(at: audioManager.currentIndex + 1 + idx)
+                                    }
                                 }
                             }
                             .onDelete { offsets in
