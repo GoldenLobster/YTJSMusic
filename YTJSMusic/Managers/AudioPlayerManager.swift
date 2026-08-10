@@ -109,7 +109,7 @@ public class AudioPlayerManager: ObservableObject {
     public func reorderUpcomingQueue(fromOffsets source: IndexSet, toOffset destination: Int) {
         guard !queue.isEmpty, currentIndex < queue.count else { return }
         var upcoming = upcomingQueue
-        upcoming.move(fromOffsets: source, toOffset: destination)
+        upcoming.moveQueueElements(fromOffsets: source, toOffset: destination)
         var newQueue = Array(queue[0...currentIndex])
         newQueue.append(contentsOf: upcoming)
         queue = newQueue
@@ -435,5 +435,29 @@ public class AudioPlayerManager: ObservableObject {
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+}
+
+extension Array {
+    mutating func moveQueueElements(fromOffsets source: IndexSet, toOffset destination: Int) {
+        var movingElements = [Element]()
+        for index in source {
+            if index < count {
+                movingElements.append(self[index])
+            }
+        }
+        
+        var result = [Element]()
+        result.reserveCapacity(count)
+        for (index, element) in self.enumerated() {
+            if !source.contains(index) {
+                result.append(element)
+            }
+        }
+        
+        let removedBeforeDest = source.filter { $0 < destination }.count
+        let targetIndex = Swift.max(0, Swift.min(destination - removedBeforeDest, result.count))
+        result.insert(contentsOf: movingElements, at: targetIndex)
+        self = result
     }
 }
