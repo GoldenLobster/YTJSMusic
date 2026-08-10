@@ -5,6 +5,10 @@ struct QueueView: View {
     @ObservedObject var audioManager: AudioPlayerManager
     @Environment(\.presentationMode) var presentationMode
     
+    private var upcoming: [Track] {
+        audioManager.upcomingQueue
+    }
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
@@ -48,7 +52,6 @@ struct QueueView: View {
                     }
                     
                     // Up Next Section
-                    let upcoming = audioManager.upcomingQueue
                     Section(header:
                         HStack {
                             Text("Up Next (\(upcoming.count))")

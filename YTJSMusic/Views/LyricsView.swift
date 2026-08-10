@@ -57,8 +57,7 @@ struct LyricsView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if !lyricLines.isEmpty {
-                    let activeId = currentActiveLyricId()
-                    
+                    let currentActive = activeId
                     ScrollViewReader { proxy in
                         ZStack(alignment: .bottom) {
                             ScrollView {
@@ -66,23 +65,7 @@ struct LyricsView: View {
                                     Spacer().frame(height: 40)
                                     
                                     ForEach(lyricLines) { line in
-                                        let isActive = isSynced && (line.id == activeId)
-                                        
-                                        Text(line.text)
-                                            .font(.system(size: isActive ? 26 : 22, weight: isActive ? .bold : .semibold, design: .rounded))
-                                            .foregroundColor(isActive ? .white : .white.opacity(0.45))
-                                            .multilineTextAlignment(.leading)
-                                            .blur(radius: isSynced && !isActive ? 0.3 : 0)
-                                            .scaleEffect(isActive ? 1.02 : 1.0, anchor: .leading)
-                                            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isActive)
-                                            .id(line.id)
-                                            .contentShape(Rectangle())
-                                            .onTapGesture {
-                                                if isSynced {
-                                                    triggerUserScrollLockout()
-                                                    audioManager.seek(to: line.timestamp)
-                                                }
-                                            }
+                                        lyricLineView(line: line, activeId: currentActive)
                                     }
                                     
                                     Spacer().frame(height: 120)
@@ -94,7 +77,7 @@ struct LyricsView: View {
                                     triggerUserScrollLockout()
                                 }
                             )
-                            .onChange(of: activeId, perform: { newActiveId in
+                            .onChange(of: currentActive, perform: { newActiveId in
                                 if isSynced && !isUserScrolling, let id = newActiveId {
                                     withAnimation(.easeInOut(duration: 0.4)) {
                                         proxy.scrollTo(id, anchor: .center)
@@ -106,9 +89,9 @@ struct LyricsView: View {
                             if isUserScrolling && isSynced {
                                 Button(action: {
                                     isUserScrolling = false
-                                    if let activeId = activeId {
+                                    if let currentActive = currentActive {
                                         withAnimation(.easeInOut(duration: 0.4)) {
-                                            proxy.scrollTo(activeId, anchor: .center)
+                                            proxy.scrollTo(currentActive, anchor: .center)
                                         }
                                     }
                                 }) {
@@ -150,6 +133,30 @@ struct LyricsView: View {
         .onChange(of: audioManager.currentTrack?.id, perform: { _ in
             loadLyricsForCurrentTrack()
         })
+    }
+    
+    private var activeId: UUID? {
+        currentActiveLyricId()
+    }
+    
+    @ViewBuilder
+    private func lyricLineView(line: LyricLine, activeId: UUID?) -> some View {
+        let isActive = isSynced && (line.id == activeId)
+        Text(line.text)
+            .font(.system(size: isActive ? 26 : 22, weight: isActive ? .bold : .semibold, design: .rounded))
+            .foregroundColor(isActive ? .white : .white.opacity(0.45))
+            .multilineTextAlignment(.leading)
+            .blur(radius: isSynced && !isActive ? 0.3 : 0)
+            .scaleEffect(isActive ? 1.02 : 1.0, anchor: .leading)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isActive)
+            .id(line.id)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                if isSynced {
+                    triggerUserScrollLockout()
+                    audioManager.seek(to: line.timestamp)
+                }
+            }
     }
     
     private func currentActiveLyricId() -> UUID? {

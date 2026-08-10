@@ -1,5 +1,6 @@
 // YTJSMusic/Services/LrclibService.swift
 import Foundation
+import Combine
 
 public class LrclibService: ObservableObject {
     public static let shared = LrclibService()
