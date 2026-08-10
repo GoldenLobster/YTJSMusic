@@ -61,8 +61,8 @@
 		B100001829F0000100000018 /* AppleAlbumDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleAlbumDetailView.swift; sourceTree = "<group>"; };
 		B100001929F0000100000019 /* AppleArtistDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleArtistDetailView.swift; sourceTree = "<group>"; };
 		B100002029F0000100000020 /* LrclibModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LrclibModels.swift; sourceTree = "<group>"; };
-		B100002129F0000100000021 /* LrcParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LrcParser.swift; path = Services/LrcParser.swift; sourceTree = "<group>"; };
-		B100002229F0000100000022 /* LrclibService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LrclibService.swift; path = Services/LrclibService.swift; sourceTree = "<group>"; };
+		B100002129F0000100000021 /* LrcParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LrcParser.swift; sourceTree = "<group>"; };
+		B100002229F0000100000022 /* LrclibService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LrclibService.swift; sourceTree = "<group>"; };
 		B100002329F0000100000023 /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		B100002429F0000100000024 /* LyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsView.swift; sourceTree = "<group>"; };
 		B100000D29F000010000000D /* runtime.bundle.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = runtime.bundle.js; sourceTree = "<group>"; };
