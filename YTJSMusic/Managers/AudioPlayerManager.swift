@@ -518,12 +518,13 @@ public class AudioPlayerManager: ObservableObject {
                                 }
                             }
                         }
+                        let finalTotalLen = totalLen
                         Task {
                             await AudioStreamCacheManager.shared.writeChunk(key: cacheKey, range: range, data: data, isPrefetch: true)
-                            if totalLen > 0 {
-                                await AudioStreamCacheManager.shared.updateContentLength(key: cacheKey, length: totalLen)
+                            if finalTotalLen > 0 {
+                                await AudioStreamCacheManager.shared.updateContentLength(key: cacheKey, length: finalTotalLen)
                             }
-                            SystemLogger.shared.append("[PREFETCH LEVEL 2 SUCCESS] Cached \(data.count) initial bytes (total \(totalLen)b) for '\(track.title)'")
+                            SystemLogger.shared.append("[PREFETCH LEVEL 2 SUCCESS] Cached \(data.count) initial bytes (total \(finalTotalLen)b) for '\(track.title)'")
                         }
                     }
                 }.resume()

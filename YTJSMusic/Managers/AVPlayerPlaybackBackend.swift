@@ -28,14 +28,12 @@ public class AVPlayerPlaybackBackend: NSObject, AudioPlaybackBackend {
     public func play(track: Track, resolvedURL: URL, cacheKey: AudioStreamCacheKey) {
         stop()
         
-        let loader = YTStreamResourceLoader(streamURL: resolvedURL, track: track, cacheKey: cacheKey, jscClient: jscClient)
+        let ref = RemoteStreamReference(key: cacheKey, initialURL: resolvedURL)
+        let source = StreamSource.remote(ref)
+        let loader = YTStreamResourceLoader(streamSource: source, track: track, jscClient: jscClient)
         self.streamResourceLoader = loader
         
-        guard let customURL = loader.getCustomSchemeURL() else {
-            delegate?.playbackDidFail(error: "Failed to construct custom scheme URL")
-            return
-        }
-        
+        let customURL = loader.customSchemeURL
         let asset = AVURLAsset(url: customURL)
         asset.resourceLoader.setDelegate(loader, queue: DispatchQueue.main)
         
