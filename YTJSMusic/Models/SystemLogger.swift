@@ -15,4 +15,8 @@ public class SystemLogger: ObservableObject {
             self.logs.append(message)
         }
     }
+    
+    public func getLogs() -> String {
+        return logs.joined(separator: "\n")
+    }
 }

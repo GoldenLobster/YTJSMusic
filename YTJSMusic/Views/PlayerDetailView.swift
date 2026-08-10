@@ -296,13 +296,14 @@ struct PlayerDetailView: View {
 
 struct DebugLogsView: View {
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var logger = SystemLogger.shared
     @State private var isCopied: Bool = false
     
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(SystemLogger.shared.getLogs())
+                    Text(logger.getLogs())
                         .font(.system(.caption, design: .monospaced))
                         .foregroundColor(.primary)
                         .padding()
@@ -312,7 +313,7 @@ struct DebugLogsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: Button(isCopied ? "Copied!" : "Copy") {
-                    UIPasteboard.general.string = SystemLogger.shared.getLogs()
+                    UIPasteboard.general.string = logger.getLogs()
                     isCopied = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                         isCopied = false
