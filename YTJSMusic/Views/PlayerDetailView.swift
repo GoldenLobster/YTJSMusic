@@ -8,6 +8,7 @@ struct PlayerDetailView: View {
     @State private var isEditingSlider: Bool = false
     @State private var editingSliderValue: Double = 0.0
     @State private var showDebugLogs: Bool = false
+    @State private var showCacheSettings: Bool = false
     @State private var showLyrics: Bool = false
     @State private var showQueue: Bool = false
     
@@ -28,12 +29,22 @@ struct PlayerDetailView: View {
                         .font(.headline)
                         .foregroundColor(.secondary)
                     Spacer()
-                    Button(action: {
-                        showDebugLogs = true
-                    }) {
-                        Image(systemName: "terminal")
-                            .font(.title3)
-                            .foregroundColor(.red)
+                    HStack(spacing: 16) {
+                        Button(action: {
+                            showCacheSettings = true
+                        }) {
+                            Image(systemName: "gearshape")
+                                .font(.title3)
+                                .foregroundColor(.primary)
+                        }
+                        
+                        Button(action: {
+                            showDebugLogs = true
+                        }) {
+                            Image(systemName: "terminal")
+                                .font(.title3)
+                                .foregroundColor(.red)
+                        }
                     }
                 }
                 .padding(.top, 16)
@@ -279,6 +290,9 @@ struct PlayerDetailView: View {
         }
         .sheet(isPresented: $showDebugLogs) {
             DebugLogsView()
+        }
+        .sheet(isPresented: $showCacheSettings) {
+            CacheSettingsView()
         }
         .sheet(isPresented: $showQueue) {
             QueueView(audioManager: audioManager)

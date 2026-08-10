@@ -383,49 +383,53 @@ struct SongRowView: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            ZStack {
-                AsyncImage(url: URL(string: track.artworkUrl)) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } else {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.2))
-                            .overlay(Image(systemName: "music.note").foregroundColor(.gray))
+            HStack(spacing: 12) {
+                ZStack {
+                    AsyncImage(url: URL(string: track.artworkUrl)) { phase in
+                        if let image = phase.image {
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        } else {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.2))
+                                .overlay(Image(systemName: "music.note").foregroundColor(.gray))
+                        }
+                    }
+                    .frame(width: 48, height: 48)
+                    .cornerRadius(6)
+                    
+                    if isResolving {
+                        Color.black.opacity(0.4)
+                            .cornerRadius(6)
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
                     }
                 }
-                .frame(width: 56, height: 56)
-                .cornerRadius(8)
                 
-                if isResolving {
-                    Rectangle()
-                        .fill(Color.black.opacity(0.4))
-                        .frame(width: 56, height: 56)
-                        .cornerRadius(8)
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 4) {
+                        Text(track.title)
+                            .font(.body)
+                            .fontWeight(.semibold)
+                            .lineLimit(1)
+                        
+                        if track.isExplicit {
+                            Image(systemName: "e.square.fill")
+                                .font(.caption2)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    
+                    Text("\(track.artist) • \(track.album)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
                 }
             }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 4) {
-                    Text(track.title)
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .lineLimit(1)
-                    
-                    if track.isExplicit {
-                        Image(systemName: "e.square.fill")
-                            .font(.caption2)
-                            .foregroundColor(.gray)
-                    }
-                }
-                
-                Text("\(track.artist) • \(track.album)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                onTap()
             }
             
             Spacer()
@@ -458,10 +462,6 @@ struct SongRowView: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 4)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            onTap()
-        }
     }
 }
 

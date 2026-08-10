@@ -111,30 +111,36 @@ struct AppleAlbumDetailView: View {
                         ForEach(0..<container.tracks.count, id: \.self) { index in
                             let track = container.tracks[index]
                             HStack(spacing: 14) {
-                                Text("\(index + 1)")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.secondary)
-                                    .frame(width: 24, alignment: .center)
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack(spacing: 4) {
-                                        Text(track.title)
-                                            .font(.body)
-                                            .fontWeight(.medium)
-                                            .lineLimit(1)
-                                        
-                                        if track.isExplicit {
-                                            Image(systemName: "e.square.fill")
-                                                .font(.caption2)
-                                                .foregroundColor(.gray)
-                                        }
-                                    }
-                                    
-                                    Text(track.artist)
-                                        .font(.caption)
+                                HStack(spacing: 14) {
+                                    Text("\(index + 1)")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
                                         .foregroundColor(.secondary)
-                                        .lineLimit(1)
+                                        .frame(width: 24, alignment: .center)
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        HStack(spacing: 4) {
+                                            Text(track.title)
+                                                .font(.body)
+                                                .fontWeight(.medium)
+                                                .lineLimit(1)
+                                            
+                                            if track.isExplicit {
+                                                Image(systemName: "e.square.fill")
+                                                    .font(.caption2)
+                                                    .foregroundColor(.gray)
+                                            }
+                                        }
+                                        
+                                        Text(track.artist)
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                            .lineLimit(1)
+                                    }
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    playAlbum(tracks: container.tracks, startIndex: index)
                                 }
                                 
                                 Spacer()
@@ -147,7 +153,7 @@ struct AppleAlbumDetailView: View {
                                      Button(action: {
                                          playAlbum(tracks: container.tracks, startIndex: index)
                                      }) {
-                                         Label("Play Next", systemImage: "play.circle")
+                                         Label("Play Track", systemImage: "play.circle")
                                      }
                                      Button(action: {
                                          trackForPlaylist = track
@@ -162,10 +168,6 @@ struct AppleAlbumDetailView: View {
                             }
                             .padding(.horizontal, 16)
                             .padding(.vertical, 10)
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                playAlbum(tracks: container.tracks, startIndex: index)
-                            }
                             
                             Divider()
                                 .padding(.leading, 54)

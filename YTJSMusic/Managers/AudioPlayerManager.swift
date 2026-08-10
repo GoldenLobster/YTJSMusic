@@ -206,6 +206,7 @@ public class AudioPlayerManager: ObservableObject {
         self.currentTime = 0.0
         self.duration = track.durationInSeconds
         self.lastPlayerError = nil
+        self.hasPrefetchedNextTrack = false
         
         let msg = "[AUDIO MANAGER] Requesting stream URL for '\(track.title)' (\(track.id))..."
         print(msg)
@@ -344,6 +345,7 @@ public class AudioPlayerManager: ObservableObject {
         timeObserverToken = player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             guard let self = self else { return }
             self.currentTime = time.seconds
+            self.checkPrefetchThreshold(currentTime: self.currentTime, duration: self.duration)
             
             // Auto advance if current time exceeds track duration
             if self.duration > 0 && self.currentTime >= self.duration - 0.5 {
@@ -385,6 +387,55 @@ public class AudioPlayerManager: ObservableObject {
         bufferEmptyObserverToken = nil
         
         NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
+    }
+    
+    // MARK: - Smart Two-Level Duration Prefetcher
+    private var hasPrefetchedNextTrack: Bool = false
+    
+    private func checkPrefetchThreshold(currentTime: Double, duration: Double) {
+        guard duration > 0, !hasPrefetchedNextTrack, let nextTrack = upcomingQueue.first else { return }
+        
+        let remainingSeconds = duration - currentTime
+        let thresholdSeconds: Double
+        if duration < 180 { // < 3 min
+            thresholdSeconds = 20
+        } else if duration < 480 { // 3-8 min
+            thresholdSeconds = 30
+        } else { // > 8 min
+            thresholdSeconds = 45
+        }
+        
+        if remainingSeconds <= thresholdSeconds {
+            hasPrefetchedNextTrack = true
+            prefetchNextTrack(nextTrack)
+        }
+    }
+    
+    private func prefetchNextTrack(_ track: Track) {
+        SystemLogger.shared.append("[PREFETCH] Triggering two-level prefetch for '\(track.title)' (\(track.id))")
+        jscClient.getAudioStreamUrl(videoId: track.id) { [weak self] result in
+            if case .success(let urlString) = result, let url = URL(string: urlString) {
+                SystemLogger.shared.append("[PREFETCH LEVEL 1 SUCCESS] Resolved stream URL for '\(track.title)'")
+                
+                let policy = NetworkPathMonitor.shared.currentPolicy
+                let fetchBytes = policy.prefetchBytes
+                guard fetchBytes > 0 else { return }
+                
+                let cacheKey = AudioStreamCacheKey(videoID: track.id, itag: 140, mimeType: "audio/mp4", codec: "mp4a.40.2", container: "m4a")
+                let range = NSRange(location: 0, length: Int(fetchBytes))
+                
+                var req = URLRequest(url: url)
+                req.setValue("bytes=0-\(fetchBytes - 1)", forHTTPHeaderField: "Range")
+                URLSession.shared.dataTask(with: req) { data, _, _ in
+                    if let data = data, !data.isEmpty {
+                        Task {
+                            await AudioStreamCacheManager.shared.writeChunk(key: cacheKey, range: range, data: data, isPrefetch: true)
+                            SystemLogger.shared.append("[PREFETCH LEVEL 2 SUCCESS] Cached \(data.count) initial bytes for '\(track.title)'")
+                        }
+                    }
+                }.resume()
+            }
+        }
     }
     
     // MARK: - Lock Screen Controls & Artwork Setup

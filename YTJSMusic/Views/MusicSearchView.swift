@@ -133,28 +133,34 @@ struct TrackRow: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: track.thumbnail)) { phase in
-                if let image = phase.image {
-                    image.resizable().aspectRatio(contentMode: .fill)
-                } else {
-                    Color.gray.opacity(0.3)
+            HStack(spacing: 12) {
+                AsyncImage(url: URL(string: track.thumbnail)) { phase in
+                    if let image = phase.image {
+                        image.resizable().aspectRatio(contentMode: .fill)
+                    } else {
+                        Color.gray.opacity(0.3)
+                    }
+                }
+                .frame(width: 48, height: 48)
+                .cornerRadius(6)
+                .clipped()
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(track.title)
+                        .font(.body)
+                        .fontWeight(.semibold)
+                        .foregroundColor(isCurrent ? .red : .primary)
+                        .lineLimit(1)
+                    
+                    Text("\(track.artist) • \(track.duration)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
                 }
             }
-            .frame(width: 48, height: 48)
-            .cornerRadius(6)
-            .clipped()
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(track.title)
-                    .font(.body)
-                    .fontWeight(.semibold)
-                    .foregroundColor(isCurrent ? .red : .primary)
-                    .lineLimit(1)
-                
-                Text("\(track.artist) • \(track.duration)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                onPlay()
             }
             
             Spacer()
@@ -181,10 +187,6 @@ struct TrackRow: View {
                     .foregroundColor(.gray)
                     .padding(8)
             }
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            onPlay()
         }
     }
 }
