@@ -127,8 +127,8 @@ struct TrackRow: View {
     let track: Track
     let isCurrent: Bool
     let onPlay: () -> Void
-    let onPlayNext: () -> Void
-    let onAppendQueue: () -> Void
+    var onPlayNext: (() -> Void)? = nil
+    var onAppendQueue: (() -> Void)? = nil
     let onAddToPlaylist: () -> Void
     
     var body: some View {
@@ -163,11 +163,15 @@ struct TrackRow: View {
                 Button(action: onPlay) {
                     Label("Play Now", systemImage: "play.circle")
                 }
-                Button(action: onPlayNext) {
-                    Label("Play Next", systemImage: "text.badge.plus")
+                if let onPlayNext = onPlayNext {
+                    Button(action: onPlayNext) {
+                        Label("Play Next", systemImage: "text.badge.plus")
+                    }
                 }
-                Button(action: onAppendQueue) {
-                    Label("Add to Queue", systemImage: "plus.circle")
+                if let onAppendQueue = onAppendQueue {
+                    Button(action: onAppendQueue) {
+                        Label("Add to Queue", systemImage: "plus.circle")
+                    }
                 }
                 Button(action: onAddToPlaylist) {
                     Label("Add to Playlist", systemImage: "plus")

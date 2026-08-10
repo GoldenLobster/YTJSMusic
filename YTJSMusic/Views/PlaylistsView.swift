@@ -108,6 +108,12 @@ struct PlaylistDetailView: View {
                             onPlay: {
                                 audioManager.playQueue(tracks: playlist.tracks, startIndex: playlist.tracks.firstIndex(of: track) ?? 0)
                             },
+                            onPlayNext: {
+                                audioManager.playNext(track: track)
+                            },
+                            onAppendQueue: {
+                                audioManager.appendQueue(track: track)
+                            },
                             onAddToPlaylist: {}
                         )
                     }
