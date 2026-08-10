@@ -86,7 +86,7 @@ public class AVPlayerPlaybackBackend: NSObject, AudioPlaybackBackend {
     }
     
     private func setupItemObservers(item: AVPlayerItem) {
-        statusObserverToken = item.observe(\AVPlayerItem.status, options: [.new]) { [weak self] item, _ in
+        statusObserverToken = item.observe(\AVPlayerItem.status, options: [.new]) { [weak self] item, change in
             DispatchQueue.main.async {
                 if item.status == .failed {
                     let err = item.error?.localizedDescription ?? "Playback error"
@@ -95,7 +95,7 @@ public class AVPlayerPlaybackBackend: NSObject, AudioPlaybackBackend {
             }
         }
         
-        durationObserverToken = item.observe(\AVPlayerItem.duration, options: [.new]) { [weak self] item, _ in
+        durationObserverToken = item.observe(\AVPlayerItem.duration, options: [.new]) { [weak self] item, change in
             DispatchQueue.main.async {
                 let secs = item.duration.seconds
                 if !secs.isNaN && !secs.isInfinite && secs > 0 {
