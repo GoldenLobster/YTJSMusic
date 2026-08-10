@@ -57,7 +57,6 @@ struct LyricsView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if !lyricLines.isEmpty {
-                    let currentActive = activeId
                     ScrollViewReader { proxy in
                         ZStack(alignment: .bottom) {
                             ScrollView {
@@ -65,7 +64,7 @@ struct LyricsView: View {
                                     Spacer().frame(height: 40)
                                     
                                     ForEach(lyricLines) { line in
-                                        lyricLineView(line: line, activeId: currentActive)
+                                        lyricLineView(line: line, activeId: activeId)
                                     }
                                     
                                     Spacer().frame(height: 120)
@@ -77,7 +76,7 @@ struct LyricsView: View {
                                     triggerUserScrollLockout()
                                 }
                             )
-                            .onChange(of: currentActive, perform: { newActiveId in
+                            .onChange(of: activeId, perform: { newActiveId in
                                 if isSynced && !isUserScrolling, let id = newActiveId {
                                     withAnimation(.easeInOut(duration: 0.4)) {
                                         proxy.scrollTo(id, anchor: .center)
@@ -89,9 +88,9 @@ struct LyricsView: View {
                             if isUserScrolling && isSynced {
                                 Button(action: {
                                     isUserScrolling = false
-                                    if let currentActive = currentActive {
+                                    if let activeId = activeId {
                                         withAnimation(.easeInOut(duration: 0.4)) {
-                                            proxy.scrollTo(currentActive, anchor: .center)
+                                            proxy.scrollTo(activeId, anchor: .center)
                                         }
                                     }
                                 }) {
