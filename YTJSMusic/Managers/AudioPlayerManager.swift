@@ -315,7 +315,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on buffer likelihood - resumes play automatically after seeking or buffering
-        likelyToKeepUpObserverToken = playerItem.observe(\.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] item, _ in
+        likelyToKeepUpObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] (item: AVPlayerItem, _: NSKeyValueObservedChange<Bool>) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if item.isPlaybackLikelyToKeepUp {
@@ -328,7 +328,7 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         // KVO observer on buffer empty state
-        bufferEmptyObserverToken = playerItem.observe(\.isPlaybackBufferEmpty, options: [.new]) { [weak self] item, _ in
+        bufferEmptyObserverToken = playerItem.observe(\AVPlayerItem.isPlaybackBufferEmpty, options: [.new]) { [weak self] (item: AVPlayerItem, _: NSKeyValueObservedChange<Bool>) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 if item.isPlaybackBufferEmpty {

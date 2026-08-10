@@ -139,8 +139,8 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
             let resSema = DispatchSemaphore(value: 0)
             var freshURL: URL? = nil
             
-            jscClient.getStreamURL(videoID: track.id) { result in
-                if case .success(let stream) = result, let url = URL(string: stream.url) {
+            jscClient.getAudioStreamUrl(videoId: track.id) { result in
+                if case .success(let streamUrlStr) = result, let url = URL(string: streamUrlStr) {
                     freshURL = url
                 }
                 resSema.signal()
