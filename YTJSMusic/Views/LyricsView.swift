@@ -15,115 +15,95 @@ struct LyricsView: View {
     @State private var scrollTimerWorkItem: DispatchWorkItem? = nil
     
     var body: some View {
-        ZStack {
-            // Blurred Artwork Background
-            if let track = audioManager.currentTrack {
-                AsyncImage(url: URL(string: track.thumbnail)) { phase in
-                    if let img = phase.image {
-                        img
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } else {
-                        Color.black
-                    }
+        VStack(spacing: 0) {
+            if isLoading {
+                VStack(spacing: 12) {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .secondary))
+                        .scaleEffect(1.1)
+                    Text("Fetching Lyrics...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
-                .ignoresSafeArea()
-                .blur(radius: 40)
-                .overlay(Color.black.opacity(0.65))
-            } else {
-                Color.black.ignoresSafeArea()
-            }
-            
-            VStack {
-                if isLoading {
-                    VStack(spacing: 12) {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                            .scaleEffect(1.2)
-                        Text("Fetching Lyrics...")
-                            .font(.subheadline)
-                            .foregroundColor(.white.opacity(0.7))
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if isInstrumental {
-                    VStack(spacing: 16) {
-                        Image(systemName: "music.mic")
-                            .font(.system(size: 56))
-                            .foregroundColor(.white.opacity(0.8))
-                        Text("This track is instrumental")
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if !lyricLines.isEmpty {
-                    ScrollViewReader { proxy in
-                        ZStack(alignment: .bottom) {
-                            ScrollView {
-                                LazyVStack(alignment: .leading, spacing: 20) {
-                                    Spacer().frame(height: 40)
-                                    
-                                    ForEach(lyricLines) { line in
-                                        lyricLineView(line: line, activeId: activeId)
-                                    }
-                                    
-                                    Spacer().frame(height: 120)
+                .frame(maxWidth: .infinity, minHeight: 200, maxHeight: .infinity)
+            } else if isInstrumental {
+                VStack(spacing: 16) {
+                    Image(systemName: "music.mic")
+                        .font(.system(size: 44))
+                        .foregroundColor(.secondary)
+                    Text("This track is instrumental")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                }
+                .frame(maxWidth: .infinity, minHeight: 200, maxHeight: .infinity)
+            } else if !lyricLines.isEmpty {
+                ScrollViewReader { proxy in
+                    ZStack(alignment: .bottom) {
+                        ScrollView {
+                            LazyVStack(alignment: .leading, spacing: 16) {
+                                Spacer().frame(height: 12)
+                                
+                                ForEach(lyricLines) { line in
+                                    lyricLineView(line: line, activeId: activeId)
                                 }
-                                .padding(.horizontal, 24)
+                                
+                                Spacer().frame(height: 48)
                             }
-                            .simultaneousGesture(
-                                DragGesture().onChanged { _ in
-                                    triggerUserScrollLockout()
+                            .padding(.horizontal, 20)
+                        }
+                        .simultaneousGesture(
+                            DragGesture().onChanged { _ in
+                                triggerUserScrollLockout()
+                            }
+                        )
+                        .onChange(of: activeId, perform: { newActiveId in
+                            if isSynced && !isUserScrolling, let id = newActiveId {
+                                withAnimation(.easeInOut(duration: 0.4)) {
+                                    proxy.scrollTo(id, anchor: .center)
                                 }
-                            )
-                            .onChange(of: activeId, perform: { newActiveId in
-                                if isSynced && !isUserScrolling, let id = newActiveId {
+                            }
+                        })
+                        
+                        // Re-sync Pill when user scrolled away
+                        if isUserScrolling && isSynced {
+                            Button(action: {
+                                isUserScrolling = false
+                                if let activeId = activeId {
                                     withAnimation(.easeInOut(duration: 0.4)) {
-                                        proxy.scrollTo(id, anchor: .center)
+                                        proxy.scrollTo(activeId, anchor: .center)
                                     }
                                 }
-                            })
-                            
-                            // Re-sync Pill when user scrolled away
-                            if isUserScrolling && isSynced {
-                                Button(action: {
-                                    isUserScrolling = false
-                                    if let activeId = activeId {
-                                        withAnimation(.easeInOut(duration: 0.4)) {
-                                            proxy.scrollTo(activeId, anchor: .center)
-                                        }
-                                    }
-                                }) {
-                                    HStack(spacing: 6) {
-                                        Image(systemName: "arrow.uturn.backward.circle.fill")
-                                        Text("Sync to Lyrics")
-                                            .font(.caption)
-                                            .fontWeight(.bold)
-                                    }
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 8)
-                                    .background(Capsule().fill(Color.white.opacity(0.25)).background(Capsule().blur(radius: 10)))
-                                    .foregroundColor(.white)
-                                    .shadow(radius: 4)
+                            }) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "arrow.uturn.backward.circle.fill")
+                                    Text("Sync to Lyrics")
+                                        .font(.caption)
+                                        .fontWeight(.bold)
                                 }
-                                .padding(.bottom, 20)
-                                .transition(.move(edge: .bottom).combined(with: .opacity))
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 8)
+                                .background(Capsule().fill(Color.primary.opacity(0.12)))
+                                .foregroundColor(.primary)
+                                .shadow(radius: 2)
                             }
+                            .padding(.bottom, 12)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
                         }
                     }
-                } else {
-                    VStack(spacing: 12) {
-                        Image(systemName: "quote.bubble.fill")
-                            .font(.system(size: 48))
-                            .foregroundColor(.white.opacity(0.4))
-                        Text(errorMessage ?? "No lyrics available for this track")
-                            .font(.headline)
-                            .foregroundColor(.white.opacity(0.7))
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 32)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
+            } else {
+                VStack(spacing: 12) {
+                    Image(systemName: "quote.bubble.fill")
+                        .font(.system(size: 44))
+                        .foregroundColor(.secondary.opacity(0.5))
+                    Text(errorMessage ?? "No lyrics available for this track")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 24)
+                }
+                .frame(maxWidth: .infinity, minHeight: 200, maxHeight: .infinity)
             }
         }
         .onAppear {
@@ -142,12 +122,12 @@ struct LyricsView: View {
     private func lyricLineView(line: LyricLine, activeId: UUID?) -> some View {
         let isActive = isSynced && (line.id == activeId)
         Text(line.text)
-            .font(.system(size: isActive ? 26 : 22, weight: isActive ? .bold : .semibold, design: .rounded))
-            .foregroundColor(isActive ? .white : .white.opacity(0.45))
+            .font(.system(size: isActive ? 20 : 17, weight: isActive ? .bold : .medium, design: .rounded))
+            .foregroundColor(isActive ? .red : .primary.opacity(0.65))
             .multilineTextAlignment(.leading)
-            .blur(radius: isSynced && !isActive ? 0.3 : 0)
-            .scaleEffect(isActive ? 1.02 : 1.0, anchor: .leading)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isActive)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
+            .animation(.easeInOut(duration: 0.25), value: isActive)
             .id(line.id)
             .contentShape(Rectangle())
             .onTapGesture {
