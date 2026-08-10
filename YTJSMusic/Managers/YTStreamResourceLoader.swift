@@ -71,16 +71,20 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         let requestedRange = NSRange(location: requestedStart, length: fetchLength)
         
         // 1. Try reading from AudioStreamCacheManager
+        class ReadDataBox {
+            var data: Data? = nil
+        }
         let semaphore = DispatchSemaphore(value: 0)
-        var cachedData: Data? = nil
+        let box = ReadDataBox()
+        let key = self.cacheKey
         
         Task {
-            cachedData = await AudioStreamCacheManager.shared.readChunk(key: self.cacheKey, requestedRange: requestedRange)
+            box.data = await AudioStreamCacheManager.shared.readChunk(key: key, requestedRange: requestedRange)
             semaphore.signal()
         }
         _ = semaphore.wait(timeout: .now() + 2.0)
         
-        if let data = cachedData, !data.isEmpty {
+        if let data = box.data, !data.isEmpty {
             SystemLogger.shared.append("[CACHE HIT] Served \(data.count) bytes from disk for offset \(requestedStart)")
             dr.respond(with: data)
             if !loadingRequest.isCancelled { loadingRequest.finishLoading() }

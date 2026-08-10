@@ -25,20 +25,18 @@ public actor AudioStreamCacheManager {
     
     private init() {
         let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        self.cacheDirectory = caches.appendingPathComponent("AudioStreamCache", isDirectory: true)
-        self.metadataFileURL = self.cacheDirectory.appendingPathComponent("cache_index.json")
+        let cacheDir = caches.appendingPathComponent("AudioStreamCache", isDirectory: true)
+        let metaURL = cacheDir.appendingPathComponent("cache_index.json")
+        self.cacheDirectory = cacheDir
+        self.metadataFileURL = metaURL
         
-        try? FileManager.default.createDirectory(at: self.cacheDirectory, withIntermediateDirectories: true)
-        loadIndex()
-    }
-    
-    private func loadIndex() {
-        guard FileManager.default.fileExists(atPath: metadataFileURL.path),
-              let data = try? Data(contentsOf: metadataFileURL),
-              let decoded = try? JSONDecoder().decode([String: CacheStreamEntry].self, from: data) else {
-            return
+        try? FileManager.default.createDirectory(at: cacheDir, withIntermediateDirectories: true)
+        
+        if FileManager.default.fileExists(atPath: metaURL.path),
+           let data = try? Data(contentsOf: metaURL),
+           let decoded = try? JSONDecoder().decode([String: CacheStreamEntry].self, from: data) {
+            self.streamEntries = decoded
         }
-        self.streamEntries = decoded
     }
     
     private func saveIndex() {
