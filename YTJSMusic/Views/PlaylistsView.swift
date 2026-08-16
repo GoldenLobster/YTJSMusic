@@ -49,7 +49,9 @@ struct PlaylistsView: View {
                 }
             }
             .navigationTitle("Playlists")
-            .padding(.bottom, audioManager.currentTrack != nil ? 110 : 20)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: audioManager.currentTrack != nil ? 80 : 0)
+            }
             .navigationBarItems(trailing: Button(action: {
                 newPlaylistName = ""
                 showCreateAlert = true
@@ -128,6 +130,8 @@ struct PlaylistDetailView: View {
             }
         }
         .navigationTitle(playlist.name)
-        .padding(.bottom, audioManager.currentTrack != nil ? 110 : 20)
+        .safeAreaInset(edge: .bottom) {
+            Color.clear.frame(height: audioManager.currentTrack != nil ? 80 : 0)
+        }
     }
 }

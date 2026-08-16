@@ -144,7 +144,9 @@ struct SettingsView: View {
             }
             .listStyle(InsetGroupedListStyle())
             .navigationTitle("Settings")
-            .padding(.bottom, audioManager.currentTrack != nil ? 110 : 20)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: audioManager.currentTrack != nil ? 80 : 0)
+            }
             .onAppear {
                 refreshStats()
             }
