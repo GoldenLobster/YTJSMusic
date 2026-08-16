@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YTJSMusic Documentation</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">☰</button>
+      <a href="#overview" class="nav-brand">
+        <span class="logo-badge">YTJS</span>
+        <span>YTJSMusic Docs</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+      <a href="https://github.com/GoldenLobster/YTJSMusic" target="_blank" class="btn-github">
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="sidebarSearch" class="search-input" placeholder="Search documentation...">
+      </div>
+
+      <nav>
+        <div class="nav-group-title">Getting Started</div>
+        <ul class="nav-menu">
+          <li class="nav-item active"><a href="#overview">🌟 Overview</a></li>
+          <li class="nav-item"><a href="#quickstart">🚀 Quick Start</a></li>
+        </ul>
+
+        <div class="nav-group-title">Features & Capabilities</div>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="#catalog-search">🔍 Catalog Search & Discovery</a></li>
+          <li class="nav-item"><a href="#song-matching">⚡ Song Matching Engine</a></li>
+          <li class="nav-item"><a href="#synced-lyrics">🎤 Karaoke Synchronized Lyrics</a></li>
+          <li class="nav-item"><a href="#queue-playlists">📋 Queue & Local Playlists</a></li>
+          <li class="nav-item"><a href="#ui-experience">📱 Player UI & Mini-Player</a></li>
+        </ul>
+
+        <div class="nav-group-title">Deep Dive Architecture</div>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="#architecture">🏛️ System Architecture</a></li>
+          <li class="nav-item"><a href="#jsc-engine">⚡ JavaScriptCore & Polyfills</a></li>
+          <li class="nav-item"><a href="#caching">🚀 3-Tier Cache & Bypass</a></li>
+          <li class="nav-item"><a href="#resource-loader">📡 Stream Resource Loader</a></li>
+          <li class="nav-item"><a href="#prefetching">⏱️ Duration-Based Prefetcher</a></li>
+        </ul>
+
+        <div class="nav-group-title">Development & Deployment</div>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="#development">🛠️ Build & Simulation Tests</a></li>
+          <li class="nav-item"><a href="#cicd">📦 CI/CD & IPA Workflow</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- SECTION: OVERVIEW -->
+      <section id="overview" class="doc-section active">
+        <h1>🎵 YTJSMusic Documentation</h1>
+        <p class="lead">A native iOS music streaming application powered by YouTube.js inside JavaScriptCore with Apple Music catalog discovery, zero-network cache playback, and real-time karaoke lyrics.</p>
+
+        <div class="badge-group">
+          <span class="badge">iOS 15.0+</span>
+          <span class="badge">Swift 5.9</span>
+          <span class="badge">YouTube.js v10.0.0</span>
+          <span class="badge">LRCLIB</span>
+          <span class="badge">MIT License</span>
+        </div>
+
+        <h2>🌟 What Makes YTJSMusic Unique?</h2>
+        <div class="cards-grid">
+          <div class="card">
+            <div class="card-icon">🔍</div>
+            <h4>Apple Music Catalog Discovery</h4>
+            <p>Browse millions of songs, albums, and discographies with live debounced search suggestions without an Apple Music subscription.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">⚡</div>
+            <h4>Instant Zero-Network Playback</h4>
+            <p>Cached tracks bypass YouTube network resolution completely, initiating audio rendering locally in under 20ms.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🎤</div>
+            <h4>Karaoke Synced Lyrics</h4>
+            <p>Live scrolling time-coded lyrics with smooth highlight animations, tap-to-seek, and instrumental break indicators.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🚀</div>
+            <h4>Isolated JavaScriptCore Runtime</h4>
+            <p>Runs YouTube.js in pure ECMAScript with 11 custom Web API polyfills backed by native Swift URLSession & CryptoKit.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <h4>💡 No WebViews or External Servers Required</h4>
+          <p>YTJSMusic does not use WKWebView wrappers or intermediary proxy backend servers. Stream resolution, signature deciphering, and caching happen natively on the iOS device.</p>
+        </div>
+      </section>
+
+      <!-- SECTION: QUICKSTART -->
+      <section id="quickstart" class="doc-section">
+        <h1>🚀 Quick Start Guide</h1>
+        <p class="lead">Set up your local development environment and run YTJSMusic on your iOS simulator or physical device.</p>
+
+        <h2>Prerequisites</h2>
+        <ul>
+          <li><strong>macOS Sonoma / Sequoia</strong> with <strong>Xcode 15.0+</strong></li>
+          <li><strong>Node.js 18+</strong> & <strong>npm</strong></li>
+          <li><strong>iOS 15.0+</strong> device or Simulator</li>
+        </ul>
+
+        <h2>1. Clone and Install Dependencies</h2>
+        <div class="code-container">
+          <div class="code-header"><span>BASH</span><button class="btn-copy">Copy</button></div>
+          <pre><code># Clone repo
+git clone https://github.com/GoldenLobster/YTJSMusic.git
+cd YTJSMusic
+
+# Install Node dependencies
+npm install</code></pre>
+        </div>
+
+        <h2>2. Build Runtime Bundle</h2>
+        <div class="code-container">
+          <div class="code-header"><span>BASH</span><button class="btn-copy">Copy</button></div>
+          <pre><code># Bundle YouTube.js for JavaScriptCore using esbuild
+npm run bundle</code></pre>
+        </div>
+
+        <h2>3. Run Desktop Test Simulation</h2>
+        <div class="code-container">
+          <div class="code-header"><span>BASH</span><button class="btn-copy">Copy</button></div>
+          <pre><code># Verify music search and stream resolution on desktop
+node test_music.js</code></pre>
+        </div>
+
+        <h2>4. Open in Xcode & Run</h2>
+        <p>Open <code>YTJSMusic.xcodeproj</code> in Xcode, choose the <code>YTJSMusic</code> target and your device/simulator, and press <strong>Cmd + R</strong>.</p>
+      </section>
+
+      <!-- SECTION: CATALOG SEARCH -->
+      <section id="catalog-search" class="doc-section">
+        <h1>🔍 Apple Music Catalog Search & Discovery</h1>
+        <p class="lead">Subscription-free access to Apple Music's metadata, rich discographies, and artist releases.</p>
+
+        <h2>Features</h2>
+        <ul>
+          <li><strong>Live Search Suggestions</strong>: Populates autocomplete queries dynamically with a 300ms debounce.</li>
+          <li><strong>Filter Chips</strong>: Seamlessly filter results across <em>Top Results</em>, <em>Songs</em>, <em>Albums</em>, and <em>Artists</em>.</li>
+          <li><strong>Album Discography View</strong>: Displays high-res album art, release year, track counts, explicit badges, and one-tap <em>Play All</em> or <em>Shuffle Play</em>.</li>
+          <li><strong>Artist View</strong>: Detailed artist biography header with genres and complete release discography.</li>
+          <li><strong>Fresh Tab Reset</strong>: Tapping "Cancel" completely clears the query, suggestions, and results container.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION: SONG MATCHING -->
+      <section id="song-matching" class="doc-section">
+        <h1>⚡ Intelligent Song Matching Engine</h1>
+        <p class="lead">How YTJSMusic bridges Apple Music metadata to YouTube Music audio streams.</p>
+
+        <h2>Matching Workflow</h2>
+        <ol>
+          <li>User selects an Apple Music track (Title, Artist, Album, Duration).</li>
+          <li><code>SongResolverCacheManager</code> checks the local SQLite/memory resolution index. If cached, returns the video ID in <strong>&lt;1ms</strong>.</li>
+          <li>On cache miss, dispatches an InnerTube query via <code>JSCYoutubeClient</code>.</li>
+          <li>Calculates confidence score based on:
+            <ul>
+              <li><strong>Duration Delta Filter</strong>: Rejects candidates differing by &gt;15 seconds (filtering out live bootlegs and video skits).</li>
+              <li><strong>Levenshtein Normalized Distance</strong>: Fuzzy matches song title and artist strings.</li>
+            </ul>
+          </li>
+          <li>Stores the winning video ID in the persistent cache for instant future lookup.</li>
+        </ol>
+      </section>
+
+      <!-- SECTION: SYNCED LYRICS -->
+      <section id="synced-lyrics" class="doc-section">
+        <h1>🎤 Karaoke Synchronized Lyrics</h1>
+        <p class="lead">Real-time time-coded lyrics with interactive seeking powered by LRCLIB.</p>
+
+        <h2>Capabilities</h2>
+        <ul>
+          <li><strong>Karaoke Dynamic Highlighting</strong>: The active lyric line smoothly enlarges and highlights in lockstep with the playback position.</li>
+          <li><strong>Centered Auto-Scroll</strong>: Keeps the current lyric centered in view via <code>ScrollViewReader</code>.</li>
+          <li><strong>Tap-to-Seek</strong>: Tap any past or upcoming lyric line to immediately jump playback to that timestamp.</li>
+          <li><strong>Instrumental Break Cues</strong>: Gaps &gt;8 seconds between lyrics display an animated <code>🎵 ...</code> indicator.</li>
+          <li><strong>Plain Lyrics Fallback</strong>: Seamless fallback to static formatted lyrics when time-codes are unavailable.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION: QUEUE & PLAYLISTS -->
+      <section id="queue-playlists" class="doc-section">
+        <h1>📋 Queue & Local Playlists</h1>
+        <p class="lead">Full playback queue management and offline playlist creation.</p>
+
+        <h2>Queue Features</h2>
+        <ul>
+          <li><strong>Drag-and-Drop Reordering</strong>: Adjust upcoming song order dynamically.</li>
+          <li><strong>Swipe-to-Delete</strong>: Remove tracks from upcoming playback.</li>
+          <li><strong>Play Next / Append Queue</strong>: Context menu actions on any track across search, albums, and the now-playing screen.</li>
+        </ul>
+
+        <h2>Local Playlists</h2>
+        <ul>
+          <li>Create custom playlists stored on device.</li>
+          <li>Add tracks from Search, Album Views, or Now Playing 3-dots action menu.</li>
+          <li>Full Shuffle Play support with automatic queue construction.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION: UI & MINI PLAYER -->
+      <section id="ui-experience" class="doc-section">
+        <h1>📱 Modern SwiftUI Experience</h1>
+        <p class="lead">Fluid animations, full-screen player sheet, and floating mini-player.</p>
+
+        <h2>Components</h2>
+        <ul>
+          <li><strong>Full-Screen Player</strong>: Dynamic artwork display, scrubbable time slider, 3-dots action sheet, and lyrics overlay.</li>
+          <li><strong>Floating Mini-Player</strong>: Persistent bottom bar across all tabs with play/pause and expand animations.</li>
+          <li><strong>Safe Area Insets</strong>: Custom <code>safeAreaInset</code> integration ensuring lists and scroll views extend behind the mini-player without obscuring content.</li>
+          <li><strong>Lock Screen & Media Center</strong>: Full <code>MPNowPlayingInfoCenter</code> artwork and <code>MPRemoteCommandCenter</code> control integration.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION: ARCHITECTURE -->
+      <section id="architecture" class="doc-section">
+        <h1>🏛️ System Architecture</h1>
+        <p class="lead">Decoupled multi-tier design separating UI, JavaScriptCore runtime, and native audio decoding.</p>
+
+        <h2>Architecture Layers</h2>
+        <div class="code-container">
+          <div class="code-header"><span>ARCHITECTURE MAP</span></div>
+          <pre><code>YTJSMusic
+├── 📱 SwiftUI Interface (Search, Albums, Player, Lyrics, Queue, Playlists)
+├── 🧠 Audio Core (AudioPlayerManager, SongResolver, LRCLIB)
+├── 🚀 3-Tier Cache (AudioStreamCacheIndex, DiskReader, CacheManager)
+├── 📡 Custom Stream Loader (YTStreamResourceLoader via ytaudio://)
+└── ⚡ JavaScriptCore Engine (JSCYoutubeClient, JSCPolyfillBridge, polyfills/*.js)</code></pre>
+        </div>
+      </section>
+
+      <!-- SECTION: JSC ENGINE -->
+      <section id="jsc-engine" class="doc-section">
+        <h1>⚡ JavaScriptCore & Polyfills</h1>
+        <p class="lead">11 modular Web API polyfills enabling YouTube.js in pure ECMAScript.</p>
+
+        <h2>Polyfills Matrix</h2>
+        <table>
+          <thead>
+            <tr><th>Polyfill</th><th>Web Standard</th><th>Swift Backing</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>00-console.js</code></td><td>WHATWG Console</td><td>Swift <code>SystemLogger</code></td></tr>
+            <tr><td><code>02-text-encoding.js</code></td><td>Encoding Standard</td><td>Pure JS TextEncoder/Decoder</td></tr>
+            <tr><td><code>05-fetch.js</code></td><td>WHATWG Fetch</td><td>Native Swift <code>URLSession</code></td></tr>
+            <tr><td><code>06-crypto.js</code></td><td>Web Crypto API</td><td><code>SecRandomCopyBytes</code> &amp; <code>CryptoKit</code></td></tr>
+            <tr><td><code>07-timers.js</code></td><td>HTML Timers</td><td>Grand Central Dispatch</td></tr>
+            <tr><td><code>10-streams.js</code></td><td>WHATWG Streams</td><td>ReadableStream / WritableStream</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- SECTION: CACHING -->
+      <section id="caching" class="doc-section">
+        <h1>🚀 3-Tier Cache & Cache Bypass</h1>
+        <p class="lead">Sub-20ms instant local playback via zero-network cache bypass.</p>
+
+        <h2>3-Tier Cache Breakdown</h2>
+        <ul>
+          <li><strong>Tier 1: In-Memory Manifest Index (<code>AudioStreamCacheIndex</code>)</strong>: Synchronous, lock-protected lookup under 0.1ms.</li>
+          <li><strong>Tier 2: Coalesced Disk Reader (<code>AudioStreamCacheDiskReader</code>)</strong>: Dedicated serial queue reader for instant local streaming.</li>
+          <li><strong>Tier 3: Asynchronous Persistence (<code>AudioStreamCacheManager</code>)</strong>: Background chunk persistence.</li>
+        </ul>
+
+        <h2>Startup Latency Benchmarks</h2>
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Cache Hit (Bypass)</th><th>Remote CDN Stream</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>$t_0 \to t_2$ Cache Lookup</td><td>&lt;0.1 ms</td><td>&lt;0.1 ms</td></tr>
+            <tr><td>$t_0 \to t_5$ First Audio Bytes</td><td><strong>&lt;15.0 ms</strong></td><td>~550.0 ms</td></tr>
+            <tr><td>$t_0 \to t_6$ ReadyToPlay</td><td><strong>&lt;20.0 ms</strong></td><td>~600.0 ms</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- SECTION: RESOURCE LOADER -->
+      <section id="resource-loader" class="doc-section">
+        <h1>📡 Stream Resource Loader</h1>
+        <p class="lead"><code>YTStreamResourceLoader</code>: Intercepting AVPlayer requests with <code>ytaudio://</code>.</p>
+
+        <h2>Key Capabilities</h2>
+        <ul>
+          <li><strong>Range Header Enforcement</strong>: Enforces mandatory byte range headers for YouTube CDN (<code>rqh=1</code>).</li>
+          <li><strong>256KB Adaptive Chunking</strong>: Avoids CDN anti-bulk-download throttling.</li>
+          <li><strong>Automatic 403 Renewal</strong>: Automatically re-resolves stream signatures if URL tokens expire mid-song.</li>
+          <li><strong>UTI Mapping</strong>: Injects <code>com.apple.m4a-audio</code> for native hardware acceleration.</li>
+        </ul>
+      </section>
+
+      <!-- SECTION: PREFETCHING -->
+      <section id="prefetching" class="doc-section">
+        <h1>⏱️ Duration-Based Prefetcher</h1>
+        <p class="lead">Dynamic two-level prefetching for true gapless playback transitions.</p>
+
+        <h2>Prefetch Thresholds</h2>
+        <ul>
+          <li><strong>Tracks &lt; 3 min</strong>: Prefetches 20 seconds before end.</li>
+          <li><strong>Tracks 3–8 min</strong>: Prefetches 30 seconds before end.</li>
+          <li><strong>Tracks &gt; 8 min</strong>: Prefetches 45 seconds before end.</li>
+        </ul>
+        <p>Prefetches both song resolution metadata and the initial 512KB audio buffer for upcoming queue items.</p>
+      </section>
+
+      <!-- SECTION: DEVELOPMENT -->
+      <section id="development" class="doc-section">
+        <h1>🛠️ Build & Simulation Tests</h1>
+        <p class="lead">Developer test scripts and desktop simulation harness.</p>
+
+        <div class="code-container">
+          <div class="code-header"><span>TEST COMMANDS</span><button class="btn-copy">Copy</button></div>
+          <pre><code># Test YouTube Music Search & Format Extraction
+node test_music.js
+
+# Test Stream Deciphering & Playback Chunk Validation
+node test_stream_playback.js
+
+# Simulate Full Swift JSC Flow with Polyfills
+node test_youtube_flow.js</code></pre>
+        </div>
+      </section>
+
+      <!-- SECTION: CICD -->
+      <section id="cicd" class="doc-section">
+        <h1>📦 CI/CD & IPA Workflow</h1>
+        <p class="lead">Automated builds via GitHub Actions.</p>
+
+        <p>YTJSMusic includes a preconfigured GitHub Actions workflow in <code>.github/workflows/build-ipa.yml</code> that bundles the JavaScript runtime and compiles the iOS project on macOS runners upon every push.</p>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
