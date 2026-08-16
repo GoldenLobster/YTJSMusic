@@ -19,4 +19,10 @@ public class SystemLogger: ObservableObject {
     public func getLogs() -> String {
         return logs.joined(separator: "\n")
     }
+    
+    public func clear() {
+        DispatchQueue.main.async {
+            self.logs = ["Logs cleared."]
+        }
+    }
 }

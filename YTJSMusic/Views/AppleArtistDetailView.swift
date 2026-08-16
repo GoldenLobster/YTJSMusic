@@ -81,6 +81,7 @@ struct AppleArtistDetailView: View {
                         }
                     }
                 }
+                .padding(.bottom, audioManager.currentTrack != nil ? 110 : 20)
             }
         }
         .navigationTitle(artistContainer?.artist.name ?? "Artist")

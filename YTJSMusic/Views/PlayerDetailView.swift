@@ -3,14 +3,15 @@ import SwiftUI
 
 struct PlayerDetailView: View {
     @ObservedObject var audioManager: AudioPlayerManager
+    @ObservedObject var playlistManager: PlaylistManager
     @Environment(\.presentationMode) var presentationMode
     
     @State private var isEditingSlider: Bool = false
     @State private var editingSliderValue: Double = 0.0
-    @State private var showDebugLogs: Bool = false
-    @State private var showCacheSettings: Bool = false
     @State private var showLyrics: Bool = false
     @State private var showQueue: Bool = false
+    @State private var showAddToPlaylist: Bool = false
+    @State private var showShareSheet: Bool = false
     
     var body: some View {
         ScrollViewReader { mainScrollProxy in
@@ -29,22 +30,41 @@ struct PlayerDetailView: View {
                         .font(.headline)
                         .foregroundColor(.secondary)
                     Spacer()
-                    HStack(spacing: 16) {
-                        Button(action: {
-                            showCacheSettings = true
-                        }) {
-                            Image(systemName: "gearshape")
-                                .font(.title3)
+                    
+                    if let track = audioManager.currentTrack {
+                        Menu {
+                            Button(action: {
+                                audioManager.playNext(track: track)
+                            }) {
+                                Label("Play Next", systemImage: "text.insert")
+                            }
+                            
+                            Button(action: {
+                                audioManager.appendQueue(track: track)
+                            }) {
+                                Label("Add to Queue", systemImage: "text.append")
+                            }
+                            
+                            Button(action: {
+                                showAddToPlaylist = true
+                            }) {
+                                Label("Add to Playlist...", systemImage: "plus")
+                            }
+                            
+                            Button(action: {
+                                shareTrack(track)
+                            }) {
+                                Label("Share Song", systemImage: "square.and.arrow.up")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                                .font(.title2)
                                 .foregroundColor(.primary)
                         }
-                        
-                        Button(action: {
-                            showDebugLogs = true
-                        }) {
-                            Image(systemName: "terminal")
-                                .font(.title3)
-                                .foregroundColor(.red)
-                        }
+                    } else {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.title2)
+                            .foregroundColor(.gray)
                     }
                 }
                 .padding(.top, 16)
@@ -288,14 +308,22 @@ struct PlayerDetailView: View {
             }
             .background(Color(UIColor.systemBackground).ignoresSafeArea())
         }
-        .sheet(isPresented: $showDebugLogs) {
-            DebugLogsView()
-        }
-        .sheet(isPresented: $showCacheSettings) {
-            CacheSettingsView()
-        }
         .sheet(isPresented: $showQueue) {
             QueueView(audioManager: audioManager)
+        }
+        .sheet(isPresented: $showAddToPlaylist) {
+            if let track = audioManager.currentTrack {
+                AddTrackToPlaylistSheet(track: track, playlistManager: playlistManager)
+            }
+        }
+    }
+    
+    private func shareTrack(_ track: Track) {
+        let text = "Listening to \(track.title) - \(track.artist) https://youtu.be/\(track.id)"
+        let av = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootVC = windowScene.windows.first?.rootViewController {
+            rootVC.present(av, animated: true, completion: nil)
         }
     }
     
@@ -308,35 +336,44 @@ struct PlayerDetailView: View {
     }
 }
 
-struct DebugLogsView: View {
+struct AddTrackToPlaylistSheet: View {
+    let track: Track
+    @ObservedObject var playlistManager: PlaylistManager
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var logger = SystemLogger.shared
-    @State private var isCopied: Bool = false
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(logger.getLogs())
-                        .font(.system(.caption, design: .monospaced))
-                        .foregroundColor(.primary)
-                        .padding()
+            List {
+                Section(header: Text("Select Playlist")) {
+                    if playlistManager.playlists.isEmpty {
+                        Text("No playlists created yet.")
+                            .foregroundColor(.secondary)
+                    } else {
+                        ForEach(playlistManager.playlists) { playlist in
+                            Button(action: {
+                                playlistManager.addTrackToPlaylist(track: track, playlistId: playlist.id)
+                                presentationMode.wrappedValue.dismiss()
+                            }) {
+                                HStack {
+                                    Image(systemName: "music.note.list")
+                                        .foregroundColor(.red)
+                                    Text(playlist.name)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    Text("\(playlist.tracks.count) tracks")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            .navigationTitle("Diagnostic Logs")
+            .navigationTitle("Add to Playlist")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                leading: Button(isCopied ? "Copied!" : "Copy") {
-                    UIPasteboard.general.string = logger.getLogs()
-                    isCopied = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                        isCopied = false
-                    }
-                },
-                trailing: Button("Done") {
-                    presentationMode.wrappedValue.dismiss()
-                }
-            )
+            .navigationBarItems(trailing: Button("Cancel") {
+                presentationMode.wrappedValue.dismiss()
+            })
         }
     }
 }

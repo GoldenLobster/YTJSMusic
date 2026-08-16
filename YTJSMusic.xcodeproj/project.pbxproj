@@ -44,6 +44,7 @@
 		A100002D29F000010000002D /* PlaybackStartupTrace.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002D29F000010000002D /* PlaybackStartupTrace.swift */; };
 		A100002E29F000010000002E /* AudioStreamCacheIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002E29F000010000002E /* AudioStreamCacheIndex.swift */; };
 		A100002F29F000010000002F /* AudioStreamCacheDiskReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100002F29F000010000002F /* AudioStreamCacheDiskReader.swift */; };
+		A100003029F0000100000030 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100003029F0000100000030 /* SettingsView.swift */; };
 		A100000D29F000010000000D /* runtime.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = B100000D29F000010000000D /* runtime.bundle.js */; };
 		A100000E29F000010000000E /* polyfills in Resources */ = {isa = PBXBuildFile; fileRef = B100000E29F000010000000E /* polyfills */; };
 /* End PBXBuildFile section */
@@ -87,6 +88,7 @@
 		B100002D29F000010000002D /* PlaybackStartupTrace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackStartupTrace.swift; sourceTree = "<group>"; };
 		B100002E29F000010000002E /* AudioStreamCacheIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamCacheIndex.swift; sourceTree = "<group>"; };
 		B100002F29F000010000002F /* AudioStreamCacheDiskReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamCacheDiskReader.swift; sourceTree = "<group>"; };
+		B100003029F0000100000030 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B100000D29F000010000000D /* runtime.bundle.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = runtime.bundle.js; sourceTree = "<group>"; };
 		B100000E29F000010000000E /* polyfills */ = {isa = PBXFileReference; lastKnownFileType = folder; path = polyfills; sourceTree = "<group>"; };
 		B100000F29F000010000000F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				B100002329F0000100000023 /* QueueView.swift */,
 				B100002429F0000100000024 /* LyricsView.swift */,
 				B100002A29F000010000002A /* CacheSettingsView.swift */,
+				B100003029F0000100000030 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				A100002D29F000010000002D /* PlaybackStartupTrace.swift in Sources */,
 				A100002E29F000010000002E /* AudioStreamCacheIndex.swift in Sources */,
 				A100002F29F000010000002F /* AudioStreamCacheDiskReader.swift in Sources */,
+				A100003029F0000100000030 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

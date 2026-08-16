@@ -175,6 +175,7 @@ struct AppleAlbumDetailView: View {
                     }
                 }
             }
+            .padding(.bottom, audioManager.currentTrack != nil ? 110 : 20)
         }
         .navigationTitle(albumContainer?.album.title ?? "Album")
         .navigationBarTitleDisplayMode(.inline)

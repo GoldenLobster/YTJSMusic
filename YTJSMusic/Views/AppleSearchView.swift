@@ -129,6 +129,7 @@ struct AppleSearchView: View {
                             }
                         }
                         .listStyle(PlainListStyle())
+                        .padding(.bottom, audioManager.currentTrack != nil ? 110 : 20)
                     } else if !searchResults.songs.isEmpty || !searchResults.albums.isEmpty || !searchResults.artists.isEmpty {
                         // Category Segment Selector
                         VStack(spacing: 0) {
@@ -214,6 +215,7 @@ struct AppleSearchView: View {
                                     }
                                 }
                                 .padding(.vertical, 8)
+                                .padding(.bottom, audioManager.currentTrack != nil ? 110 : 20)
                             }
                         }
                     } else if !searchText.isEmpty {

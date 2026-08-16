@@ -26,10 +26,10 @@ struct MainTabView: View {
                     }
                     .tag(1)
                 
-                MusicSearchView(jscClient: jscClient, audioManager: audioManager, playlistManager: playlistManager)
+                SettingsView(playlistManager: playlistManager, audioManager: audioManager)
                     .tabItem {
-                        Image(systemName: "y.square")
-                        Text("Legacy YT")
+                        Image(systemName: "gearshape")
+                        Text("Settings")
                     }
                     .tag(2)
             }
@@ -45,7 +45,7 @@ struct MainTabView: View {
             .ignoresSafeArea(.keyboard, edges: .bottom)
         }
         .fullScreenCover(isPresented: $showPlayerDetail) {
-            PlayerDetailView(audioManager: audioManager)
+            PlayerDetailView(audioManager: audioManager, playlistManager: playlistManager)
         }
     }
 }

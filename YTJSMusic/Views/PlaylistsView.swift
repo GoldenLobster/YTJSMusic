@@ -49,6 +49,7 @@ struct PlaylistsView: View {
                 }
             }
             .navigationTitle("Playlists")
+            .padding(.bottom, audioManager.currentTrack != nil ? 110 : 20)
             .navigationBarItems(trailing: Button(action: {
                 newPlaylistName = ""
                 showCreateAlert = true
@@ -127,5 +128,6 @@ struct PlaylistDetailView: View {
             }
         }
         .navigationTitle(playlist.name)
+        .padding(.bottom, audioManager.currentTrack != nil ? 110 : 20)
     }
 }

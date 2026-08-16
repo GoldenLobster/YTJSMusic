@@ -4,6 +4,7 @@ import AVFoundation
 import MediaPlayer
 import Combine
 import SwiftUI
+import UIKit
 
 public class AudioPlayerManager: ObservableObject {
     @Published public var currentTrack: Track?
@@ -18,6 +19,9 @@ public class AudioPlayerManager: ObservableObject {
     @Published public var queue: [Track] = []
     @Published public var currentIndex: Int = 0
     private var originalQueue: [Track] = []
+    
+    private var currentArtworkImage: UIImage?
+    private var currentArtworkTrackId: String?
     
     private var player: AVPlayer?
     private var timeObserverToken: Any?
@@ -209,6 +213,8 @@ public class AudioPlayerManager: ObservableObject {
         self.duration = track.durationInSeconds
         self.lastPlayerError = nil
         self.hasPrefetchedNextTrack = false
+        
+        self.fetchArtwork(for: track)
         
         var trace = PlaybackStartupTrace(trackID: track.id)
         trace.t1PlayInvoked = CACurrentMediaTime()
@@ -565,6 +571,32 @@ public class AudioPlayerManager: ObservableObject {
         }
     }
     
+    private func fetchArtwork(for track: Track) {
+        guard let url = URL(string: track.thumbnail), !track.thumbnail.isEmpty else {
+            self.currentArtworkImage = nil
+            self.currentArtworkTrackId = track.id
+            self.updateNowPlayingInfo()
+            return
+        }
+        
+        if currentArtworkTrackId == track.id && currentArtworkImage != nil {
+            return
+        }
+        
+        currentArtworkTrackId = track.id
+        currentArtworkImage = nil
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let self = self, let data = data, let image = UIImage(data: data) else { return }
+            DispatchQueue.main.async {
+                if self.currentTrack?.id == track.id {
+                    self.currentArtworkImage = image
+                    self.updateNowPlayingInfo()
+                }
+            }
+        }.resume()
+    }
+    
     private func updateNowPlayingInfo() {
         guard let track = currentTrack else {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
@@ -572,12 +604,19 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         var nowPlayingInfo = [String: Any]()
+        nowPlayingInfo[MPNowPlayingInfoPropertyMediaType] = MPNowPlayingInfoMediaType.audio.rawValue
         nowPlayingInfo[MPMediaItemPropertyTitle] = track.title
         nowPlayingInfo[MPMediaItemPropertyArtist] = track.artist
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = track.album
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
+        
+        if let image = currentArtworkImage {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in
+                return image
+            }
+        }
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
