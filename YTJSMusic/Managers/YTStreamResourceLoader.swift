@@ -101,7 +101,6 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
                 trace?.t5FirstBytesSupplied = CACurrentMediaTime()
             }
             trace?.bytesServedFromDisk += Int64(result.data.count)
-            SystemLogger.shared.append("[CACHE HIT] Served \(result.data.count) bytes from disk for offset \(requestedStart)")
             dr.respond(with: result.data)
             
             if result.isCompleteRequest {
@@ -194,10 +193,6 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
                 loadingRequest.finishLoading(with: err)
             }
             return
-        }
-        
-        if elapsed > 4.0 {
-            SystemLogger.shared.append("[STREAM LOADER SLOW] Range \(reqStart)-\(reqEnd) took \(String(format: "%.1f", elapsed))s (status: \(statusCode))")
         }
         
         if loadingRequest.isCancelled { return }
