@@ -12,6 +12,7 @@ struct PlayerDetailView: View {
     @State private var showQueue: Bool = false
     @State private var showAddToPlaylist: Bool = false
     @State private var showShareSheet: Bool = false
+    @State private var showDebugLogs: Bool = false
     
     var body: some View {
         ScrollViewReader { mainScrollProxy in
@@ -314,6 +315,11 @@ struct PlayerDetailView: View {
         .sheet(isPresented: $showAddToPlaylist) {
             if let track = audioManager.currentTrack {
                 AddTrackToPlaylistSheet(track: track, playlistManager: playlistManager)
+            }
+        }
+        .sheet(isPresented: $showDebugLogs) {
+            NavigationView {
+                FullDiagnosticsLogView()
             }
         }
     }
