@@ -178,12 +178,27 @@ public class YTStreamResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
             sema.signal()
         }
         
-        lock.lock()
-        activeTasks[key] = task
-        lock.unlock()
-        
+        let tStart = CACurrentMediaTime()
         task.resume()
-        _ = sema.wait(timeout: .now() + 15.0)
+        let waitResult = sema.wait(timeout: .now() + 12.0)
+        let elapsed = CACurrentMediaTime() - tStart
+        
+        if waitResult == .timedOut {
+            SystemLogger.shared.append("[STREAM LOADER TIMEOUT] Request for range \(reqStart)-\(reqEnd) timed out after \(String(format: "%.1f", elapsed))s. Cancelling task...")
+            task.cancel()
+            lock.lock()
+            activeTasks.removeValue(forKey: key)
+            lock.unlock()
+            if !loadingRequest.isCancelled {
+                let err = NSError(domain: "YTStreamLoader", code: -1001, userInfo: [NSLocalizedDescriptionKey: "CDN chunk request timed out"])
+                loadingRequest.finishLoading(with: err)
+            }
+            return
+        }
+        
+        if elapsed > 4.0 {
+            SystemLogger.shared.append("[STREAM LOADER SLOW] Range \(reqStart)-\(reqEnd) took \(String(format: "%.1f", elapsed))s (status: \(statusCode))")
+        }
         
         if loadingRequest.isCancelled { return }
         

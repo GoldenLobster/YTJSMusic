@@ -29,6 +29,12 @@ public class AudioPlayerManager: ObservableObject {
     private var durationObserverToken: NSKeyValueObservation?
     private var likelyToKeepUpObserverToken: NSKeyValueObservation?
     private var bufferEmptyObserverToken: NSKeyValueObservation?
+    private var timeControlStatusObserverToken: NSKeyValueObservation?
+    
+    // Playback Health Watchdog & Self-Healing
+    private var watchdogTimer: Timer?
+    private var consecutiveStallCount: Int = 0
+    private var isRecoveringPlayback: Bool = false
     
     // MUST retain the resource loader — AVURLAsset holds only a weak delegate reference
     private var streamResourceLoader: YTStreamResourceLoader?
@@ -129,9 +135,11 @@ public class AudioPlayerManager: ObservableObject {
         if isPlaying {
             player.pause()
             isPlaying = false
+            stopWatchdog()
         } else {
             player.play()
             isPlaying = true
+            startWatchdog()
         }
         updateNowPlayingInfo()
     }
@@ -414,12 +422,35 @@ public class AudioPlayerManager: ObservableObject {
                 guard let self = self else { return }
                 if item.isPlaybackBufferEmpty {
                     self.isLoading = true
+                    SystemLogger.shared.append("[AVPLAYER BUFFER] Playback buffer empty at \(String(format: "%.1f", self.currentTime))s")
                 }
             }
         }
         
-        // Add end of track observer
+        // KVO observer on player timeControlStatus
+        timeControlStatusObserverToken = player?.observe(\AVPlayer.timeControlStatus, options: NSKeyValueObservingOptions([.new])) { [weak self] (p: AVPlayer, change: NSKeyValueObservedChange<AVPlayer.TimeControlStatus>) in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch p.timeControlStatus {
+                case .paused:
+                    break
+                case .waitingToPlayAtSpecifiedRate:
+                    let reason = p.reasonForWaitingToPlay?.rawValue ?? "unknown"
+                    SystemLogger.shared.append("[AVPLAYER WAITING] Reason: \(reason) at \(String(format: "%.1f", self.currentTime))s")
+                case .playing:
+                    self.isLoading = false
+                    self.isPlaying = true
+                @unknown default:
+                    break
+                }
+            }
+        }
+        
+        // Add end of track and playback stall observers
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(_:)), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(handlePlayerItemPlaybackStalled(_:)), name: .AVPlayerItemPlaybackStalled, object: playerItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(handlePlayerItemErrorLog(_:)), name: .AVPlayerItemNewErrorLogEntry, object: playerItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(handlePlayerItemAccessLog(_:)), name: .AVPlayerItemNewAccessLogEntry, object: playerItem)
         
         // Add periodic time observer for current playback position
         let interval = CMTime(seconds: 0.5, preferredTimescale: 1000)
@@ -437,11 +468,142 @@ public class AudioPlayerManager: ObservableObject {
         }
         
         player?.play()
+        startWatchdog()
         updateNowPlayingInfo()
     }
     
     @objc private func playerItemDidReachEnd(_ notification: Notification) {
         handleTrackEnded()
+    }
+    
+    @objc private func handlePlayerItemPlaybackStalled(_ notification: Notification) {
+        SystemLogger.shared.append("[AVPLAYER STALLED EVENT] Playback stalled at \(String(format: "%.1f", currentTime))s! Scheduling recovery...")
+        attemptPlaybackRecovery(reason: "AVPlayerItemPlaybackStalled notification")
+    }
+    
+    @objc private func handlePlayerItemErrorLog(_ notification: Notification) {
+        guard let item = notification.object as? AVPlayerItem, let errorLog = item.errorLog() else { return }
+        for event in errorLog.events {
+            SystemLogger.shared.append("[AVPLAYER ERROR LOG] Domain: \(event.errorDomain) Code: \(event.errorStatusCode) Comment: \(event.errorComment ?? "none")")
+        }
+    }
+    
+    @objc private func handlePlayerItemAccessLog(_ notification: Notification) {
+        guard let item = notification.object as? AVPlayerItem, let accessLog = item.accessLog() else { return }
+        if let lastEvent = accessLog.events.last {
+            if lastEvent.numberOfDroppedVideoFrames > 0 || lastEvent.numberOfStalls > 0 {
+                SystemLogger.shared.append("[AVPLAYER ACCESS LOG] Stalls: \(lastEvent.numberOfStalls) | Bitrate: \(lastEvent.observedBitrate) bps")
+            }
+        }
+    }
+    
+    // MARK: - Playback Health Watchdog & Self-Healing
+    private func startWatchdog() {
+        stopWatchdog()
+        watchdogTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { [weak self] _ in
+            self?.watchdogCheck()
+        }
+    }
+    
+    private func stopWatchdog() {
+        watchdogTimer?.invalidate()
+        watchdogTimer = nil
+        consecutiveStallCount = 0
+    }
+    
+    private func watchdogCheck() {
+        guard let player = player, let item = player.currentItem, isPlaying, !isRecoveringPlayback else { return }
+        
+        let timeControl = player.timeControlStatus
+        let isLikelyToKeepUp = item.isPlaybackLikelyToKeepUp
+        let isBufferEmpty = item.isPlaybackBufferEmpty
+        
+        // Calculate loaded buffer ahead of currentTime
+        let cur = currentTime
+        var bufferAhead: Double = 0.0
+        for rangeValue in item.loadedTimeRanges {
+            let range = rangeValue.timeRangeValue
+            let start = range.start.seconds
+            let dur = range.duration.seconds
+            let end = start + dur
+            if cur >= start && cur <= end {
+                bufferAhead = Swift.max(0, end - cur)
+                break
+            }
+        }
+        
+        // Diagnostic status log if buffer is thin or player is waiting
+        if bufferAhead < 2.0 || isBufferEmpty || timeControl == .waitingToPlayAtSpecifiedRate {
+            let reason = player.reasonForWaitingToPlay?.rawValue ?? "none"
+            SystemLogger.shared.append("[WATCHDOG DIAGNOSTIC] Pos=\(String(format: "%.1f", cur))s | BufAhead=\(String(format: "%.1f", bufferAhead))s | Empty=\(isBufferEmpty) | Likely=\(isLikelyToKeepUp) | TimeControl=\(timeControl.rawValue) | Reason=\(reason)")
+        }
+        
+        // Check for stall/freeze condition:
+        if (isBufferEmpty || !isLikelyToKeepUp || timeControl == .waitingToPlayAtSpecifiedRate) && bufferAhead < 0.5 {
+            consecutiveStallCount += 1
+            if consecutiveStallCount >= 2 { // Stalled for ~3.0 seconds
+                SystemLogger.shared.append("[WATCHDOG STALL DETECTED] Consecutive stall count: \(consecutiveStallCount). Initiating auto-recovery...")
+                attemptPlaybackRecovery(reason: "Buffer starvation / Audio stall at \(String(format: "%.1f", cur))s")
+            }
+        } else {
+            consecutiveStallCount = 0
+        }
+    }
+    
+    private func attemptPlaybackRecovery(reason: String) {
+        guard !isRecoveringPlayback, let track = currentTrack else { return }
+        isRecoveringPlayback = true
+        
+        let resumePosition = currentTime
+        SystemLogger.shared.append("[WATCHDOG RECOVERY] Triggered by: \(reason). Target resume position: \(String(format: "%.1f", resumePosition))s")
+        
+        if consecutiveStallCount <= 2 {
+            // Stage 1: Soft Micro-Seek to reset AVPlayer's rendering pipeline
+            let cmTime = CMTime(seconds: resumePosition, preferredTimescale: 1000)
+            player?.seek(to: cmTime, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
+                DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    self.player?.play()
+                    self.isRecoveringPlayback = false
+                    SystemLogger.shared.append("[WATCHDOG RECOVERY] Soft micro-seek completed (finished: \(finished))")
+                }
+            }
+        } else {
+            // Stage 2: Seamless Stream Reconnect / Re-anchor at resumePosition
+            SystemLogger.shared.append("[WATCHDOG RECOVERY] Initiating seamless stream reconnect at \(String(format: "%.1f", resumePosition))s...")
+            
+            jscClient.getAudioStreamUrl(videoId: track.id) { [weak self] result in
+                DispatchQueue.main.async {
+                    guard let self = self, self.currentTrack?.id == track.id else { return }
+                    switch result {
+                    case .success(let streamUrlStr):
+                        if let newURL = URL(string: streamUrlStr) {
+                            let cacheKey = AudioStreamCacheKey(videoID: track.id, itag: 140, mimeType: "audio/mp4", codec: "mp4a.40.2", container: "m4a")
+                            let ref = RemoteStreamReference(key: cacheKey, initialURL: newURL)
+                            let source = StreamSource.remote(ref)
+                            
+                            var trace = PlaybackStartupTrace(trackID: track.id)
+                            trace.source = source
+                            
+                            self.removeObservers()
+                            self.startAVPlayer(source: source, track: track, trace: trace)
+                            
+                            let targetTime = CMTime(seconds: resumePosition, preferredTimescale: 1000)
+                            self.player?.seek(to: targetTime, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+                                self.player?.play()
+                                self.isRecoveringPlayback = false
+                                self.consecutiveStallCount = 0
+                                SystemLogger.shared.append("[WATCHDOG RECOVERY SUCCESS] Reconnected and resumed at \(String(format: "%.1f", resumePosition))s")
+                            }
+                        }
+                    case .failure(let err):
+                        self.isRecoveringPlayback = false
+                        SystemLogger.shared.append("[WATCHDOG RECOVERY FAILED] Re-resolution error: \(err.localizedDescription)")
+                        self.lastPlayerError = "Playback auto-recovery failed: \(err.localizedDescription)"
+                    }
+                }
+            }
+        }
     }
     
     private var isTransitioningTrack: Bool = false
@@ -455,6 +617,7 @@ public class AudioPlayerManager: ObservableObject {
     }
     
     private func removeObservers() {
+        stopWatchdog()
         if let token = timeObserverToken {
             player?.removeTimeObserver(token)
             timeObserverToken = nil
@@ -471,7 +634,13 @@ public class AudioPlayerManager: ObservableObject {
         bufferEmptyObserverToken?.invalidate()
         bufferEmptyObserverToken = nil
         
+        timeControlStatusObserverToken?.invalidate()
+        timeControlStatusObserverToken = nil
+        
         NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemPlaybackStalled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemNewErrorLogEntry, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemNewAccessLogEntry, object: nil)
     }
     
     // MARK: - Smart Two-Level Duration Prefetcher

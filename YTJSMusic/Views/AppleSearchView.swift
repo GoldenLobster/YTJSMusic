@@ -62,6 +62,7 @@ struct AppleSearchView: View {
                                 searchText = ""
                                 suggestions = []
                                 searchResults = AppleMusicSearchContainer()
+                                selectedCategory = .top
                             }) {
                                 Image(systemName: "xmark.circle.fill")
                                     .foregroundColor(.gray)
@@ -72,11 +73,13 @@ struct AppleSearchView: View {
                     .background(Color(UIColor.secondarySystemBackground))
                     .cornerRadius(12)
                     
-                    if isEditingSearch || !searchText.isEmpty {
+                    if isEditingSearch || !searchText.isEmpty || !searchResults.songs.isEmpty || !searchResults.albums.isEmpty || !searchResults.artists.isEmpty {
                         Button("Cancel") {
                             searchText = ""
                             suggestions = []
+                            searchResults = AppleMusicSearchContainer()
                             isEditingSearch = false
+                            selectedCategory = .top
                             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         }
                         .foregroundColor(.red)
