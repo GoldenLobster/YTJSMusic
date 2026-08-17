@@ -6,7 +6,7 @@
 
 [![iOS 15.0+](https://img.shields.io/badge/iOS-15.0%2B-blue.svg?style=flat-square&logo=apple)](https://developer.apple.com/ios/)
 [![Swift 5.9](https://img.shields.io/badge/Swift-5.9-F05138.svg?style=flat-square&logo=swift)](https://swift.org)
-[![YouTube.js](https://img.shields.io/badge/YouTube.js-v10.0.0-FF0000.svg?style=flat-square&logo=youtube)](https://github.com/LuanRT/YouTube.js)
+[![YouTube.js](https://img.shields.io/badge/YouTube.js-v18.0.0-FF0000.svg?style=flat-square&logo=youtube)](https://github.com/LuanRT/YouTube.js)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
 *An all-in-one, privacy-focused iOS music streaming application with zero-network cache playback, real-time karaoke synchronized lyrics, Apple Music catalog discovery, and native hardware-accelerated playback without WebViews or external servers.*

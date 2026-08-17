@@ -492,8 +492,11 @@
     Author: () => Author,
     ChildElement: () => ChildElement,
     CommandContext: () => CommandContext,
+    CommentsContinuation: () => CommentsContinuation,
     EmojiRun: () => EmojiRun,
     Format: () => Format,
+    PlaylistCollaborationFormSchema: () => PlaylistCollaborationFormSchema,
+    PlaylistCollaborationViewModelPlaylistCollaboratorData: () => PlaylistCollaborationViewModelPlaylistCollaboratorData,
     RendererContext: () => RendererContext,
     SubscriptionButton: () => SubscriptionButton,
     Text: () => Text2,
@@ -529,147 +532,6 @@
   };
   __name(_AccessibilityData, "AccessibilityData");
   var AccessibilityData = _AccessibilityData;
-  var Constants_exports = {};
-  __export2(Constants_exports, {
-    CLIENTS: () => CLIENTS,
-    CLIENT_NAME_IDS: () => CLIENT_NAME_IDS,
-    INNERTUBE_HEADERS_BASE: () => INNERTUBE_HEADERS_BASE,
-    OAUTH: () => OAUTH,
-    STREAM_HEADERS: () => STREAM_HEADERS,
-    SUPPORTED_CLIENTS: () => SUPPORTED_CLIENTS,
-    URLS: () => URLS
-  });
-  var URLS = {
-    YT_BASE: "https://www.youtube.com",
-    YT_MUSIC_BASE: "https://music.youtube.com",
-    YT_SUGGESTIONS: "https://suggestqueries-clients6.youtube.com",
-    YT_UPLOAD: "https://upload.youtube.com/",
-    API: {
-      BASE: "https://youtubei.googleapis.com",
-      PRODUCTION_1: "https://www.youtube.com/youtubei/",
-      PRODUCTION_2: "https://youtubei.googleapis.com/youtubei/",
-      STAGING: "https://green-youtubei.sandbox.googleapis.com/youtubei/",
-      RELEASE: "https://release-youtubei.sandbox.googleapis.com/youtubei/",
-      TEST: "https://test-youtubei.sandbox.googleapis.com/youtubei/",
-      CAMI: "http://cami-youtubei.sandbox.googleapis.com/youtubei/",
-      UYTFE: "https://uytfe.sandbox.google.com/youtubei/"
-    },
-    GOOGLE_SEARCH_BASE: "https://www.google.com/"
-  };
-  var OAUTH = {
-    REGEX: {
-      TV_SCRIPT: new RegExp('<script\\s+id="base-js"\\s+src="([^"]+)"[^>]*><\\/script>'),
-      CLIENT_IDENTITY: new RegExp('clientId:"(?<client_id>[^"]+)",[^"]*?:"(?<client_secret>[^"]+)"')
-    }
-  };
-  var CLIENTS = {
-    IOS: {
-      NAME: "iOS",
-      VERSION: "20.11.6",
-      USER_AGENT: "com.google.ios.youtube/20.11.6 (iPhone10,4; U; CPU iOS 16_7_7 like Mac OS X)",
-      DEVICE_MODEL: "iPhone10,4",
-      OS_NAME: "iOS",
-      OS_VERSION: "16.7.7.20H330"
-    },
-    WEB: {
-      NAME: "WEB",
-      VERSION: "2.20260623.01.00",
-      API_KEY: "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
-      API_VERSION: "v1",
-      STATIC_VISITOR_ID: "6zpwvWUNAco",
-      SUGG_EXP_ID: "ytzpb5_e2,ytpo.bo.lqp.elu=1,ytpo.bo.lqp.ecsc=1,ytpo.bo.lqp.mcsc=3,ytpo.bo.lqp.mec=1,ytpo.bo.lqp.rw=0.8,ytpo.bo.lqp.fw=0.2,ytpo.bo.lqp.szp=1,ytpo.bo.lqp.mz=3,ytpo.bo.lqp.al=en_us,ytpo.bo.lqp.zrm=1,ytpo.bo.lqp.er=1,ytpo.bo.ro.erl=1,ytpo.bo.ro.mlus=3,ytpo.bo.ro.erls=3,ytpo.bo.qfo.mlus=3,ytzprp.ppp.e=1,ytzprp.ppp.st=772,ytzprp.ppp.p=5"
-    },
-    MWEB: {
-      NAME: "MWEB",
-      VERSION: "2.20260205.04.01",
-      API_VERSION: "v1"
-    },
-    WEB_KIDS: {
-      NAME: "WEB_KIDS",
-      VERSION: "2.20260205.00.00"
-    },
-    YTMUSIC: {
-      NAME: "WEB_REMIX",
-      VERSION: "1.20250219.01.00"
-    },
-    ANDROID: {
-      NAME: "ANDROID",
-      VERSION: "21.03.36",
-      SDK_VERSION: 36,
-      USER_AGENT: "com.google.android.youtube/21.03.36(Linux; U; Android 16; en_US; SM-S908E Build/TP1A.220624.014) gzip"
-    },
-    ANDROID_VR: {
-      NAME: "ANDROID_VR",
-      VERSION: "1.65.10",
-      SDK_VERSION: 32,
-      DEVICE_MAKE: "Oculus",
-      DEVICE_MODEL: "Quest 3",
-      USER_AGENT: "com.google.android.apps.youtube.vr.oculus/1.65.10 (Linux; U; Android 12L; eureka-user Build/SQ3A.220605.009.A1) gzip"
-    },
-    YTSTUDIO_ANDROID: {
-      NAME: "ANDROID_CREATOR",
-      VERSION: "22.43.101"
-    },
-    YTMUSIC_ANDROID: {
-      NAME: "ANDROID_MUSIC",
-      VERSION: "5.34.51"
-    },
-    TV: {
-      NAME: "TVHTML5",
-      VERSION: "7.20260311.12.00",
-      USER_AGENT: "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"
-    },
-    TV_SIMPLY: {
-      NAME: "TVHTML5_SIMPLY",
-      VERSION: "1.0"
-    },
-    TV_EMBEDDED: {
-      NAME: "TVHTML5_SIMPLY_EMBEDDED_PLAYER",
-      VERSION: "2.0"
-    },
-    WEB_EMBEDDED: {
-      NAME: "WEB_EMBEDDED_PLAYER",
-      VERSION: "1.20260206.01.00",
-      API_KEY: "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
-      API_VERSION: "v1",
-      STATIC_VISITOR_ID: "6zpwvWUNAco"
-    },
-    WEB_CREATOR: {
-      NAME: "WEB_CREATOR",
-      VERSION: "1.20241203.01.00",
-      API_KEY: "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
-      API_VERSION: "v1",
-      STATIC_VISITOR_ID: "6zpwvWUNAco"
-    }
-  };
-  var CLIENT_NAME_IDS = {
-    iOS: "5",
-    WEB: "1",
-    MWEB: "2",
-    WEB_KIDS: "76",
-    WEB_REMIX: "67",
-    ANDROID: "3",
-    ANDROID_CREATOR: "14",
-    ANDROID_MUSIC: "21",
-    ANDROID_VR: "28",
-    TVHTML5: "7",
-    TVHTML5_SIMPLY: "74",
-    TVHTML5_SIMPLY_EMBEDDED_PLAYER: "85",
-    WEB_EMBEDDED_PLAYER: "56",
-    WEB_CREATOR: "62"
-  };
-  var STREAM_HEADERS = {
-    "accept": "*/*",
-    "origin": "https://www.youtube.com",
-    "referer": "https://www.youtube.com",
-    "DNT": "?1"
-  };
-  var INNERTUBE_HEADERS_BASE = {
-    "accept": "*/*",
-    "accept-encoding": "gzip, deflate",
-    "content-type": "application/json"
-  };
-  var SUPPORTED_CLIENTS = ["IOS", "WEB", "MWEB", "YTKIDS", "YTMUSIC", "ANDROID", "ANDROID_VR", "YTSTUDIO_ANDROID", "YTMUSIC_ANDROID", "TV", "TV_SIMPLY", "TV_EMBEDDED", "WEB_EMBEDDED", "WEB_CREATOR"];
   var parser_exports = {};
   __export2(parser_exports, {
     addRuntimeParser: () => addRuntimeParser,
@@ -796,6 +658,7 @@
     CompactVideo: () => CompactVideo,
     CompositeVideoPrimaryInfo: () => CompositeVideoPrimaryInfo,
     ConfirmDialog: () => ConfirmDialog,
+    ContentListItemView: () => ContentListItemView,
     ContentMetadataView: () => ContentMetadataView,
     ContentPreviewImageView: () => ContentPreviewImageView,
     ContinuationCommand: () => ContinuationCommand,
@@ -1042,6 +905,7 @@
     PlayerStoryboardSpec: () => PlayerStoryboardSpec,
     Playlist: () => Playlist,
     PlaylistAddToOption: () => PlaylistAddToOption,
+    PlaylistCollaborationView: () => PlaylistCollaborationView,
     PlaylistCustomThumbnail: () => PlaylistCustomThumbnail,
     PlaylistEditEndpoint: () => PlaylistEditEndpoint,
     PlaylistHeader: () => PlaylistHeader,
@@ -1167,6 +1031,7 @@
     ThumbnailHoverOverlayToggleActionsView: () => ThumbnailHoverOverlayToggleActionsView,
     ThumbnailHoverOverlayView: () => ThumbnailHoverOverlayView,
     ThumbnailLandscapePortrait: () => ThumbnailLandscapePortrait,
+    ThumbnailOverlayAvatarStackView: () => ThumbnailOverlayAvatarStackView,
     ThumbnailOverlayBadgeView: () => ThumbnailOverlayBadgeView,
     ThumbnailOverlayBottomPanel: () => ThumbnailOverlayBottomPanel,
     ThumbnailOverlayEndorsement: () => ThumbnailOverlayEndorsement,
@@ -1183,6 +1048,8 @@
     ThumbnailOverlayTitleView: () => ThumbnailOverlayTitleView,
     ThumbnailOverlayToggleButton: () => ThumbnailOverlayToggleButton,
     ThumbnailView: () => ThumbnailView,
+    TicketEvent: () => TicketEvent,
+    TicketShelf: () => TicketShelf,
     TimedMarkerDecoration: () => TimedMarkerDecoration,
     TitleAndButtonListHeader: () => TitleAndButtonListHeader,
     ToggleButton: () => ToggleButton,
@@ -1228,6 +1095,7 @@
     VideoDescriptionInfocardsSection: () => VideoDescriptionInfocardsSection,
     VideoDescriptionMusicSection: () => VideoDescriptionMusicSection,
     VideoDescriptionTranscriptSection: () => VideoDescriptionTranscriptSection,
+    VideoDescriptionYouchatSectionView: () => VideoDescriptionYouchatSectionView,
     VideoInfoCardContent: () => VideoInfoCardContent,
     VideoMetadataCarouselView: () => VideoMetadataCarouselView,
     VideoOwner: () => VideoOwner,
@@ -1270,6 +1138,157 @@
   _cache = /* @__PURE__ */ new WeakMap();
   __name(_UniversalCache, "UniversalCache");
   var UniversalCache = _UniversalCache;
+  var Constants_exports = {};
+  __export2(Constants_exports, {
+    CLIENTS: () => CLIENTS,
+    CLIENT_NAME_IDS: () => CLIENT_NAME_IDS,
+    INNERTUBE_HEADERS_BASE: () => INNERTUBE_HEADERS_BASE,
+    OAUTH: () => OAUTH,
+    STREAM_HEADERS: () => STREAM_HEADERS,
+    SUPPORTED_CLIENTS: () => SUPPORTED_CLIENTS,
+    URLS: () => URLS
+  });
+  var URLS = {
+    YT_BASE: "https://www.youtube.com",
+    YT_MUSIC_BASE: "https://music.youtube.com",
+    YT_SUGGESTIONS: "https://suggestqueries-clients6.youtube.com",
+    YT_UPLOAD: "https://upload.youtube.com/",
+    API: {
+      BASE: "https://youtubei.googleapis.com",
+      PRODUCTION_1: "https://www.youtube.com/youtubei/",
+      PRODUCTION_2: "https://youtubei.googleapis.com/youtubei/",
+      STAGING: "https://green-youtubei.sandbox.googleapis.com/youtubei/",
+      RELEASE: "https://release-youtubei.sandbox.googleapis.com/youtubei/",
+      TEST: "https://test-youtubei.sandbox.googleapis.com/youtubei/",
+      CAMI: "http://cami-youtubei.sandbox.googleapis.com/youtubei/",
+      UYTFE: "https://uytfe.sandbox.google.com/youtubei/"
+    },
+    GOOGLE_SEARCH_BASE: "https://www.google.com/"
+  };
+  var OAUTH = {
+    REGEX: {
+      TV_SCRIPT: new RegExp('<script\\s+id="base-js"\\s+src="([^"]+)"[^>]*><\\/script>'),
+      CLIENT_IDENTITY: new RegExp('clientId:"(?<client_id>[^"]+)",[^"]*?:"(?<client_secret>[^"]+)"')
+    }
+  };
+  var CLIENTS = {
+    IOS: {
+      NAME: "iOS",
+      VERSION: "20.11.6",
+      USER_AGENT: "com.google.ios.youtube/20.11.6 (iPhone10,4; U; CPU iOS 16_7_7 like Mac OS X)",
+      DEVICE_MODEL: "iPhone10,4",
+      OS_NAME: "iOS",
+      OS_VERSION: "16.7.7.20H330"
+    },
+    WEB: {
+      NAME: "WEB",
+      VERSION: "2.20260623.01.00",
+      API_KEY: "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+      API_VERSION: "v1",
+      STATIC_VISITOR_ID: "6zpwvWUNAco",
+      SUGG_EXP_ID: "ytzpb5_e2,ytpo.bo.lqp.elu=1,ytpo.bo.lqp.ecsc=1,ytpo.bo.lqp.mcsc=3,ytpo.bo.lqp.mec=1,ytpo.bo.lqp.rw=0.8,ytpo.bo.lqp.fw=0.2,ytpo.bo.lqp.szp=1,ytpo.bo.lqp.mz=3,ytpo.bo.lqp.al=en_us,ytpo.bo.lqp.zrm=1,ytpo.bo.lqp.er=1,ytpo.bo.ro.erl=1,ytpo.bo.ro.mlus=3,ytpo.bo.ro.erls=3,ytpo.bo.qfo.mlus=3,ytzprp.ppp.e=1,ytzprp.ppp.st=772,ytzprp.ppp.p=5"
+    },
+    MWEB: {
+      NAME: "MWEB",
+      VERSION: "2.20260205.04.01",
+      API_VERSION: "v1"
+    },
+    WEB_KIDS: {
+      NAME: "WEB_KIDS",
+      VERSION: "2.20260205.00.00"
+    },
+    YTMUSIC: {
+      NAME: "WEB_REMIX",
+      VERSION: "1.20250219.01.00"
+    },
+    ANDROID: {
+      NAME: "ANDROID",
+      VERSION: "21.03.36",
+      SDK_VERSION: 36,
+      USER_AGENT: "com.google.android.youtube/21.03.36(Linux; U; Android 16; en_US; SM-S908E Build/TP1A.220624.014) gzip"
+    },
+    ANDROID_VR: {
+      NAME: "ANDROID_VR",
+      VERSION: "1.65.10",
+      SDK_VERSION: 32,
+      DEVICE_MAKE: "Oculus",
+      DEVICE_MODEL: "Quest 3",
+      USER_AGENT: "com.google.android.apps.youtube.vr.oculus/1.65.10 (Linux; U; Android 12L; eureka-user Build/SQ3A.220605.009.A1) gzip"
+    },
+    VISIONOS: {
+      NAME: "VISIONOS",
+      VERSION: "1.02",
+      DEVICE_MAKE: "Apple",
+      DEVICE_MODEL: "RealityDevice17,1",
+      OS_NAME: "visionOS",
+      OS_VERSION: "26.5.23O471",
+      USER_AGENT: "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15"
+    },
+    YTSTUDIO_ANDROID: {
+      NAME: "ANDROID_CREATOR",
+      VERSION: "22.43.101"
+    },
+    YTMUSIC_ANDROID: {
+      NAME: "ANDROID_MUSIC",
+      VERSION: "5.34.51"
+    },
+    TV: {
+      NAME: "TVHTML5",
+      VERSION: "7.20260311.12.00",
+      USER_AGENT: "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"
+    },
+    TV_SIMPLY: {
+      NAME: "TVHTML5_SIMPLY",
+      VERSION: "1.0"
+    },
+    TV_EMBEDDED: {
+      NAME: "TVHTML5_SIMPLY_EMBEDDED_PLAYER",
+      VERSION: "2.0"
+    },
+    WEB_EMBEDDED: {
+      NAME: "WEB_EMBEDDED_PLAYER",
+      VERSION: "1.20260206.01.00",
+      API_KEY: "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+      API_VERSION: "v1",
+      STATIC_VISITOR_ID: "6zpwvWUNAco"
+    },
+    WEB_CREATOR: {
+      NAME: "WEB_CREATOR",
+      VERSION: "1.20241203.01.00",
+      API_KEY: "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+      API_VERSION: "v1",
+      STATIC_VISITOR_ID: "6zpwvWUNAco"
+    }
+  };
+  var CLIENT_NAME_IDS = {
+    iOS: "5",
+    WEB: "1",
+    MWEB: "2",
+    WEB_KIDS: "76",
+    WEB_REMIX: "67",
+    ANDROID: "3",
+    ANDROID_CREATOR: "14",
+    ANDROID_MUSIC: "21",
+    ANDROID_VR: "28",
+    VISIONOS: "101",
+    TVHTML5: "7",
+    TVHTML5_SIMPLY: "74",
+    TVHTML5_SIMPLY_EMBEDDED_PLAYER: "85",
+    WEB_EMBEDDED_PLAYER: "56",
+    WEB_CREATOR: "62"
+  };
+  var STREAM_HEADERS = {
+    "accept": "*/*",
+    "origin": "https://www.youtube.com",
+    "referer": "https://www.youtube.com",
+    "DNT": "?1"
+  };
+  var INNERTUBE_HEADERS_BASE = {
+    "accept": "*/*",
+    "accept-encoding": "gzip, deflate",
+    "content-type": "application/json"
+  };
+  var SUPPORTED_CLIENTS = ["IOS", "WEB", "MWEB", "YTKIDS", "YTMUSIC", "ANDROID", "ANDROID_VR", "VISIONOS", "YTSTUDIO_ANDROID", "YTMUSIC_ANDROID", "TV", "TV_SIMPLY", "TV_EMBEDDED", "WEB_EMBEDDED", "WEB_CREATOR"];
   var _legacy_listeners;
   var _EventEmitterLike = class _EventEmitterLike2 extends EventTarget {
     constructor() {
@@ -1410,7 +1429,7 @@
   var PlayerStoryboardSpec = _PlayerStoryboardSpec;
   var package_default = {
     name: "youtubei.js",
-    version: "17.2.0",
+    version: "18.0.0",
     description: "A JavaScript client for YouTube's private API, known as InnerTube.",
     type: "module",
     types: "./dist/src/platform/lib.d.ts",
@@ -1514,17 +1533,17 @@
     dependencies: {
       "@bufbuild/protobuf": "^2.0.0",
       fflate: "^0.8.2",
-      meriyah: "^6.1.4"
+      meriyah: "^7.3.1"
     },
     devDependencies: {
       "@eslint/js": "^9.37.0",
       "@types/estree": "^1.0.6",
-      "@types/node": "^25.0.3",
+      "@types/node": "^26.2.0",
       "@typescript-eslint/eslint-plugin": "^8.46.0",
       "@typescript-eslint/parser": "^8.46.0",
-      "cpy-cli": "^6.0.0",
+      "cpy-cli": "^7.0.0",
       esbuild: "^0.28.0",
-      eslint: "^9.37.0",
+      eslint: "^10.8.0",
       globals: "^17.0.0",
       replace: "^1.2.2",
       rimraf: "^6.0.1",
@@ -1534,7 +1553,7 @@
       "typedoc-plugin-markdown": "^4.9.0",
       typescript: "^5.9.3",
       "typescript-eslint": "^8.46.0",
-      vitest: "^3.2.4"
+      vitest: "^4.1.10"
     },
     bugs: {
       url: "https://github.com/LuanRT/YouTube.js/issues"
@@ -2392,6 +2411,10 @@ format:`, anonymisedFormat);
           request_headers.set("X-GOOG-API-FORMAT-VERSION", "2");
         } else if (adjustedClientName === CLIENTS.IOS.NAME) {
           request_headers.set("User-Agent", CLIENTS.IOS.USER_AGENT);
+        } else if (adjustedClientName === CLIENTS.ANDROID_VR.NAME) {
+          request_headers.set("User-Agent", CLIENTS.ANDROID_VR.USER_AGENT);
+        } else if (adjustedClientName === CLIENTS.VISIONOS.NAME) {
+          request_headers.set("User-Agent", CLIENTS.VISIONOS.USER_AGENT);
         }
       } else if (content_type === "application/x-protobuf") {
         if (Platform.shim.server) {
@@ -2529,6 +2552,18 @@ format:`, anonymisedFormat);
         ctx.client.clientVersion = CLIENTS.ANDROID_VR.VERSION;
         ctx.client.clientFormFactor = "SMALL_FORM_FACTOR";
         ctx.client.clientName = CLIENTS.ANDROID_VR.NAME;
+        break;
+      case "VISIONOS":
+        ctx.client.deviceMake = CLIENTS.VISIONOS.DEVICE_MAKE;
+        ctx.client.deviceModel = CLIENTS.VISIONOS.DEVICE_MODEL;
+        ctx.client.clientVersion = CLIENTS.VISIONOS.VERSION;
+        ctx.client.clientName = CLIENTS.VISIONOS.NAME;
+        ctx.client.platform = "MOBILE";
+        ctx.client.osName = CLIENTS.VISIONOS.OS_NAME;
+        ctx.client.osVersion = CLIENTS.VISIONOS.OS_VERSION;
+        ctx.client.userAgent = CLIENTS.VISIONOS.USER_AGENT;
+        delete ctx.client.browserName;
+        delete ctx.client.browserVersion;
         break;
       case "YTMUSIC_ANDROID":
         ctx.client.clientVersion = CLIENTS.YTMUSIC_ANDROID.VERSION;
@@ -2807,6 +2842,7 @@ format:`, anonymisedFormat);
     "stream finished",
     "no stream handler",
     ,
+    // determined by compression function
     "no callback",
     "invalid UTF-8 data",
     "extra field too long",
@@ -3180,8 +3216,8 @@ format:`, anonymisedFormat);
       var msk_1 = (1 << plvl) - 1;
       var prev = st.p || new u16(32768), head = st.h || new u16(msk_1 + 1);
       var bs1_1 = Math.ceil(plvl / 3), bs2_1 = 2 * bs1_1;
-      var hsh = /* @__PURE__ */ __name(function(i22) {
-        return (dat[i22] ^ dat[i22 + 1] << bs1_1 ^ dat[i22 + 2] << bs2_1) & msk_1;
+      var hsh = /* @__PURE__ */ __name(function(i3) {
+        return (dat[i3] ^ dat[i3 + 1] << bs1_1 ^ dat[i3 + 2] << bs2_1) & msk_1;
       }, "hsh");
       var syms = new i32(25e3);
       var lf = new u16(288), df = new u16(32);
@@ -3385,9 +3421,9 @@ format:`, anonymisedFormat);
     if (magic !== MAGIC_HEADER) {
       throw new Error("Invalid binary format: magic header mismatch");
     }
-    const version2 = view.getUint32(4, true);
-    if (version2 !== VERSION) {
-      throw new Error(`Unsupported binary format version: ${version2}`);
+    const version22 = view.getUint32(4, true);
+    if (version22 !== VERSION) {
+      throw new Error(`Unsupported binary format version: ${version22}`);
     }
     const length = view.getUint32(8, true);
     if (12 + length > buffer.byteLength) {
@@ -3598,7 +3634,7 @@ format:`, anonymisedFormat);
   var protoInt64 = /* @__PURE__ */ makeInt64Support();
   function makeInt64Support() {
     const dv = new DataView(new ArrayBuffer(8));
-    const ok = typeof BigInt === "function" && typeof dv.getBigInt64 === "function" && typeof dv.getBigUint64 === "function" && typeof dv.setBigInt64 === "function" && typeof dv.setBigUint64 === "function" && (!!globalThis.Deno || typeof process != "object" || typeof process.env != "object" || process.env.BUF_BIGINT_DISABLE !== "1");
+    const ok = typeof BigInt === "function" && typeof dv.getBigInt64 === "function" && typeof dv.getBigUint64 === "function" && typeof dv.setBigInt64 === "function" && typeof dv.setBigUint64 === "function" && (!!globalThis.Deno || !!globalThis.Bun || typeof process != "object" || typeof process.env != "object" || process.env.BUF_BIGINT_DISABLE !== "1");
     if (ok) {
       const MIN = BigInt("-9223372036854775808");
       const MAX = BigInt("9223372036854775807");
@@ -3982,9 +4018,11 @@ format:`, anonymisedFormat);
      * Skip one element and return the skipped data.
      *
      * When skipping StartGroup, provide the tags field number to check for
-     * matching field number in the EndGroup tag.
+     * matching field number in the EndGroup tag. Recursion into nested groups
+     * is guarded by the `recursionLimit` argument: When the limit is reached,
+     * this method throws.
      */
-    skip(wireType, fieldNo) {
+    skip(wireType, fieldNo, recursionLimit = 100) {
       let start = this.pos;
       switch (wireType) {
         case WireType.Varint:
@@ -4002,6 +4040,9 @@ format:`, anonymisedFormat);
           this.pos += len;
           break;
         case WireType.StartGroup:
+          if (recursionLimit <= 0) {
+            throw new Error("maximum recursion depth reached");
+          }
           for (; ; ) {
             const [fn, wt] = this.tag();
             if (wt === WireType.EndGroup) {
@@ -4010,7 +4051,7 @@ format:`, anonymisedFormat);
               }
               break;
             }
-            this.skip(wt, fn);
+            this.skip(wt, fn, recursionLimit - 1);
           }
           break;
         default:
@@ -6405,11 +6446,15 @@ format:`, anonymisedFormat);
     return foundObject || false;
   }
   __name(timestampMatcher, "timestampMatcher");
+  var version$1 = "7.3.1";
+  var packageJson = {
+    version: version$1
+  };
   var unicodeLookup = ((compressed, lookup) => {
     const result = new Uint32Array(69632);
     let index = 0;
     let subIndex = 0;
-    while (index < 2571) {
+    while (index < 2597) {
       const inst = compressed[index++];
       if (inst < 0) {
         subIndex -= inst;
@@ -6425,74 +6470,9 @@ format:`, anonymisedFormat);
       }
     }
     return result;
-  })([-1, 2, 26, 2, 27, 2, 5, -1, 0, 77595648, 3, 44, 2, 3, 0, 14, 2, 63, 2, 64, 3, 0, 3, 0, 3168796671, 0, 4294956992, 2, 1, 2, 0, 2, 41, 3, 0, 4, 0, 4294966523, 3, 0, 4, 2, 16, 2, 65, 2, 0, 0, 4294836735, 0, 3221225471, 0, 4294901942, 2, 66, 0, 134152192, 3, 0, 2, 0, 4294951935, 3, 0, 2, 0, 2683305983, 0, 2684354047, 2, 18, 2, 0, 0, 4294961151, 3, 0, 2, 2, 19, 2, 0, 0, 608174079, 2, 0, 2, 60, 2, 7, 2, 6, 0, 4286611199, 3, 0, 2, 2, 1, 3, 0, 3, 0, 4294901711, 2, 40, 0, 4089839103, 0, 2961209759, 0, 1342439375, 0, 4294543342, 0, 3547201023, 0, 1577204103, 0, 4194240, 0, 4294688750, 2, 2, 0, 80831, 0, 4261478351, 0, 4294549486, 2, 2, 0, 2967484831, 0, 196559, 0, 3594373100, 0, 3288319768, 0, 8469959, 0, 65472, 2, 3, 0, 4093640191, 0, 660618719, 0, 65487, 0, 4294828015, 0, 4092591615, 0, 1616920031, 0, 982991, 2, 3, 2, 0, 0, 2163244511, 0, 4227923919, 0, 4236247022, 2, 71, 0, 4284449919, 0, 851904, 2, 4, 2, 12, 0, 67076095, -1, 2, 72, 0, 1073741743, 0, 4093607775, -1, 0, 50331649, 0, 3265266687, 2, 33, 0, 4294844415, 0, 4278190047, 2, 20, 2, 137, -1, 3, 0, 2, 2, 23, 2, 0, 2, 10, 2, 0, 2, 15, 2, 22, 3, 0, 10, 2, 74, 2, 0, 2, 75, 2, 76, 2, 77, 2, 0, 2, 78, 2, 0, 2, 11, 0, 261632, 2, 25, 3, 0, 2, 2, 13, 2, 4, 3, 0, 18, 2, 79, 2, 5, 3, 0, 2, 2, 80, 0, 2151677951, 2, 29, 2, 9, 0, 909311, 3, 0, 2, 0, 814743551, 2, 49, 0, 67090432, 3, 0, 2, 2, 42, 2, 0, 2, 6, 2, 0, 2, 30, 2, 8, 0, 268374015, 2, 110, 2, 51, 2, 0, 2, 81, 0, 134153215, -1, 2, 7, 2, 0, 2, 8, 0, 2684354559, 0, 67044351, 0, 3221160064, 2, 17, -1, 3, 0, 2, 2, 53, 0, 1046528, 3, 0, 3, 2, 9, 2, 0, 2, 54, 0, 4294960127, 2, 10, 2, 6, 2, 11, 0, 4294377472, 2, 12, 3, 0, 16, 2, 13, 2, 0, 2, 82, 2, 10, 2, 0, 2, 83, 2, 84, 2, 85, 0, 12288, 2, 55, 0, 1048577, 2, 86, 2, 14, -1, 2, 14, 0, 131042, 2, 87, 2, 88, 2, 89, 2, 0, 2, 34, -83, 3, 0, 7, 0, 1046559, 2, 0, 2, 15, 2, 0, 0, 2147516671, 2, 21, 3, 90, 2, 2, 0, -16, 2, 91, 0, 524222462, 2, 4, 2, 0, 0, 4269801471, 2, 4, 3, 0, 2, 2, 28, 2, 16, 3, 0, 2, 2, 17, 2, 0, -1, 2, 18, -16, 3, 0, 206, -2, 3, 0, 692, 2, 73, -1, 2, 18, 2, 10, 3, 0, 8, 2, 93, 2, 133, 2, 0, 0, 3220242431, 3, 0, 3, 2, 19, 2, 94, 2, 95, 3, 0, 2, 2, 96, 2, 0, 2, 97, 2, 46, 2, 0, 0, 4351, 2, 0, 2, 9, 3, 0, 2, 0, 67043391, 0, 3909091327, 2, 0, 2, 24, 2, 9, 2, 20, 3, 0, 2, 0, 67076097, 2, 8, 2, 0, 2, 21, 0, 67059711, 0, 4236247039, 3, 0, 2, 0, 939524103, 0, 8191999, 2, 101, 2, 102, 2, 22, 2, 23, 3, 0, 3, 0, 67057663, 3, 0, 349, 2, 103, 2, 104, 2, 7, -264, 3, 0, 11, 2, 24, 3, 0, 2, 2, 32, -1, 0, 3774349439, 2, 105, 2, 106, 3, 0, 2, 2, 19, 2, 107, 3, 0, 10, 2, 10, 2, 18, 2, 0, 2, 47, 2, 0, 2, 31, 2, 108, 2, 25, 0, 1638399, 0, 57344, 2, 109, 3, 0, 3, 2, 20, 2, 26, 2, 27, 2, 5, 2, 28, 2, 0, 2, 8, 2, 111, -1, 2, 112, 2, 113, 2, 114, -1, 3, 0, 3, 2, 12, -2, 2, 0, 2, 29, -3, 0, 536870912, -4, 2, 20, 2, 0, 2, 36, 0, 1, 2, 0, 2, 67, 2, 6, 2, 12, 2, 10, 2, 0, 2, 115, -1, 3, 0, 4, 2, 10, 2, 23, 2, 116, 2, 7, 2, 0, 2, 117, 2, 0, 2, 118, 2, 119, 2, 120, 2, 0, 2, 9, 3, 0, 9, 2, 21, 2, 30, 2, 31, 2, 121, 2, 122, -2, 2, 123, 2, 124, 2, 30, 2, 21, 2, 8, -2, 2, 125, 2, 30, 2, 32, -2, 2, 0, 2, 39, -2, 0, 4277137519, 0, 2269118463, -1, 3, 20, 2, -1, 2, 33, 2, 38, 2, 0, 3, 30, 2, 2, 35, 2, 19, -3, 3, 0, 2, 2, 34, -1, 2, 0, 2, 35, 2, 0, 2, 35, 2, 0, 2, 48, 2, 0, 0, 4294950463, 2, 37, -7, 2, 0, 0, 203775, 2, 57, 0, 4026531840, 2, 20, 2, 43, 2, 36, 2, 18, 2, 37, 2, 18, 2, 126, 2, 21, 3, 0, 2, 2, 38, 0, 2151677888, 2, 0, 2, 12, 0, 4294901764, 2, 144, 2, 0, 2, 58, 2, 56, 0, 5242879, 3, 0, 2, 0, 402644511, -1, 2, 128, 2, 39, 0, 3, -1, 2, 129, 2, 130, 2, 0, 0, 67045375, 2, 40, 0, 4226678271, 0, 3766565279, 0, 2039759, 2, 132, 2, 41, 0, 1046437, 0, 6, 3, 0, 2, 0, 3288270847, 0, 3, 3, 0, 2, 0, 67043519, -5, 2, 0, 0, 4282384383, 0, 1056964609, -1, 3, 0, 2, 0, 67043345, -1, 2, 0, 2, 42, 2, 23, 2, 50, 2, 11, 2, 61, 2, 38, -5, 2, 0, 2, 12, -3, 3, 0, 2, 0, 2147484671, 2, 134, 0, 4190109695, 2, 52, -2, 2, 135, 0, 4244635647, 0, 27, 2, 0, 2, 8, 2, 43, 2, 0, 2, 68, 2, 18, 2, 0, 2, 42, -6, 2, 0, 2, 45, 2, 59, 2, 44, 2, 45, 2, 46, 2, 47, 0, 8388351, -2, 2, 136, 0, 3028287487, 2, 48, 2, 138, 0, 33259519, 2, 49, -9, 2, 21, 0, 4294836223, 0, 3355443199, 0, 134152199, -2, 2, 69, -2, 3, 0, 28, 2, 32, -3, 3, 0, 3, 2, 17, 3, 0, 6, 2, 50, -81, 2, 18, 3, 0, 2, 2, 36, 3, 0, 33, 2, 25, 2, 30, 3, 0, 124, 2, 12, 3, 0, 18, 2, 38, -213, 2, 0, 2, 32, -54, 3, 0, 17, 2, 42, 2, 8, 2, 23, 2, 0, 2, 8, 2, 23, 2, 51, 2, 0, 2, 21, 2, 52, 2, 139, 2, 25, -13, 2, 0, 2, 53, -6, 3, 0, 2, -4, 3, 0, 2, 0, 4294936575, 2, 0, 0, 4294934783, -2, 0, 196635, 3, 0, 191, 2, 54, 3, 0, 38, 2, 30, 2, 55, 2, 34, -278, 2, 140, 3, 0, 9, 2, 141, 2, 142, 2, 56, 3, 0, 11, 2, 7, -72, 3, 0, 3, 2, 143, 0, 1677656575, -130, 2, 26, -16, 2, 0, 2, 24, 2, 38, -16, 0, 4161266656, 0, 4071, 0, 15360, -4, 2, 57, -13, 3, 0, 2, 2, 58, 2, 0, 2, 145, 2, 146, 2, 62, 2, 0, 2, 147, 2, 148, 2, 149, 3, 0, 10, 2, 150, 2, 151, 2, 22, 3, 58, 2, 3, 152, 2, 3, 59, 2, 0, 4294954999, 2, 0, -16, 2, 0, 2, 92, 2, 0, 0, 2105343, 0, 4160749584, 0, 65534, -34, 2, 8, 2, 154, -6, 0, 4194303871, 0, 4294903771, 2, 0, 2, 60, 2, 100, -3, 2, 0, 0, 1073684479, 0, 17407, -9, 2, 18, 2, 17, 2, 0, 2, 32, -14, 2, 18, 2, 32, -6, 2, 18, 2, 12, -15, 2, 155, 3, 0, 6, 0, 8323103, -1, 3, 0, 2, 2, 61, -37, 2, 62, 2, 156, 2, 157, 2, 158, 2, 159, 2, 160, -105, 2, 26, -32, 3, 0, 1335, -1, 3, 0, 129, 2, 32, 3, 0, 6, 2, 10, 3, 0, 180, 2, 161, 3, 0, 233, 2, 162, 3, 0, 18, 2, 10, -77, 3, 0, 16, 2, 10, -47, 3, 0, 154, 2, 6, 3, 0, 130, 2, 25, -22250, 3, 0, 7, 2, 25, -6130, 3, 5, 2, -1, 0, 69207040, 3, 44, 2, 3, 0, 14, 2, 63, 2, 64, -3, 0, 3168731136, 0, 4294956864, 2, 1, 2, 0, 2, 41, 3, 0, 4, 0, 4294966275, 3, 0, 4, 2, 16, 2, 65, 2, 0, 2, 34, -1, 2, 18, 2, 66, -1, 2, 0, 0, 2047, 0, 4294885376, 3, 0, 2, 0, 3145727, 0, 2617294944, 0, 4294770688, 2, 25, 2, 67, 3, 0, 2, 0, 131135, 2, 98, 0, 70256639, 0, 71303167, 0, 272, 2, 42, 2, 6, 0, 32511, 2, 0, 2, 49, -1, 2, 99, 2, 68, 0, 4278255616, 0, 4294836227, 0, 4294549473, 0, 600178175, 0, 2952806400, 0, 268632067, 0, 4294543328, 0, 57540095, 0, 1577058304, 0, 1835008, 0, 4294688736, 2, 70, 2, 69, 0, 33554435, 2, 131, 2, 70, 0, 2952790016, 0, 131075, 0, 3594373096, 0, 67094296, 2, 69, -1, 0, 4294828e3, 0, 603979263, 0, 654311424, 0, 3, 0, 4294828001, 0, 602930687, 0, 1610612736, 0, 393219, 0, 4294828016, 0, 671088639, 0, 2154840064, 0, 4227858435, 0, 4236247008, 2, 71, 2, 38, -1, 2, 4, 0, 917503, 2, 38, -1, 2, 72, 0, 537788335, 0, 4026531935, -1, 0, 1, -1, 2, 33, 2, 73, 0, 7936, -3, 2, 0, 0, 2147485695, 0, 1010761728, 0, 4292984930, 0, 16387, 2, 0, 2, 15, 2, 22, 3, 0, 10, 2, 74, 2, 0, 2, 75, 2, 76, 2, 77, 2, 0, 2, 78, 2, 0, 2, 12, -1, 2, 25, 3, 0, 2, 2, 13, 2, 4, 3, 0, 18, 2, 79, 2, 5, 3, 0, 2, 2, 80, 0, 2147745791, 3, 19, 2, 0, 122879, 2, 0, 2, 9, 0, 276824064, -2, 3, 0, 2, 2, 42, 2, 0, 0, 4294903295, 2, 0, 2, 30, 2, 8, -1, 2, 18, 2, 51, 2, 0, 2, 81, 2, 49, -1, 2, 21, 2, 0, 2, 29, -2, 0, 128, -2, 2, 28, 2, 9, 0, 8160, -1, 2, 127, 0, 4227907585, 2, 0, 2, 37, 2, 0, 2, 50, 0, 4227915776, 2, 10, 2, 6, 2, 11, -1, 0, 74440192, 3, 0, 6, -2, 3, 0, 8, 2, 13, 2, 0, 2, 82, 2, 10, 2, 0, 2, 83, 2, 84, 2, 85, -3, 2, 86, 2, 14, -3, 2, 87, 2, 88, 2, 89, 2, 0, 2, 34, -83, 3, 0, 7, 0, 817183, 2, 0, 2, 15, 2, 0, 0, 33023, 2, 21, 3, 90, 2, -17, 2, 91, 0, 524157950, 2, 4, 2, 0, 2, 92, 2, 4, 2, 0, 2, 22, 2, 28, 2, 16, 3, 0, 2, 2, 17, 2, 0, -1, 2, 18, -16, 3, 0, 206, -2, 3, 0, 692, 2, 73, -1, 2, 18, 2, 10, 3, 0, 8, 2, 93, 0, 3072, 2, 0, 0, 2147516415, 2, 10, 3, 0, 2, 2, 25, 2, 94, 2, 95, 3, 0, 2, 2, 96, 2, 0, 2, 97, 2, 46, 0, 4294965179, 0, 7, 2, 0, 2, 9, 2, 95, 2, 9, -1, 0, 1761345536, 2, 98, 0, 4294901823, 2, 38, 2, 20, 2, 99, 2, 35, 2, 100, 0, 2080440287, 2, 0, 2, 34, 2, 153, 0, 3296722943, 2, 0, 0, 1046675455, 0, 939524101, 0, 1837055, 2, 101, 2, 102, 2, 22, 2, 23, 3, 0, 3, 0, 7, 3, 0, 349, 2, 103, 2, 104, 2, 7, -264, 3, 0, 11, 2, 24, 3, 0, 2, 2, 32, -1, 0, 2700607615, 2, 105, 2, 106, 3, 0, 2, 2, 19, 2, 107, 3, 0, 10, 2, 10, 2, 18, 2, 0, 2, 47, 2, 0, 2, 31, 2, 108, -3, 2, 109, 3, 0, 3, 2, 20, -1, 3, 5, 2, 2, 110, 2, 0, 2, 8, 2, 111, -1, 2, 112, 2, 113, 2, 114, -1, 3, 0, 3, 2, 12, -2, 2, 0, 2, 29, -8, 2, 20, 2, 0, 2, 36, -1, 2, 0, 2, 67, 2, 6, 2, 30, 2, 10, 2, 0, 2, 115, -1, 3, 0, 4, 2, 10, 2, 18, 2, 116, 2, 7, 2, 0, 2, 117, 2, 0, 2, 118, 2, 119, 2, 120, 2, 0, 2, 9, 3, 0, 9, 2, 21, 2, 30, 2, 31, 2, 121, 2, 122, -2, 2, 123, 2, 124, 2, 30, 2, 21, 2, 8, -2, 2, 125, 2, 30, 2, 32, -2, 2, 0, 2, 39, -2, 0, 4277075969, 2, 30, -1, 3, 20, 2, -1, 2, 33, 2, 126, 2, 0, 3, 30, 2, 2, 35, 2, 19, -3, 3, 0, 2, 2, 34, -1, 2, 0, 2, 35, 2, 0, 2, 35, 2, 0, 2, 50, 2, 98, 0, 4294934591, 2, 37, -7, 2, 0, 0, 197631, 2, 57, -1, 2, 20, 2, 43, 2, 37, 2, 18, 0, 3, 2, 18, 2, 126, 2, 21, 2, 127, 2, 54, -1, 0, 2490368, 2, 127, 2, 25, 2, 18, 2, 34, 2, 127, 2, 38, 0, 4294901904, 0, 4718591, 2, 127, 2, 35, 0, 335544350, -1, 2, 128, 0, 2147487743, 0, 1, -1, 2, 129, 2, 130, 2, 8, -1, 2, 131, 2, 70, 0, 3758161920, 0, 3, 2, 132, 0, 12582911, 0, 655360, -1, 2, 0, 2, 29, 0, 2147485568, 0, 3, 2, 0, 2, 25, 0, 176, -5, 2, 0, 2, 17, 0, 251658240, -1, 2, 0, 2, 25, 0, 16, -1, 2, 0, 0, 16779263, -2, 2, 12, -1, 2, 38, -5, 2, 0, 2, 133, -3, 3, 0, 2, 2, 55, 2, 134, 0, 2147549183, 0, 2, -2, 2, 135, 2, 36, 0, 10, 0, 4294965249, 0, 67633151, 0, 4026597376, 2, 0, 0, 536871935, 2, 18, 2, 0, 2, 42, -6, 2, 0, 0, 1, 2, 59, 2, 17, 0, 1, 2, 46, 2, 25, -3, 2, 136, 2, 36, 2, 137, 2, 138, 0, 16778239, -10, 2, 35, 0, 4294836212, 2, 9, -3, 2, 69, -2, 3, 0, 28, 2, 32, -3, 3, 0, 3, 2, 17, 3, 0, 6, 2, 50, -81, 2, 18, 3, 0, 2, 2, 36, 3, 0, 33, 2, 25, 0, 126, 3, 0, 124, 2, 12, 3, 0, 18, 2, 38, -213, 2, 10, -55, 3, 0, 17, 2, 42, 2, 8, 2, 18, 2, 0, 2, 8, 2, 18, 2, 60, 2, 0, 2, 25, 2, 50, 2, 139, 2, 25, -13, 2, 0, 2, 73, -6, 3, 0, 2, -4, 3, 0, 2, 0, 67583, -1, 2, 107, -2, 0, 11, 3, 0, 191, 2, 54, 3, 0, 38, 2, 30, 2, 55, 2, 34, -278, 2, 140, 3, 0, 9, 2, 141, 2, 142, 2, 56, 3, 0, 11, 2, 7, -72, 3, 0, 3, 2, 143, 2, 144, -187, 3, 0, 2, 2, 58, 2, 0, 2, 145, 2, 146, 2, 62, 2, 0, 2, 147, 2, 148, 2, 149, 3, 0, 10, 2, 150, 2, 151, 2, 22, 3, 58, 2, 3, 152, 2, 3, 59, 2, 2, 153, -57, 2, 8, 2, 154, -7, 2, 18, 2, 0, 2, 60, -4, 2, 0, 0, 1065361407, 0, 16384, -9, 2, 18, 2, 60, 2, 0, 2, 133, -14, 2, 18, 2, 133, -6, 2, 18, 0, 81919, -15, 2, 155, 3, 0, 6, 2, 126, -1, 3, 0, 2, 0, 2063, -37, 2, 62, 2, 156, 2, 157, 2, 158, 2, 159, 2, 160, -138, 3, 0, 1335, -1, 3, 0, 129, 2, 32, 3, 0, 6, 2, 10, 3, 0, 180, 2, 161, 3, 0, 233, 2, 162, 3, 0, 18, 2, 10, -77, 3, 0, 16, 2, 10, -47, 3, 0, 154, 2, 6, 3, 0, 130, 2, 25, -28386], [4294967295, 4294967291, 4092460543, 4294828031, 4294967294, 134217726, 4294903807, 268435455, 2147483647, 1048575, 1073741823, 3892314111, 134217727, 1061158911, 536805376, 4294910143, 4294901759, 32767, 4294901760, 262143, 536870911, 8388607, 4160749567, 4294902783, 4294918143, 65535, 67043328, 2281701374, 4294967264, 2097151, 4194303, 255, 67108863, 4294967039, 511, 524287, 131071, 63, 127, 3238002687, 4294549487, 4290772991, 33554431, 4294901888, 4286578687, 67043329, 4294705152, 4294770687, 67043583, 1023, 15, 2047999, 67043343, 67051519, 16777215, 2147483648, 4294902e3, 28, 4292870143, 4294966783, 16383, 67047423, 4294967279, 262083, 20511, 41943039, 493567, 4294959104, 603979775, 65536, 602799615, 805044223, 4294965206, 8191, 1031749119, 4294917631, 2134769663, 4286578493, 4282253311, 4294942719, 33540095, 4294905855, 2868854591, 1608515583, 265232348, 534519807, 2147614720, 1060109444, 4093640016, 17376, 2139062143, 224, 4169138175, 4294909951, 4286578688, 4294967292, 4294965759, 535511039, 4294966272, 4294967280, 32768, 8289918, 4294934399, 4294901775, 4294965375, 1602223615, 4294967259, 4294443008, 268369920, 4292804608, 4294967232, 486341884, 4294963199, 3087007615, 1073692671, 4128527, 4279238655, 4294902015, 4160684047, 4290246655, 469499899, 4294967231, 134086655, 4294966591, 2445279231, 3670015, 31, 4294967288, 4294705151, 3221208447, 4294902271, 4294549472, 4294921215, 4095, 4285526655, 4294966527, 4294966143, 64, 4294966719, 3774873592, 1877934080, 262151, 2555904, 536807423, 67043839, 3758096383, 3959414372, 3755993023, 2080374783, 4294835295, 4294967103, 4160749565, 4294934527, 4087, 2016, 2147446655, 184024726, 2862017156, 1593309078, 268434431, 268434414, 4294901763, 4294901761]);
+  })([-1, 2, 26, 2, 27, 2, 5, -1, 0, 77595648, 3, 44, 2, 3, 0, 14, 2, 61, 2, 62, 3, 0, 3, 0, 3168796671, 0, 4294956992, 2, 1, 2, 0, 2, 41, 3, 0, 4, 0, 4294966523, 3, 0, 4, 2, 16, 2, 63, 2, 0, 0, 4294836735, 0, 3221225471, 0, 4294901942, 2, 64, 0, 134152192, 3, 0, 2, 0, 4294951935, 3, 0, 2, 0, 2683305983, 0, 2684354047, 2, 17, 2, 0, 0, 4294961151, 3, 0, 2, 2, 19, 2, 0, 0, 608174079, 2, 0, 2, 58, 2, 7, 2, 6, 0, 4286643967, 3, 0, 2, 2, 1, 3, 0, 3, 0, 4294901711, 2, 40, 0, 4089839103, 0, 2961209759, 0, 1342439375, 0, 4294543342, 0, 3547201023, 0, 1577204103, 0, 4194240, 0, 4294688750, 2, 2, 0, 80831, 0, 4261478351, 0, 4294549486, 2, 2, 0, 2967484831, 0, 196559, 0, 3594373100, 0, 3288319768, 0, 8469959, 0, 65472, 2, 3, 0, 4093640191, 0, 929054175, 0, 65487, 0, 4294828015, 0, 4092591615, 0, 1885355487, 0, 982991, 2, 3, 2, 0, 0, 2163244511, 0, 4227923919, 0, 4236247022, 2, 69, 0, 4284449919, 0, 851904, 2, 4, 2, 12, 0, 67076095, -1, 2, 70, 0, 1073741743, 0, 4093607775, -1, 0, 50331649, 0, 3265266687, 2, 33, 0, 4294844415, 0, 4278190047, 2, 20, 2, 137, -1, 3, 0, 2, 2, 23, 2, 0, 2, 9, 2, 0, 2, 15, 2, 22, 3, 0, 10, 2, 72, 2, 0, 2, 73, 2, 74, 2, 75, 2, 0, 2, 76, 2, 0, 2, 11, 0, 261632, 2, 25, 3, 0, 2, 2, 13, 2, 4, 3, 0, 18, 2, 77, 2, 5, 3, 0, 2, 2, 78, 0, 2151677951, 2, 29, 2, 10, 0, 909311, 3, 0, 2, 0, 814743551, 2, 48, 0, 67090432, 3, 0, 2, 2, 42, 2, 0, 2, 6, 2, 0, 2, 30, 2, 8, 0, 268374015, 2, 108, 2, 51, 2, 0, 2, 79, 0, 134153215, -1, 2, 7, 2, 0, 2, 8, 0, 2684354559, 0, 67044351, 0, 3221160064, 2, 9, 2, 18, 3, 0, 2, 2, 53, 0, 1046528, 3, 0, 3, 2, 10, 2, 0, 2, 127, 0, 4294960127, 2, 9, 2, 6, 2, 11, 0, 4294377472, 2, 12, 3, 0, 16, 2, 13, 2, 0, 2, 80, 2, 9, 2, 0, 2, 81, 2, 82, 2, 83, 0, 12288, 2, 54, 0, 1048577, 2, 84, 2, 14, -1, 2, 14, 0, 131042, 2, 85, 2, 86, 2, 87, 2, 0, 2, 34, -83, 3, 0, 7, 0, 1046559, 2, 0, 2, 15, 2, 0, 0, 2147516671, 2, 21, 3, 88, 2, 2, 0, -16, 2, 89, 0, 524222462, 2, 4, 2, 0, 0, 4269801471, 2, 4, 3, 0, 2, 2, 28, 2, 16, 3, 0, 2, 2, 49, 2, 0, -1, 2, 17, -16, 3, 0, 206, -2, 3, 0, 692, 2, 71, -1, 2, 17, 2, 9, 3, 0, 8, 2, 91, 2, 18, 2, 0, 0, 3220242431, 3, 0, 3, 2, 19, 2, 92, 2, 93, 3, 0, 2, 2, 94, 2, 0, 2, 20, 2, 95, 2, 0, 0, 4351, 2, 0, 2, 10, 3, 0, 2, 0, 67043391, 0, 3909091327, 2, 0, 2, 24, 2, 10, 2, 20, 3, 0, 2, 0, 67076097, 2, 8, 2, 0, 2, 21, 0, 67059711, 0, 4236247039, 3, 0, 2, 0, 939524103, 0, 8191999, 2, 99, 2, 100, 2, 22, 2, 23, 3, 0, 3, 0, 67057663, 3, 0, 349, 2, 101, 2, 102, 2, 7, -264, 3, 0, 11, 2, 24, 3, 0, 2, 2, 32, -1, 0, 3774349439, 2, 103, 2, 104, 3, 0, 2, 2, 19, 2, 105, 3, 0, 10, 2, 9, 2, 17, 2, 0, 2, 46, 2, 0, 2, 31, 2, 106, 2, 25, 0, 1638399, 0, 57344, 2, 107, 3, 0, 3, 2, 20, 2, 26, 2, 27, 2, 5, 2, 28, 2, 0, 2, 8, 2, 109, -1, 2, 110, 2, 111, 2, 112, -1, 3, 0, 3, 2, 12, -2, 2, 0, 2, 29, -3, 0, 536870912, -4, 2, 20, 2, 0, 2, 36, 0, 1, 2, 0, 2, 65, 2, 6, 2, 12, 2, 9, 2, 0, 2, 113, -1, 3, 0, 4, 2, 9, 2, 23, 2, 114, 2, 7, 2, 0, 2, 115, 2, 0, 2, 116, 2, 117, 2, 118, 2, 0, 2, 10, 3, 0, 9, 2, 21, 2, 30, 2, 31, 2, 119, 2, 120, -2, 2, 121, 2, 122, 2, 30, 2, 21, 2, 8, -2, 2, 123, 2, 30, 3, 32, 2, -1, 2, 0, 2, 39, -2, 0, 4277137519, 0, 2269118463, -1, 3, 20, 2, -1, 2, 33, 2, 38, 2, 0, 3, 30, 2, 2, 35, 2, 19, -3, 3, 0, 2, 2, 34, -1, 2, 0, 2, 35, 2, 0, 2, 35, 2, 0, 2, 47, 2, 0, 0, 4294950463, 2, 37, -7, 2, 0, 0, 203775, 2, 125, 0, 4227858432, 2, 20, 2, 43, 2, 36, 2, 17, 2, 37, 2, 17, 2, 124, 2, 21, 3, 0, 2, 2, 38, 0, 2151677888, 2, 0, 2, 12, 0, 4294901764, 2, 145, 2, 0, 2, 56, 2, 55, 0, 5242879, 3, 0, 2, 0, 402644511, -1, 2, 128, 2, 39, 0, 3, -1, 2, 129, 2, 130, 2, 0, 0, 67045375, 2, 40, 0, 4226678271, 0, 3766565279, 0, 2039759, 2, 132, 2, 41, 0, 1046437, 0, 6, 3, 0, 2, 0, 3288270847, 0, 3, 3, 0, 2, 0, 67043519, -5, 2, 0, 0, 4282384383, 0, 1056964609, -1, 3, 0, 2, 0, 67043345, -1, 2, 0, 2, 42, 2, 23, 2, 50, 2, 11, 2, 59, 2, 38, -5, 2, 0, 2, 12, -3, 3, 0, 2, 0, 2147484671, 2, 133, 0, 4190109695, 2, 52, -2, 2, 134, 0, 4244635647, 0, 27, 2, 0, 2, 8, 2, 43, 2, 0, 2, 66, 2, 17, 2, 0, 2, 42, -3, 2, 31, -2, 2, 0, 2, 45, 2, 57, 2, 44, 2, 45, 2, 135, 2, 46, 0, 8388351, -2, 2, 136, 0, 3028287487, 2, 47, 2, 138, 0, 33259519, 2, 23, 2, 7, 2, 48, -7, 2, 21, 0, 4294836223, 0, 3355443199, 0, 134152199, -2, 2, 67, -2, 3, 0, 28, 2, 32, -3, 3, 0, 3, 2, 49, 3, 0, 6, 2, 50, -81, 2, 17, 3, 0, 2, 2, 36, 3, 0, 33, 2, 25, 2, 30, 3, 0, 124, 2, 12, 3, 0, 18, 2, 38, -213, 2, 0, 2, 32, -54, 3, 0, 17, 2, 42, 2, 8, 2, 23, 2, 0, 2, 8, 2, 23, 2, 51, 2, 0, 2, 21, 2, 52, 2, 139, 2, 25, -13, 2, 0, 2, 53, -6, 3, 0, 2, -1, 2, 140, 2, 10, -1, 3, 0, 2, 0, 4294936575, 2, 0, 0, 4294934783, -2, 0, 8323099, 3, 0, 230, 2, 30, 2, 54, 2, 8, -3, 3, 0, 3, 2, 35, -271, 2, 141, 3, 0, 9, 2, 142, 2, 143, 2, 55, 3, 0, 11, 2, 7, -72, 3, 0, 3, 2, 144, 0, 1677656575, -130, 2, 26, -16, 2, 0, 2, 24, 2, 38, -16, 0, 4161266656, 0, 4071, 0, 15360, -4, 0, 28, -13, 3, 0, 2, 2, 56, 2, 0, 2, 146, 2, 147, 2, 60, 2, 0, 2, 148, 2, 149, 2, 150, 3, 0, 10, 2, 151, 2, 152, 2, 22, 3, 56, 2, 3, 153, 2, 3, 57, 2, 0, 4294954999, 2, 0, -16, 2, 0, 2, 90, 2, 0, 0, 2105343, 0, 4160749584, 0, 65534, -34, 2, 8, 2, 155, -6, 0, 4194303871, 0, 4294903771, 2, 0, 2, 58, 2, 98, -3, 2, 0, 0, 1073684479, 0, 17407, -9, 2, 17, 2, 49, 2, 0, 2, 32, -14, 2, 17, 2, 32, -6, 2, 17, 2, 12, -6, 2, 8, 0, 3225419775, -7, 2, 156, 3, 0, 6, 0, 8323103, -1, 3, 0, 2, 2, 59, -37, 2, 60, 2, 157, 2, 158, 2, 159, 2, 160, 2, 161, -105, 2, 26, -32, 3, 0, 1335, -1, 3, 0, 136, 2, 9, 3, 0, 180, 2, 24, 3, 0, 233, 2, 162, 3, 0, 18, 2, 9, -77, 3, 0, 16, 2, 9, -47, 3, 0, 154, 2, 6, 3, 0, 264, 2, 32, -22116, 3, 0, 7, 2, 25, -6130, 3, 5, 2, -1, 0, 69207040, 3, 44, 2, 3, 0, 14, 2, 61, 2, 62, -3, 0, 3168731136, 0, 4294956864, 2, 1, 2, 0, 2, 41, 3, 0, 4, 0, 4294966275, 3, 0, 4, 2, 16, 2, 63, 2, 0, 2, 34, -1, 2, 17, 2, 64, -1, 2, 0, 0, 2047, 0, 4294885376, 3, 0, 2, 0, 3145727, 0, 2617294944, 0, 4294770688, 2, 25, 2, 65, 3, 0, 2, 0, 131135, 2, 96, 0, 70256639, 0, 71303167, 0, 272, 2, 42, 2, 6, 0, 65279, 2, 0, 2, 48, -1, 2, 97, 2, 66, 0, 4278255616, 0, 4294836227, 0, 4294549473, 0, 600178175, 0, 2952806400, 0, 268632067, 0, 4294543328, 0, 57540095, 0, 1577058304, 0, 1835008, 0, 4294688736, 2, 68, 2, 67, 0, 33554435, 2, 131, 2, 68, 0, 2952790016, 0, 131075, 0, 3594373096, 0, 67094296, 2, 67, -1, 0, 4294828e3, 0, 603979263, 0, 922746880, 0, 3, 0, 4294828001, 0, 602930687, 0, 1879048192, 0, 393219, 0, 4294828016, 0, 671088639, 0, 2154840064, 0, 4227858435, 0, 4236247008, 2, 69, 2, 38, -1, 2, 4, 0, 917503, 2, 38, -1, 2, 70, 0, 537788335, 0, 4026531935, -1, 0, 1, -1, 2, 33, 2, 71, 0, 7936, -3, 2, 0, 0, 2147485695, 0, 1010761728, 0, 4292984930, 0, 16387, 2, 0, 2, 15, 2, 22, 3, 0, 10, 2, 72, 2, 0, 2, 73, 2, 74, 2, 75, 2, 0, 2, 76, 2, 0, 2, 12, -1, 2, 25, 3, 0, 2, 2, 13, 2, 4, 3, 0, 18, 2, 77, 2, 5, 3, 0, 2, 2, 78, 0, 2147745791, 3, 19, 2, 0, 122879, 2, 0, 2, 10, 0, 276824064, -2, 3, 0, 2, 2, 42, 2, 0, 0, 4294903295, 2, 0, 2, 30, 2, 8, -1, 2, 17, 2, 51, 2, 0, 2, 79, 2, 48, -1, 2, 21, 2, 0, 2, 29, -2, 0, 128, -2, 2, 28, 2, 10, 0, 8160, -1, 2, 126, 0, 4227907585, 2, 0, 2, 37, 2, 0, 2, 50, 0, 4227915776, 2, 9, 2, 6, 2, 11, -1, 0, 74440192, 3, 0, 6, -2, 3, 0, 8, 2, 13, 2, 0, 2, 80, 2, 9, 2, 0, 2, 81, 2, 82, 2, 83, -3, 2, 84, 2, 14, -3, 2, 85, 2, 86, 2, 87, 2, 0, 2, 34, -83, 3, 0, 7, 0, 817183, 2, 0, 2, 15, 2, 0, 0, 33023, 2, 21, 3, 88, 2, -17, 2, 89, 0, 524157950, 2, 4, 2, 0, 2, 90, 2, 4, 2, 0, 2, 22, 2, 28, 2, 16, 3, 0, 2, 2, 49, 2, 0, -1, 2, 17, -16, 3, 0, 206, -2, 3, 0, 692, 2, 71, -1, 2, 17, 2, 9, 3, 0, 8, 2, 91, 0, 3072, 2, 0, 0, 2147516415, 2, 9, 3, 0, 2, 2, 25, 2, 92, 2, 93, 3, 0, 2, 2, 94, 2, 0, 2, 20, 2, 95, 0, 4294965179, 0, 7, 2, 0, 2, 10, 2, 93, 2, 10, -1, 0, 1761345536, 2, 96, 0, 4294901823, 2, 38, 2, 20, 2, 97, 2, 35, 2, 98, 0, 2080440287, 2, 0, 2, 34, 2, 154, 0, 3296722943, 2, 0, 0, 1046675455, 0, 939524101, 0, 1837055, 2, 99, 2, 100, 2, 22, 2, 23, 3, 0, 3, 0, 7, 3, 0, 349, 2, 101, 2, 102, 2, 7, -264, 3, 0, 11, 2, 24, 3, 0, 2, 2, 32, -1, 0, 2700607615, 2, 103, 2, 104, 3, 0, 2, 2, 19, 2, 105, 3, 0, 10, 2, 9, 2, 17, 2, 0, 2, 46, 2, 0, 2, 31, 2, 106, -3, 2, 107, 3, 0, 3, 2, 20, -1, 3, 5, 2, 2, 108, 2, 0, 2, 8, 2, 109, -1, 2, 110, 2, 111, 2, 112, -1, 3, 0, 3, 2, 12, -2, 2, 0, 2, 29, -8, 2, 20, 2, 0, 2, 36, -1, 2, 0, 2, 65, 2, 6, 2, 30, 2, 9, 2, 0, 2, 113, -1, 3, 0, 4, 2, 9, 2, 17, 2, 114, 2, 7, 2, 0, 2, 115, 2, 0, 2, 116, 2, 117, 2, 118, 2, 0, 2, 10, 3, 0, 9, 2, 21, 2, 30, 2, 31, 2, 119, 2, 120, -2, 2, 121, 2, 122, 2, 30, 2, 21, 2, 8, -2, 2, 123, 2, 30, 3, 32, 2, -1, 2, 0, 2, 39, -2, 0, 4277075969, 2, 30, -1, 3, 20, 2, -1, 2, 33, 2, 124, 2, 0, 3, 30, 2, 2, 35, 2, 19, -3, 3, 0, 2, 2, 34, -1, 2, 0, 2, 35, 2, 0, 2, 35, 2, 0, 2, 50, 2, 96, 0, 4294934591, 2, 37, -7, 2, 0, 0, 197631, 2, 125, -1, 2, 20, 2, 43, 2, 37, 2, 17, 0, 3, 2, 17, 2, 124, 2, 21, 2, 126, 2, 127, -1, 0, 2490368, 2, 126, 2, 25, 2, 17, 2, 34, 2, 126, 2, 38, 0, 4294901904, 0, 4718591, 2, 126, 2, 35, 0, 335544350, -1, 2, 128, 0, 2147487743, 0, 1, -1, 2, 129, 2, 130, 2, 8, -1, 2, 131, 2, 68, 0, 3758161920, 0, 3, 2, 132, 0, 12582911, 0, 655360, -1, 2, 0, 2, 29, 0, 2147485568, 0, 3, 2, 0, 2, 25, 0, 176, -5, 2, 0, 2, 49, 0, 251658240, -1, 2, 0, 2, 25, 0, 16, -1, 2, 0, 0, 16779263, -2, 2, 12, -1, 2, 38, -5, 2, 0, 2, 18, -3, 3, 0, 2, 2, 54, 2, 133, 0, 2147549183, 0, 2, -2, 2, 134, 2, 36, 0, 10, 0, 4294965249, 0, 67633151, 0, 4026597376, 2, 0, 0, 536871935, 2, 17, 2, 0, 2, 42, -6, 2, 0, 0, 1, 2, 57, 2, 49, 0, 1, 2, 135, 2, 25, -3, 2, 136, 2, 36, 2, 137, 2, 138, 0, 16778239, 2, 17, 2, 7, -8, 2, 35, 0, 4294836212, 2, 10, -3, 2, 67, -2, 3, 0, 28, 2, 32, -3, 3, 0, 3, 2, 49, 3, 0, 6, 2, 50, -81, 2, 17, 3, 0, 2, 2, 36, 3, 0, 33, 2, 25, 0, 126, 3, 0, 124, 2, 12, 3, 0, 18, 2, 38, -213, 2, 9, -55, 3, 0, 17, 2, 42, 2, 8, 2, 17, 2, 0, 2, 8, 2, 17, 2, 58, 2, 0, 2, 25, 2, 50, 2, 139, 2, 25, -13, 2, 0, 2, 71, -6, 3, 0, 2, -1, 2, 140, 2, 10, -1, 3, 0, 2, 0, 67583, -1, 2, 105, -2, 0, 8126475, 3, 0, 230, 2, 30, 2, 54, 2, 8, -3, 3, 0, 3, 2, 35, -271, 2, 141, 3, 0, 9, 2, 142, 2, 143, 2, 55, 3, 0, 11, 2, 7, -72, 3, 0, 3, 2, 144, 2, 145, -187, 3, 0, 2, 2, 56, 2, 0, 2, 146, 2, 147, 2, 60, 2, 0, 2, 148, 2, 149, 2, 150, 3, 0, 10, 2, 151, 2, 152, 2, 22, 3, 56, 2, 3, 153, 2, 3, 57, 2, 2, 154, -57, 2, 8, 2, 155, -7, 2, 17, 2, 0, 2, 58, -4, 2, 0, 0, 1065361407, 0, 16384, -9, 2, 17, 2, 58, 2, 0, 2, 18, -14, 2, 17, 2, 18, -6, 2, 17, 0, 81919, -6, 2, 8, 0, 3223273399, -7, 2, 156, 3, 0, 6, 2, 124, -1, 3, 0, 2, 0, 2063, -37, 2, 60, 2, 157, 2, 158, 2, 159, 2, 160, 2, 161, -138, 3, 0, 1335, -1, 3, 0, 136, 2, 9, 3, 0, 180, 2, 24, 3, 0, 233, 2, 162, 3, 0, 18, 2, 9, -77, 3, 0, 16, 2, 9, -47, 3, 0, 154, 2, 6, 3, 0, 264, 2, 32, -28252], [4294967295, 4294967291, 4092460543, 4294828031, 4294967294, 134217726, 4294903807, 268435455, 2147483647, 1073741823, 1048575, 3892314111, 134217727, 1061158911, 536805376, 4294910143, 4294901759, 4294901760, 4095, 262143, 536870911, 8388607, 4160749567, 4294902783, 4294918143, 65535, 67043328, 2281701374, 4294967264, 2097151, 4194303, 255, 67108863, 4294967039, 511, 524287, 131071, 63, 127, 3238002687, 4294549487, 4290772991, 33554431, 4294901888, 4286578687, 67043329, 4294770687, 67043583, 1023, 32767, 15, 2047999, 67043343, 67051519, 2147483648, 4294902e3, 4292870143, 4294966783, 16383, 67047423, 4294967279, 262083, 20511, 41943039, 493567, 4294959104, 603979775, 65536, 602799615, 805044223, 4294965206, 8191, 1031749119, 4294917631, 2134769663, 4286578493, 4282253311, 4294942719, 33540095, 4294905855, 2868854591, 1608515583, 265232348, 534519807, 2147614720, 1060109444, 4093640016, 17376, 2139062143, 224, 4169138175, 4294909951, 4286578688, 4294967292, 4294965759, 4294836224, 4294966272, 4294967280, 32768, 8289918, 4294934399, 4294901775, 4294965375, 1602223615, 4294967259, 4294443008, 268369920, 4292804608, 4294967232, 486341884, 4294963199, 3087007615, 1073692671, 4128527, 4279238655, 4294902015, 4160684047, 4290246655, 469499899, 4294967231, 134086655, 4294966591, 2445279231, 3670015, 31, 252, 4294967288, 16777215, 4294705151, 3221208447, 4294902271, 4294549472, 4294921215, 4285526655, 4294966527, 4294705152, 4294966143, 64, 4294966719, 3774873592, 4194303999, 1877934080, 262151, 2555904, 536807423, 67043839, 3758096383, 3959414372, 3755993023, 2080374783, 4294835295, 4294967103, 4160749565, 4294934527, 4087, 2016, 2147446655, 184024726, 2862017156, 1593309078, 268434431, 268434414, 4294901761]);
   var isIDContinue = /* @__PURE__ */ __name((code) => (unicodeLookup[(code >>> 5) + 0] >>> code & 31 & 1) !== 0, "isIDContinue");
   var isIDStart = /* @__PURE__ */ __name((code) => (unicodeLookup[(code >>> 5) + 34816] >>> code & 31 & 1) !== 0, "isIDStart");
-  function advanceChar(parser2) {
-    parser2.column++;
-    return parser2.currentChar = parser2.source.charCodeAt(++parser2.index);
-  }
-  __name(advanceChar, "advanceChar");
-  function consumePossibleSurrogatePair(parser2) {
-    const hi = parser2.currentChar;
-    if ((hi & 64512) !== 55296)
-      return 0;
-    const lo = parser2.source.charCodeAt(parser2.index + 1);
-    if ((lo & 64512) !== 56320)
-      return 0;
-    return 65536 + ((hi & 1023) << 10) + (lo & 1023);
-  }
-  __name(consumePossibleSurrogatePair, "consumePossibleSurrogatePair");
-  function consumeLineFeed(parser2, state) {
-    parser2.currentChar = parser2.source.charCodeAt(++parser2.index);
-    parser2.flags |= 1;
-    if ((state & 4) === 0) {
-      parser2.column = 0;
-      parser2.line++;
-    }
-  }
-  __name(consumeLineFeed, "consumeLineFeed");
-  function scanNewLine(parser2) {
-    parser2.flags |= 1;
-    parser2.currentChar = parser2.source.charCodeAt(++parser2.index);
-    parser2.column = 0;
-    parser2.line++;
-  }
-  __name(scanNewLine, "scanNewLine");
-  function isExoticECMAScriptWhitespace(ch) {
-    return ch === 160 || ch === 65279 || ch === 133 || ch === 5760 || ch >= 8192 && ch <= 8203 || ch === 8239 || ch === 8287 || ch === 12288 || ch === 8201 || ch === 65519;
-  }
-  __name(isExoticECMAScriptWhitespace, "isExoticECMAScriptWhitespace");
-  function toHex(code) {
-    return code < 65 ? code - 48 : code - 65 + 10 & 15;
-  }
-  __name(toHex, "toHex");
-  function convertTokenType(t) {
-    switch (t) {
-      case 134283266:
-        return "NumericLiteral";
-      case 134283267:
-        return "StringLiteral";
-      case 86021:
-      case 86022:
-        return "BooleanLiteral";
-      case 86023:
-        return "NullLiteral";
-      case 65540:
-        return "RegularExpression";
-      case 67174408:
-      case 67174409:
-      case 131:
-        return "TemplateLiteral";
-      default:
-        if ((t & 143360) === 143360)
-          return "Identifier";
-        if ((t & 4096) === 4096)
-          return "Keyword";
-        return "Punctuator";
-    }
-  }
-  __name(convertTokenType, "convertTokenType");
   var CharTypes = [
     0,
     0,
@@ -6556,7 +6536,7 @@ format:`, anonymisedFormat);
     0,
     16384,
     0,
-    0,
+    16384,
     0,
     0,
     1 | 2 | 64,
@@ -6619,7 +6599,7 @@ format:`, anonymisedFormat);
     1 | 2 | 4,
     16384,
     0,
-    0,
+    16384,
     0,
     0
   ];
@@ -6891,6 +6871,71 @@ format:`, anonymisedFormat);
     return code <= 127 ? isIdPart[code] > 0 : isIDContinue(code) || (code === 8204 || code === 8205);
   }
   __name(isIdentifierPart, "isIdentifierPart");
+  function advanceChar(parser2) {
+    parser2.column++;
+    return parser2.currentChar = parser2.source.charCodeAt(++parser2.index);
+  }
+  __name(advanceChar, "advanceChar");
+  function consumePossibleSurrogatePair(parser2) {
+    const hi = parser2.currentChar;
+    if ((hi & 64512) !== 55296)
+      return 0;
+    const lo = parser2.source.charCodeAt(parser2.index + 1);
+    if ((lo & 64512) !== 56320)
+      return 0;
+    return 65536 + ((hi & 1023) << 10) + (lo & 1023);
+  }
+  __name(consumePossibleSurrogatePair, "consumePossibleSurrogatePair");
+  function consumeLineFeed(parser2, state) {
+    parser2.currentChar = parser2.source.charCodeAt(++parser2.index);
+    parser2.flags |= 1;
+    if ((state & 4) === 0) {
+      parser2.column = 0;
+      parser2.line++;
+    }
+  }
+  __name(consumeLineFeed, "consumeLineFeed");
+  function scanNewLine(parser2) {
+    parser2.flags |= 1;
+    parser2.currentChar = parser2.source.charCodeAt(++parser2.index);
+    parser2.column = 0;
+    parser2.line++;
+  }
+  __name(scanNewLine, "scanNewLine");
+  function isExoticECMAScriptWhitespace(ch) {
+    return ch === 160 || ch === 65279 || ch === 133 || ch === 5760 || ch >= 8192 && ch <= 8203 || ch === 8239 || ch === 8287 || ch === 12288 || ch === 8201 || ch === 65519;
+  }
+  __name(isExoticECMAScriptWhitespace, "isExoticECMAScriptWhitespace");
+  function toHex(code) {
+    return code < 65 ? code - 48 : code - 65 + 10 & 15;
+  }
+  __name(toHex, "toHex");
+  function convertTokenType(t) {
+    switch (t) {
+      case 134283266:
+        return "NumericLiteral";
+      case 134283267:
+        return "StringLiteral";
+      case 86021:
+      case 86022:
+        return "BooleanLiteral";
+      case 86023:
+        return "NullLiteral";
+      case 65540:
+        return "RegularExpression";
+      case 67174408:
+      case 67174409:
+      case 132:
+        return "TemplateLiteral";
+      default:
+        if ((t & 143360) === 143360)
+          return "Identifier";
+        if ((t & 4096) === 4096)
+          return "Keyword";
+        return "Punctuator";
+    }
+  }
+  __name(convertTokenType, "convertTokenType");
   var CommentTypes = ["SingleLine", "MultiLine", "HTMLOpen", "HTMLClose", "HashbangComment"];
   function skipHashBang(parser2) {
     const { source } = parser2;
@@ -7000,6 +7045,757 @@ format:`, anonymisedFormat);
     parser2.report(18);
   }
   __name(skipMultiLineComment, "skipMultiLineComment");
+  var errorMessages = {
+    [0]: "Unexpected token",
+    [30]: "Unexpected token: '%0'",
+    [1]: "Octal escape sequences are not allowed in strict mode",
+    [2]: "Octal escape sequences are not allowed in template strings",
+    [3]: "\\8 and \\9 are not allowed in template strings",
+    [4]: "Private identifier #%0 is not defined",
+    [5]: "Illegal Unicode escape sequence",
+    [6]: "Invalid code point %0",
+    [7]: "Invalid hexadecimal escape sequence",
+    [9]: "Octal literals are not allowed in strict mode",
+    [8]: "Decimal integer literals with a leading zero are forbidden in strict mode",
+    [10]: "Expected number in radix %0",
+    [153]: "Invalid left-hand side assignment to a destructible right-hand side",
+    [11]: "Non-number found after exponent indicator",
+    [12]: "Invalid BigIntLiteral",
+    [13]: "No identifiers allowed directly after numeric literal",
+    [14]: "Escapes \\8 or \\9 are not syntactically valid escapes",
+    [15]: "Escapes \\8 or \\9 are not allowed in strict mode",
+    [16]: "Unterminated string literal",
+    [17]: "Unterminated template literal",
+    [18]: "Multiline comment was not closed properly",
+    [19]: "The identifier contained dynamic unicode escape that was not closed",
+    [20]: "Illegal character '%0'",
+    [21]: "Missing hexadecimal digits",
+    [22]: "Invalid implicit octal",
+    [23]: "Invalid line break in string literal",
+    [24]: "Only unicode escapes are legal in identifier names",
+    [25]: "Expected '%0'",
+    [26]: "Invalid left-hand side in assignment",
+    [27]: "Invalid left-hand side in async arrow",
+    [28]: 'Calls to super must be in the "constructor" method of a class expression or class declaration that has a superclass',
+    [29]: "Member access on super must be in a method",
+    [31]: "Await expression not allowed in formal parameter",
+    [32]: "Yield expression not allowed in formal parameter",
+    [95]: "Unexpected token: 'escaped keyword'",
+    [33]: "Unary expressions as the left operand of an exponentiation expression must be disambiguated with parentheses",
+    [125]: "Async functions can only be declared at the top level or inside a block",
+    [34]: "Unterminated regular expression",
+    [35]: "Unexpected regular expression flag",
+    [36]: "Duplicate regular expression flag '%0'",
+    [37]: "%0 functions must have exactly %1 argument%2",
+    [38]: "Setter function argument must not be a rest parameter",
+    [39]: "%0 declaration must have a name in this context",
+    [40]: "Function name may not contain any reserved words or be eval or arguments in strict mode",
+    [41]: "The rest operator is missing an argument",
+    [42]: "A getter cannot be a generator",
+    [43]: "A setter cannot be a generator",
+    [44]: "A computed property name must be followed by a colon or paren",
+    [136]: "Object literal keys that are strings or numbers must be a method or have a colon",
+    [46]: "Found `* async x(){}` but this should be `async * x(){}`",
+    [45]: "Getters and setters can not be generators",
+    [47]: "'%0' can not be generator method",
+    [48]: "No line break is allowed after '=>'",
+    [49]: "The left-hand side of the arrow can only be destructed through assignment",
+    [50]: "The binding declaration is not destructible",
+    [51]: "Async arrow can not be followed by new expression",
+    [52]: "Classes may not have a static property named 'prototype'",
+    [53]: "Class constructor may not be a %0",
+    [54]: "Duplicate constructor method in class",
+    [55]: "Invalid increment/decrement operand",
+    [56]: "Invalid use of `new` keyword on an increment/decrement expression",
+    [57]: "`=>` is an invalid assignment target",
+    [58]: "Rest element may not have a trailing comma",
+    [59]: "Missing initializer in %0 declaration",
+    [60]: "'for-%0' loop head declarations can not have an initializer",
+    [61]: "Invalid left-hand side in for-%0 loop: Must have a single binding",
+    [62]: "Invalid shorthand property initializer",
+    [63]: "Property name __proto__ appears more than once in object literal",
+    [64]: "Let is disallowed as a lexically bound name",
+    [65]: "Invalid use of '%0' inside new expression",
+    [66]: "Illegal 'use strict' directive in function with non-simple parameter list",
+    [67]: 'Identifier "let" disallowed as left-hand side expression in strict mode',
+    [68]: "Illegal continue statement",
+    [69]: "Illegal break statement",
+    [70]: "Cannot have `let[...]` as a var name in strict mode",
+    [71]: "Invalid destructuring assignment target",
+    [72]: "Rest parameter may not have a default initializer",
+    [73]: "The rest argument must the be last parameter",
+    [74]: "Invalid rest argument",
+    [76]: "In strict mode code, functions can only be declared at top level or inside a block",
+    [77]: "In non-strict mode code, functions can only be declared at top level, inside a block, or as the body of an if statement",
+    [78]: "Without web compatibility enabled functions can not be declared at top level, inside a block, or as the body of an if statement",
+    [79]: "Class declaration can't appear in single-statement context",
+    [80]: "Invalid left-hand side in for-%0",
+    [81]: "Invalid assignment in for-%0",
+    [82]: "for await (... of ...) is only valid in async functions and async generators",
+    [83]: "The first token after the template expression should be a continuation of the template",
+    [85]: "`let` declaration not allowed here and `let` cannot be a regular var name in strict mode",
+    [84]: "`let \n [` is a restricted production at the start of a statement",
+    [86]: "Catch clause requires exactly one parameter, not more (and no trailing comma)",
+    [87]: "Catch clause parameter does not support default values",
+    [88]: "Missing catch or finally after try",
+    [89]: "More than one default clause in switch statement",
+    [90]: "Illegal newline after throw",
+    [91]: "Strict mode code may not include a with statement",
+    [92]: "Illegal return statement",
+    [93]: "The left hand side of the for-header binding declaration is not destructible",
+    [94]: "new.target only allowed within functions or static blocks",
+    [96]: "'#' not followed by identifier",
+    [102]: "Invalid keyword",
+    [101]: "Can not use 'let' as a class name",
+    [100]: "'A lexical declaration can't define a 'let' binding",
+    [99]: "Can not use `let` as variable name in strict mode",
+    [97]: "'%0' may not be used as an identifier in this context",
+    [98]: "Await is only valid in async functions",
+    [103]: "The %0 keyword can only be used with the module goal",
+    [104]: "Unicode codepoint must not be greater than 0x10FFFF",
+    [105]: "%0 source must be string",
+    [106]: "Only a identifier or string can be used to indicate alias",
+    [107]: "Only '*' or '{...}' can be imported after default",
+    [108]: "'import defer' must be followed by a namespace import",
+    [109]: "'import source' must be followed by a default import",
+    [110]: "Trailing decorator may be followed by method",
+    [111]: "Decorators can't be used with a constructor",
+    [112]: "Can not use `await` as identifier in module or async func",
+    [113]: "Can not use `await` as identifier in module",
+    [114]: "HTML comments are only allowed with web compatibility (Annex B)",
+    [115]: "The identifier 'let' must not be in expression position in strict mode",
+    [116]: "Cannot assign to `eval` and `arguments` in strict mode",
+    [117]: "The left-hand side of a for-of loop may not start with 'let'",
+    [118]: "Block body arrows can not be immediately invoked without a group",
+    [119]: "Block body arrows can not be immediately accessed without a group",
+    [120]: "Unexpected strict mode reserved word",
+    [121]: "Unexpected eval or arguments in strict mode",
+    [122]: "Decorators must not be followed by a semicolon",
+    [123]: "Calling delete on expression not allowed in strict mode",
+    [124]: "Pattern can not have a tail",
+    [126]: "Can not have a `yield` expression on the left side of a ternary",
+    [127]: "An arrow function can not have a postfix update operator",
+    [128]: "Invalid object literal key character after generator star",
+    [129]: "Private fields can not be deleted",
+    [131]: "Classes may not have a field called constructor",
+    [130]: "Classes may not have a private element named constructor",
+    [132]: "A class field initializer or static block may not contain arguments",
+    [133]: "Generators can only be declared at the top level or inside a block",
+    [134]: "Async methods are a restricted production and cannot have a newline following it",
+    [135]: "Unexpected character after object literal property name",
+    [137]: "Invalid key token",
+    [138]: "Label '%0' has already been declared",
+    [139]: "continue statement must be nested within an iteration statement",
+    [140]: "Undefined label '%0'",
+    [141]: "Trailing comma is disallowed inside import(...) arguments",
+    [142]: "Invalid binding in JSON import",
+    [143]: "import() requires exactly one argument",
+    [144]: "Cannot use new with import(...)",
+    [145]: "... is not allowed in import()",
+    [146]: "Expected '=>'",
+    [147]: "Duplicate binding '%0'",
+    [148]: "Duplicate private identifier #%0",
+    [149]: "Cannot export a duplicate name '%0'",
+    [152]: "Duplicate %0 for-binding",
+    [150]: "Exported binding '%0' needs to refer to a top-level declared variable",
+    [151]: "Unexpected private field",
+    [155]: "Numeric separators are not allowed at the end of numeric literals",
+    [154]: "Only one underscore is allowed as numeric separator",
+    [156]: "JSX value should be either an expression or a quoted JSX text",
+    [157]: "Expected corresponding JSX closing tag for %0",
+    [158]: "Adjacent JSX elements must be wrapped in an enclosing tag",
+    [159]: "JSX attributes must only be assigned a non-empty 'expression'",
+    [160]: "'%0' has already been declared",
+    [161]: "'%0' shadowed a catch clause binding",
+    [162]: "Dot property must be an identifier",
+    [163]: "Encountered invalid input after spread/rest argument",
+    [164]: "Catch without try",
+    [165]: "Finally without try",
+    [166]: "Expected corresponding closing tag for JSX fragment",
+    [167]: "Coalescing and logical operators used together in the same expression must be disambiguated with parentheses",
+    [168]: "Invalid tagged template on optional chain",
+    [169]: "Invalid optional chain from super property",
+    [170]: "Invalid optional chain from new expression",
+    [171]: 'Cannot use "import.meta" outside a module',
+    [172]: "Leading decorators must be attached to a class declaration",
+    [173]: "An export name cannot include a lone surrogate",
+    [174]: "A string literal cannot be used as an exported binding without `from`",
+    [175]: "Private fields can't be accessed on super",
+    [176]: "The only valid meta property for import is 'import.meta'",
+    [177]: "'import.meta' must not contain escaped characters",
+    [178]: 'cannot use "await" as identifier inside an async function',
+    [179]: 'cannot use "await" in static blocks',
+    [180]: "Unexpected token `}`. Did you mean `&rbrace;` or `{'}'}`?",
+    [181]: "Unexpected token `>`. Did you mean `&gt;` or `{'>'}`?"
+  };
+  var _ParseError = class _ParseError2 extends SyntaxError {
+    constructor(start, end, type, ...params) {
+      const description = errorMessages[type].replaceAll(/%(\d+)/g, (_, i2) => params[i2]);
+      const message = "[" + start.line + ":" + start.column + "-" + end.line + ":" + end.column + "]: " + description;
+      super(message);
+      __publicField2(this, "start");
+      __publicField2(this, "end");
+      __publicField2(this, "range");
+      __publicField2(this, "loc");
+      __publicField2(this, "description");
+      this.start = start.index;
+      this.end = end.index;
+      this.range = [start.index, end.index];
+      this.loc = {
+        start: { line: start.line, column: start.column },
+        end: { line: end.line, column: end.column }
+      };
+      this.description = description;
+    }
+  };
+  __name(_ParseError, "ParseError");
+  var ParseError = _ParseError;
+  var KeywordDescTable = [
+    "end of source",
+    "identifier",
+    "number",
+    "string",
+    "regular expression",
+    "false",
+    "true",
+    "null",
+    "template continuation",
+    "template tail",
+    "=>",
+    "(",
+    "{",
+    ".",
+    "...",
+    "}",
+    ")",
+    ";",
+    ",",
+    "[",
+    "]",
+    ":",
+    "?",
+    "'",
+    '"',
+    "++",
+    "--",
+    "=",
+    "<<=",
+    ">>=",
+    ">>>=",
+    "**=",
+    "+=",
+    "-=",
+    "*=",
+    "/=",
+    "%=",
+    "^=",
+    "|=",
+    "&=",
+    "||=",
+    "&&=",
+    "??=",
+    "typeof",
+    "delete",
+    "void",
+    "!",
+    "~",
+    "+",
+    "-",
+    "in",
+    "instanceof",
+    "*",
+    "%",
+    "/",
+    "**",
+    "&&",
+    "||",
+    "===",
+    "!==",
+    "==",
+    "!=",
+    "<=",
+    ">=",
+    "<",
+    ">",
+    "<<",
+    ">>",
+    ">>>",
+    "&",
+    "|",
+    "^",
+    "var",
+    "let",
+    "const",
+    "break",
+    "case",
+    "catch",
+    "class",
+    "continue",
+    "debugger",
+    "default",
+    "do",
+    "else",
+    "export",
+    "extends",
+    "finally",
+    "for",
+    "function",
+    "if",
+    "import",
+    "new",
+    "return",
+    "super",
+    "switch",
+    "this",
+    "throw",
+    "try",
+    "while",
+    "with",
+    "implements",
+    "interface",
+    "package",
+    "private",
+    "protected",
+    "public",
+    "static",
+    "yield",
+    "as",
+    "async",
+    "await",
+    "constructor",
+    "get",
+    "set",
+    "accessor",
+    "from",
+    "of",
+    "using",
+    "enum",
+    "eval",
+    "arguments",
+    "escaped keyword",
+    "escaped future reserved keyword",
+    "reserved if strict",
+    "#",
+    "BigIntLiteral",
+    "??",
+    "?.",
+    "WhiteSpace",
+    "Illegal",
+    "LineTerminator",
+    "PrivateField",
+    "Template",
+    "@",
+    "target",
+    "meta",
+    "LineFeed",
+    "Escaped",
+    "JSXText"
+  ];
+  var descKeywordTable = /* @__PURE__ */ new Map([
+    ["this", 86111],
+    ["function", 86104],
+    ["if", 20569],
+    ["return", 20572],
+    ["var", 86088],
+    ["else", 20563],
+    ["for", 20567],
+    ["new", 86107],
+    ["in", 8673330],
+    ["typeof", 16863275],
+    ["while", 20578],
+    ["case", 20556],
+    ["break", 20555],
+    ["try", 20577],
+    ["catch", 20557],
+    ["delete", 16863276],
+    ["throw", 86112],
+    ["switch", 86110],
+    ["continue", 20559],
+    ["default", 20561],
+    ["instanceof", 8411187],
+    ["do", 20562],
+    ["void", 16863277],
+    ["finally", 20566],
+    ["async", 209005],
+    ["await", 209006],
+    ["class", 86094],
+    ["const", 86090],
+    ["constructor", 12399],
+    ["debugger", 20560],
+    ["export", 20564],
+    ["extends", 20565],
+    ["false", 86021],
+    ["from", 209011],
+    ["get", 209008],
+    ["implements", 36964],
+    ["import", 86106],
+    ["interface", 36965],
+    ["let", 241737],
+    ["null", 86023],
+    ["of", 471156],
+    ["using", 209013],
+    ["package", 36966],
+    ["private", 36967],
+    ["protected", 36968],
+    ["public", 36969],
+    ["set", 209009],
+    ["static", 36970],
+    ["super", 86109],
+    ["true", 86022],
+    ["with", 20579],
+    ["yield", 241771],
+    ["enum", 86134],
+    ["eval", 537079927],
+    ["as", 77932],
+    ["arguments", 537079928],
+    ["target", 209030],
+    ["meta", 209031],
+    ["accessor", 12402]
+  ]);
+  var keywordLengths = [...descKeywordTable.keys()].map((keyword) => keyword.length);
+  var minKeywordLength = Math.min(...keywordLengths);
+  var maxKeywordLength = Math.max(...keywordLengths);
+  function scanIdentifier(parser2, context, isValidAsKeyword) {
+    var _a2;
+    while (isIdPart[advanceChar(parser2)])
+      ;
+    parser2.tokenValue = parser2.source.slice(parser2.tokenIndex, parser2.index);
+    if (parser2.currentChar === 92 || parser2.currentChar > 126) {
+      return scanIdentifierSlowCase(parser2, context, 0, isValidAsKeyword);
+    }
+    const length = parser2.index - parser2.tokenIndex;
+    if (length < minKeywordLength || length > maxKeywordLength)
+      return 208897;
+    return (_a2 = descKeywordTable.get(parser2.tokenValue)) != null ? _a2 : 208897;
+  }
+  __name(scanIdentifier, "scanIdentifier");
+  function scanUnicodeIdentifier(parser2, context) {
+    const cookedChar = scanIdentifierUnicodeEscape(parser2);
+    if (!isIdentifierStart(cookedChar))
+      parser2.report(5);
+    parser2.tokenValue = String.fromCodePoint(cookedChar);
+    return scanIdentifierSlowCase(parser2, context, 1, CharTypes[cookedChar] & 4);
+  }
+  __name(scanUnicodeIdentifier, "scanUnicodeIdentifier");
+  function scanIdentifierSlowCase(parser2, context, hasEscape, isValidAsKeyword) {
+    let start = parser2.index;
+    while (parser2.index < parser2.end) {
+      if (parser2.currentChar === 92) {
+        parser2.tokenValue += parser2.source.slice(start, parser2.index);
+        hasEscape = 1;
+        const code = scanIdentifierUnicodeEscape(parser2);
+        if (!isIdentifierPart(code))
+          parser2.report(5);
+        isValidAsKeyword = isValidAsKeyword && CharTypes[code] & 4;
+        parser2.tokenValue += String.fromCodePoint(code);
+        start = parser2.index;
+      } else {
+        const merged = consumePossibleSurrogatePair(parser2);
+        if (merged > 0) {
+          if (!isIdentifierPart(merged)) {
+            parser2.report(20, String.fromCodePoint(merged));
+          }
+          parser2.currentChar = merged;
+          parser2.index++;
+          parser2.column++;
+        } else if (!isIdentifierPart(parser2.currentChar)) {
+          break;
+        }
+        advanceChar(parser2);
+      }
+    }
+    if (parser2.index <= parser2.end) {
+      parser2.tokenValue += parser2.source.slice(start, parser2.index);
+    }
+    const { length } = parser2.tokenValue;
+    if (isValidAsKeyword && length >= minKeywordLength && length <= maxKeywordLength) {
+      const token = descKeywordTable.get(parser2.tokenValue);
+      if (token === void 0)
+        return 208897 | (hasEscape ? -2147483648 : 0);
+      if (!hasEscape)
+        return token;
+      if (token === 209006) {
+        if ((context & (2 | 2048)) === 0) {
+          return token | -2147483648;
+        }
+        return -2147483527;
+      }
+      if (context & 1) {
+        if (token === 36970) {
+          return -2147483526;
+        }
+        if ((token & 36864) === 36864) {
+          return -2147483526;
+        }
+        if ((token & 20480) === 20480) {
+          if (context & 262144 && (context & 8) === 0) {
+            return token | -2147483648;
+          } else {
+            return -2147483527;
+          }
+        }
+        return 209019 | -2147483648;
+      }
+      if (context & 262144 && (context & 8) === 0 && (token & 20480) === 20480) {
+        return token | -2147483648;
+      }
+      if (token === 241771) {
+        return context & 262144 ? 209019 | -2147483648 : context & 1024 ? -2147483527 : token | -2147483648;
+      }
+      if (token === 209005) {
+        return 209019 | -2147483648;
+      }
+      if ((token & 36864) === 36864) {
+        return token | 12288 | -2147483648;
+      }
+      return -2147483527;
+    }
+    return 208897 | (hasEscape ? -2147483648 : 0);
+  }
+  __name(scanIdentifierSlowCase, "scanIdentifierSlowCase");
+  function scanPrivateIdentifier(parser2) {
+    let char = advanceChar(parser2);
+    if (char === 92)
+      return 131;
+    const merged = consumePossibleSurrogatePair(parser2);
+    if (merged)
+      char = merged;
+    if (!isIdentifierStart(char))
+      parser2.report(96);
+    return 131;
+  }
+  __name(scanPrivateIdentifier, "scanPrivateIdentifier");
+  function scanIdentifierUnicodeEscape(parser2) {
+    if (parser2.source.charCodeAt(parser2.index + 1) !== 117) {
+      parser2.report(5);
+    }
+    parser2.currentChar = parser2.source.charCodeAt(parser2.index += 2);
+    parser2.column += 2;
+    return scanUnicodeEscape(parser2);
+  }
+  __name(scanIdentifierUnicodeEscape, "scanIdentifierUnicodeEscape");
+  function scanUnicodeEscape(parser2) {
+    let codePoint = 0;
+    const char = parser2.currentChar;
+    if (char === 123) {
+      const begin = parser2.index - 2;
+      while (CharTypes[advanceChar(parser2)] & 64) {
+        codePoint = codePoint << 4 | toHex(parser2.currentChar);
+        if (codePoint > 1114111)
+          throw new ParseError({ index: begin, line: parser2.line, column: parser2.column }, parser2.currentLocation, 104);
+      }
+      if (parser2.currentChar !== 125) {
+        throw new ParseError({ index: begin, line: parser2.line, column: parser2.column }, parser2.currentLocation, 7);
+      }
+      advanceChar(parser2);
+      return codePoint;
+    }
+    if ((CharTypes[char] & 64) === 0)
+      parser2.report(7);
+    const char2 = parser2.source.charCodeAt(parser2.index + 1);
+    if ((CharTypes[char2] & 64) === 0)
+      parser2.report(7);
+    const char3 = parser2.source.charCodeAt(parser2.index + 2);
+    if ((CharTypes[char3] & 64) === 0)
+      parser2.report(7);
+    const char4 = parser2.source.charCodeAt(parser2.index + 3);
+    if ((CharTypes[char4] & 64) === 0)
+      parser2.report(7);
+    codePoint = toHex(char) << 12 | toHex(char2) << 8 | toHex(char3) << 4 | toHex(char4);
+    parser2.currentChar = parser2.source.charCodeAt(parser2.index += 4);
+    parser2.column += 4;
+    return codePoint;
+  }
+  __name(scanUnicodeEscape, "scanUnicodeEscape");
+  function scanNumber(parser2, context, kind) {
+    let char = parser2.currentChar;
+    let value = 0;
+    let digit = 9;
+    let atStart = kind & 64 ? 0 : 1;
+    let digits = 0;
+    let allowSeparator = 0;
+    if (kind & 64) {
+      value = "." + scanDecimalDigitsOrSeparator(parser2, char);
+      char = parser2.currentChar;
+      if (char === 110)
+        parser2.report(12);
+    } else {
+      if (char === 48) {
+        char = advanceChar(parser2);
+        if ((char | 32) === 120) {
+          kind = 8 | 128;
+          char = advanceChar(parser2);
+          while (CharTypes[char] & (64 | 4096)) {
+            if (char === 95) {
+              if (!allowSeparator)
+                parser2.report(154);
+              allowSeparator = 0;
+              char = advanceChar(parser2);
+              continue;
+            }
+            allowSeparator = 1;
+            value = value * 16 + toHex(char);
+            digits++;
+            char = advanceChar(parser2);
+          }
+          if (digits === 0 || !allowSeparator) {
+            parser2.report(digits === 0 ? 21 : 155);
+          }
+        } else if ((char | 32) === 111) {
+          kind = 4 | 128;
+          char = advanceChar(parser2);
+          while (CharTypes[char] & (32 | 4096)) {
+            if (char === 95) {
+              if (!allowSeparator) {
+                parser2.report(154);
+              }
+              allowSeparator = 0;
+              char = advanceChar(parser2);
+              continue;
+            }
+            allowSeparator = 1;
+            value = value * 8 + (char - 48);
+            digits++;
+            char = advanceChar(parser2);
+          }
+          if (digits === 0 || !allowSeparator) {
+            parser2.report(digits === 0 ? 0 : 155);
+          }
+        } else if ((char | 32) === 98) {
+          kind = 2 | 128;
+          char = advanceChar(parser2);
+          while (CharTypes[char] & (128 | 4096)) {
+            if (char === 95) {
+              if (!allowSeparator) {
+                parser2.report(154);
+              }
+              allowSeparator = 0;
+              char = advanceChar(parser2);
+              continue;
+            }
+            allowSeparator = 1;
+            value = value * 2 + (char - 48);
+            digits++;
+            char = advanceChar(parser2);
+          }
+          if (digits === 0 || !allowSeparator) {
+            parser2.report(digits === 0 ? 0 : 155);
+          }
+        } else if (CharTypes[char] & 32) {
+          if (context & 1)
+            parser2.report(1);
+          kind = 1;
+          while (CharTypes[char] & 16) {
+            if (CharTypes[char] & 512) {
+              kind = 32;
+              atStart = 0;
+              break;
+            }
+            value = value * 8 + (char - 48);
+            char = advanceChar(parser2);
+          }
+        } else if (CharTypes[char] & 512) {
+          if (context & 1)
+            parser2.report(1);
+          parser2.flags |= 64;
+          kind = 32;
+        } else if (char === 95) {
+          parser2.report(0);
+        }
+      }
+      if (kind & 48) {
+        if (atStart) {
+          while (digit >= 0 && CharTypes[char] & (16 | 4096)) {
+            if (char === 95) {
+              char = advanceChar(parser2);
+              if (char === 95 || kind & 32) {
+                throw new ParseError(parser2.currentLocation, { index: parser2.index + 1, line: parser2.line, column: parser2.column }, 154);
+              }
+              allowSeparator = 1;
+              continue;
+            }
+            allowSeparator = 0;
+            value = 10 * value + (char - 48);
+            char = advanceChar(parser2);
+            --digit;
+          }
+          if (allowSeparator) {
+            throw new ParseError(parser2.currentLocation, { index: parser2.index + 1, line: parser2.line, column: parser2.column }, 155);
+          }
+          if (digit >= 0 && !isIdentifierStart(char) && char !== 46) {
+            parser2.tokenValue = value;
+            if (parser2.options.raw)
+              parser2.tokenRaw = parser2.source.slice(parser2.tokenIndex, parser2.index);
+            return 134283266;
+          }
+        }
+        value += scanDecimalDigitsOrSeparator(parser2, char);
+        char = parser2.currentChar;
+        if (char === 46) {
+          if (advanceChar(parser2) === 95)
+            parser2.report(0);
+          kind = 64;
+          value += "." + scanDecimalDigitsOrSeparator(parser2, parser2.currentChar);
+          char = parser2.currentChar;
+        }
+      }
+    }
+    const end = parser2.index;
+    let isBigInt = 0;
+    if (char === 110 && kind & 128) {
+      isBigInt = 1;
+      char = advanceChar(parser2);
+    } else {
+      if ((char | 32) === 101) {
+        char = advanceChar(parser2);
+        if (CharTypes[char] & 256)
+          char = advanceChar(parser2);
+        const { index } = parser2;
+        if ((CharTypes[char] & 16) === 0)
+          parser2.report(11);
+        value += parser2.source.substring(end, index) + scanDecimalDigitsOrSeparator(parser2, char);
+        char = parser2.currentChar;
+      }
+    }
+    if (parser2.index < parser2.end && CharTypes[char] & 16 || isIdentifierStart(char)) {
+      parser2.report(13);
+    }
+    if (isBigInt) {
+      parser2.tokenRaw = parser2.source.slice(parser2.tokenIndex, parser2.index);
+      parser2.tokenValue = BigInt(parser2.tokenRaw.slice(0, -1).replaceAll("_", ""));
+      return 134283389;
+    }
+    parser2.tokenValue = kind & (1 | 2 | 8 | 4) ? value : kind & 32 ? parseFloat(parser2.source.substring(parser2.tokenIndex, parser2.index)) : +value;
+    if (parser2.options.raw)
+      parser2.tokenRaw = parser2.source.slice(parser2.tokenIndex, parser2.index);
+    return 134283266;
+  }
+  __name(scanNumber, "scanNumber");
+  function scanDecimalDigitsOrSeparator(parser2, char) {
+    let allowSeparator = 0;
+    let start = parser2.index;
+    let ret = "";
+    while (CharTypes[char] & (16 | 4096)) {
+      if (char === 95) {
+        const { index } = parser2;
+        char = advanceChar(parser2);
+        if (char === 95) {
+          throw new ParseError(parser2.currentLocation, { index: parser2.index + 1, line: parser2.line, column: parser2.column }, 154);
+        }
+        allowSeparator = 1;
+        ret += parser2.source.substring(start, index);
+        start = parser2.index;
+        continue;
+      }
+      allowSeparator = 0;
+      char = advanceChar(parser2);
+    }
+    if (allowSeparator) {
+      throw new ParseError(parser2.currentLocation, { index: parser2.index + 1, line: parser2.line, column: parser2.column }, 155);
+    }
+    return ret + parser2.source.substring(start, parser2.index);
+  }
+  __name(scanDecimalDigitsOrSeparator, "scanDecimalDigitsOrSeparator");
   var RegexState;
   (function(RegexState2) {
     RegexState2[RegexState2["Empty"] = 0] = "Empty";
@@ -7119,12 +7915,10 @@ format:`, anonymisedFormat);
     try {
       return new RegExp(pattern, flags);
     } catch {
-      try {
-        new RegExp(pattern, flags);
+      if (!parser2.options.validateRegex) {
         return null;
-      } catch {
-        parser2.report(34);
       }
+      parser2.report(34);
     }
   }
   __name(validate, "validate");
@@ -7269,12 +8063,14 @@ format:`, anonymisedFormat);
         const ch = advanceChar(parser2);
         if (parser2.currentChar === 123) {
           let code = 0;
+          let digits = 0;
           while ((CharTypes[advanceChar(parser2)] & 64) !== 0) {
             code = code << 4 | toHex(parser2.currentChar);
             if (code > 1114111)
               return -5;
+            digits++;
           }
-          if (parser2.currentChar < 1 || parser2.currentChar !== 125) {
+          if (digits === 0 || parser2.currentChar < 1 || parser2.currentChar !== 125) {
             return -4;
           }
           return code;
@@ -7298,7 +8094,7 @@ format:`, anonymisedFormat);
       }
       case 56:
       case 57:
-        if (isTemplate || !parser2.options.webcompat || context & 1)
+        if (isTemplate || context & 1)
           return -3;
         parser2.flags |= 4096;
       default:
@@ -7325,6 +8121,7 @@ format:`, anonymisedFormat);
     const { index: start } = parser2;
     let token = 67174409;
     let ret = "";
+    let hasCarriageReturn = false;
     let char = advanceChar(parser2);
     while (char !== 96) {
       if (char === 36 && parser2.source.charCodeAt(parser2.index + 1) === 123) {
@@ -7333,6 +8130,8 @@ format:`, anonymisedFormat);
         break;
       } else if (char === 92) {
         char = advanceChar(parser2);
+        if (char === 13)
+          hasCarriageReturn = true;
         if (char > 126) {
           ret += String.fromCodePoint(char);
         } else {
@@ -7345,7 +8144,9 @@ format:`, anonymisedFormat);
             parser2.line = line;
             parser2.column = column;
             ret = null;
-            char = scanBadTemplate(parser2, char);
+            char = scanBadTemplate(parser2, char, () => {
+              hasCarriageReturn = true;
+            });
             if (char < 0)
               token = 67174408;
             break;
@@ -7354,10 +8155,13 @@ format:`, anonymisedFormat);
           }
         }
       } else if (parser2.index < parser2.end) {
-        if (char === 13 && parser2.source.charCodeAt(parser2.index) === 10) {
-          ret += String.fromCodePoint(char);
+        if (char === 13)
+          hasCarriageReturn = true;
+        if (char === 13 && parser2.source.charCodeAt(parser2.index + 1) === 10) {
           parser2.currentChar = parser2.source.charCodeAt(++parser2.index);
         }
+        if (char === 13)
+          char = 10;
         if ((char & 83) < 3 && char === 10 || (char ^ 8232) <= 1) {
           parser2.column = -1;
           parser2.line++;
@@ -7370,13 +8174,17 @@ format:`, anonymisedFormat);
     }
     advanceChar(parser2);
     parser2.tokenValue = ret;
-    parser2.tokenRaw = parser2.source.slice(start + 1, parser2.index - (token === 67174409 ? 1 : 2));
+    const tokenRaw = parser2.source.slice(start + 1, parser2.index - (token === 67174409 ? 1 : 2));
+    parser2.tokenRaw = hasCarriageReturn ? tokenRaw.replaceAll(/\r\n?/g, "\n") : tokenRaw;
     return token;
   }
   __name(scanTemplate, "scanTemplate");
-  function scanBadTemplate(parser2, ch) {
+  function scanBadTemplate(parser2, ch, onCarriageReturn) {
     while (ch !== 96) {
       switch (ch) {
+        case 13:
+          onCarriageReturn();
+          break;
         case 36: {
           const index = parser2.index + 1;
           if (index < parser2.end && parser2.source.charCodeAt(index) === 123) {
@@ -7407,978 +8215,43 @@ format:`, anonymisedFormat);
     return scanTemplate(parser2, context);
   }
   __name(scanTemplateTail, "scanTemplateTail");
-  var errorMessages = {
-    [0]: "Unexpected token",
-    [30]: "Unexpected token: '%0'",
-    [1]: "Octal escape sequences are not allowed in strict mode",
-    [2]: "Octal escape sequences are not allowed in template strings",
-    [3]: "\\8 and \\9 are not allowed in template strings",
-    [4]: "Private identifier #%0 is not defined",
-    [5]: "Illegal Unicode escape sequence",
-    [6]: "Invalid code point %0",
-    [7]: "Invalid hexadecimal escape sequence",
-    [9]: "Octal literals are not allowed in strict mode",
-    [8]: "Decimal integer literals with a leading zero are forbidden in strict mode",
-    [10]: "Expected number in radix %0",
-    [151]: "Invalid left-hand side assignment to a destructible right-hand side",
-    [11]: "Non-number found after exponent indicator",
-    [12]: "Invalid BigIntLiteral",
-    [13]: "No identifiers allowed directly after numeric literal",
-    [14]: "Escapes \\8 or \\9 are not syntactically valid escapes",
-    [15]: "Escapes \\8 or \\9 are not allowed in strict mode",
-    [16]: "Unterminated string literal",
-    [17]: "Unterminated template literal",
-    [18]: "Multiline comment was not closed properly",
-    [19]: "The identifier contained dynamic unicode escape that was not closed",
-    [20]: "Illegal character '%0'",
-    [21]: "Missing hexadecimal digits",
-    [22]: "Invalid implicit octal",
-    [23]: "Invalid line break in string literal",
-    [24]: "Only unicode escapes are legal in identifier names",
-    [25]: "Expected '%0'",
-    [26]: "Invalid left-hand side in assignment",
-    [27]: "Invalid left-hand side in async arrow",
-    [28]: 'Calls to super must be in the "constructor" method of a class expression or class declaration that has a superclass',
-    [29]: "Member access on super must be in a method",
-    [31]: "Await expression not allowed in formal parameter",
-    [32]: "Yield expression not allowed in formal parameter",
-    [95]: "Unexpected token: 'escaped keyword'",
-    [33]: "Unary expressions as the left operand of an exponentiation expression must be disambiguated with parentheses",
-    [123]: "Async functions can only be declared at the top level or inside a block",
-    [34]: "Unterminated regular expression",
-    [35]: "Unexpected regular expression flag",
-    [36]: "Duplicate regular expression flag '%0'",
-    [37]: "%0 functions must have exactly %1 argument%2",
-    [38]: "Setter function argument must not be a rest parameter",
-    [39]: "%0 declaration must have a name in this context",
-    [40]: "Function name may not contain any reserved words or be eval or arguments in strict mode",
-    [41]: "The rest operator is missing an argument",
-    [42]: "A getter cannot be a generator",
-    [43]: "A setter cannot be a generator",
-    [44]: "A computed property name must be followed by a colon or paren",
-    [134]: "Object literal keys that are strings or numbers must be a method or have a colon",
-    [46]: "Found `* async x(){}` but this should be `async * x(){}`",
-    [45]: "Getters and setters can not be generators",
-    [47]: "'%0' can not be generator method",
-    [48]: "No line break is allowed after '=>'",
-    [49]: "The left-hand side of the arrow can only be destructed through assignment",
-    [50]: "The binding declaration is not destructible",
-    [51]: "Async arrow can not be followed by new expression",
-    [52]: "Classes may not have a static property named 'prototype'",
-    [53]: "Class constructor may not be a %0",
-    [54]: "Duplicate constructor method in class",
-    [55]: "Invalid increment/decrement operand",
-    [56]: "Invalid use of `new` keyword on an increment/decrement expression",
-    [57]: "`=>` is an invalid assignment target",
-    [58]: "Rest element may not have a trailing comma",
-    [59]: "Missing initializer in %0 declaration",
-    [60]: "'for-%0' loop head declarations can not have an initializer",
-    [61]: "Invalid left-hand side in for-%0 loop: Must have a single binding",
-    [62]: "Invalid shorthand property initializer",
-    [63]: "Property name __proto__ appears more than once in object literal",
-    [64]: "Let is disallowed as a lexically bound name",
-    [65]: "Invalid use of '%0' inside new expression",
-    [66]: "Illegal 'use strict' directive in function with non-simple parameter list",
-    [67]: 'Identifier "let" disallowed as left-hand side expression in strict mode',
-    [68]: "Illegal continue statement",
-    [69]: "Illegal break statement",
-    [70]: "Cannot have `let[...]` as a var name in strict mode",
-    [71]: "Invalid destructuring assignment target",
-    [72]: "Rest parameter may not have a default initializer",
-    [73]: "The rest argument must the be last parameter",
-    [74]: "Invalid rest argument",
-    [76]: "In strict mode code, functions can only be declared at top level or inside a block",
-    [77]: "In non-strict mode code, functions can only be declared at top level, inside a block, or as the body of an if statement",
-    [78]: "Without web compatibility enabled functions can not be declared at top level, inside a block, or as the body of an if statement",
-    [79]: "Class declaration can't appear in single-statement context",
-    [80]: "Invalid left-hand side in for-%0",
-    [81]: "Invalid assignment in for-%0",
-    [82]: "for await (... of ...) is only valid in async functions and async generators",
-    [83]: "The first token after the template expression should be a continuation of the template",
-    [85]: "`let` declaration not allowed here and `let` cannot be a regular var name in strict mode",
-    [84]: "`let \n [` is a restricted production at the start of a statement",
-    [86]: "Catch clause requires exactly one parameter, not more (and no trailing comma)",
-    [87]: "Catch clause parameter does not support default values",
-    [88]: "Missing catch or finally after try",
-    [89]: "More than one default clause in switch statement",
-    [90]: "Illegal newline after throw",
-    [91]: "Strict mode code may not include a with statement",
-    [92]: "Illegal return statement",
-    [93]: "The left hand side of the for-header binding declaration is not destructible",
-    [94]: "new.target only allowed within functions or static blocks",
-    [96]: "'#' not followed by identifier",
-    [102]: "Invalid keyword",
-    [101]: "Can not use 'let' as a class name",
-    [100]: "'A lexical declaration can't define a 'let' binding",
-    [99]: "Can not use `let` as variable name in strict mode",
-    [97]: "'%0' may not be used as an identifier in this context",
-    [98]: "Await is only valid in async functions",
-    [103]: "The %0 keyword can only be used with the module goal",
-    [104]: "Unicode codepoint must not be greater than 0x10FFFF",
-    [105]: "%0 source must be string",
-    [106]: "Only a identifier or string can be used to indicate alias",
-    [107]: "Only '*' or '{...}' can be imported after default",
-    [108]: "Trailing decorator may be followed by method",
-    [109]: "Decorators can't be used with a constructor",
-    [110]: "Can not use `await` as identifier in module or async func",
-    [111]: "Can not use `await` as identifier in module",
-    [112]: "HTML comments are only allowed with web compatibility (Annex B)",
-    [113]: "The identifier 'let' must not be in expression position in strict mode",
-    [114]: "Cannot assign to `eval` and `arguments` in strict mode",
-    [115]: "The left-hand side of a for-of loop may not start with 'let'",
-    [116]: "Block body arrows can not be immediately invoked without a group",
-    [117]: "Block body arrows can not be immediately accessed without a group",
-    [118]: "Unexpected strict mode reserved word",
-    [119]: "Unexpected eval or arguments in strict mode",
-    [120]: "Decorators must not be followed by a semicolon",
-    [121]: "Calling delete on expression not allowed in strict mode",
-    [122]: "Pattern can not have a tail",
-    [124]: "Can not have a `yield` expression on the left side of a ternary",
-    [125]: "An arrow function can not have a postfix update operator",
-    [126]: "Invalid object literal key character after generator star",
-    [127]: "Private fields can not be deleted",
-    [129]: "Classes may not have a field called constructor",
-    [128]: "Classes may not have a private element named constructor",
-    [130]: "A class field initializer or static block may not contain arguments",
-    [131]: "Generators can only be declared at the top level or inside a block",
-    [132]: "Async methods are a restricted production and cannot have a newline following it",
-    [133]: "Unexpected character after object literal property name",
-    [135]: "Invalid key token",
-    [136]: "Label '%0' has already been declared",
-    [137]: "continue statement must be nested within an iteration statement",
-    [138]: "Undefined label '%0'",
-    [139]: "Trailing comma is disallowed inside import(...) arguments",
-    [140]: "Invalid binding in JSON import",
-    [141]: "import() requires exactly one argument",
-    [142]: "Cannot use new with import(...)",
-    [143]: "... is not allowed in import()",
-    [144]: "Expected '=>'",
-    [145]: "Duplicate binding '%0'",
-    [146]: "Duplicate private identifier #%0",
-    [147]: "Cannot export a duplicate name '%0'",
-    [150]: "Duplicate %0 for-binding",
-    [148]: "Exported binding '%0' needs to refer to a top-level declared variable",
-    [149]: "Unexpected private field",
-    [153]: "Numeric separators are not allowed at the end of numeric literals",
-    [152]: "Only one underscore is allowed as numeric separator",
-    [154]: "JSX value should be either an expression or a quoted JSX text",
-    [155]: "Expected corresponding JSX closing tag for %0",
-    [156]: "Adjacent JSX elements must be wrapped in an enclosing tag",
-    [157]: "JSX attributes must only be assigned a non-empty 'expression'",
-    [158]: "'%0' has already been declared",
-    [159]: "'%0' shadowed a catch clause binding",
-    [160]: "Dot property must be an identifier",
-    [161]: "Encountered invalid input after spread/rest argument",
-    [162]: "Catch without try",
-    [163]: "Finally without try",
-    [164]: "Expected corresponding closing tag for JSX fragment",
-    [165]: "Coalescing and logical operators used together in the same expression must be disambiguated with parentheses",
-    [166]: "Invalid tagged template on optional chain",
-    [167]: "Invalid optional chain from super property",
-    [168]: "Invalid optional chain from new expression",
-    [169]: 'Cannot use "import.meta" outside a module',
-    [170]: "Leading decorators must be attached to a class declaration",
-    [171]: "An export name cannot include a lone surrogate, found %0",
-    [172]: "A string literal cannot be used as an exported binding without `from`",
-    [173]: "Private fields can't be accessed on super",
-    [174]: "The only valid meta property for import is 'import.meta'",
-    [175]: "'import.meta' must not contain escaped characters",
-    [176]: 'cannot use "await" as identifier inside an async function',
-    [177]: 'cannot use "await" in static blocks'
-  };
-  var _ParseError = class _ParseError2 extends SyntaxError {
-    constructor(start, end, type, ...params) {
-      const description = errorMessages[type].replace(/%(\d+)/g, (_, i2) => params[i2]);
-      const message = "[" + start.line + ":" + start.column + "-" + end.line + ":" + end.column + "]: " + description;
-      super(message);
-      __publicField2(this, "start");
-      __publicField2(this, "end");
-      __publicField2(this, "range");
-      __publicField2(this, "loc");
-      __publicField2(this, "description");
-      this.start = start.index;
-      this.end = end.index;
-      this.range = [start.index, end.index];
-      this.loc = {
-        start: { line: start.line, column: start.column },
-        end: { line: end.line, column: end.column }
-      };
-      this.description = description;
-    }
-  };
-  __name(_ParseError, "ParseError");
-  var ParseError = _ParseError;
-  function scanNumber(parser2, context, kind) {
-    let char = parser2.currentChar;
-    let value = 0;
-    let digit = 9;
-    let atStart = kind & 64 ? 0 : 1;
-    let digits = 0;
-    let allowSeparator = 0;
-    if (kind & 64) {
-      value = "." + scanDecimalDigitsOrSeparator(parser2, char);
-      char = parser2.currentChar;
-      if (char === 110)
-        parser2.report(12);
-    } else {
-      if (char === 48) {
-        char = advanceChar(parser2);
-        if ((char | 32) === 120) {
-          kind = 8 | 128;
-          char = advanceChar(parser2);
-          while (CharTypes[char] & (64 | 4096)) {
-            if (char === 95) {
-              if (!allowSeparator)
-                parser2.report(152);
-              allowSeparator = 0;
-              char = advanceChar(parser2);
-              continue;
-            }
-            allowSeparator = 1;
-            value = value * 16 + toHex(char);
-            digits++;
-            char = advanceChar(parser2);
-          }
-          if (digits === 0 || !allowSeparator) {
-            parser2.report(digits === 0 ? 21 : 153);
-          }
-        } else if ((char | 32) === 111) {
-          kind = 4 | 128;
-          char = advanceChar(parser2);
-          while (CharTypes[char] & (32 | 4096)) {
-            if (char === 95) {
-              if (!allowSeparator) {
-                parser2.report(152);
-              }
-              allowSeparator = 0;
-              char = advanceChar(parser2);
-              continue;
-            }
-            allowSeparator = 1;
-            value = value * 8 + (char - 48);
-            digits++;
-            char = advanceChar(parser2);
-          }
-          if (digits === 0 || !allowSeparator) {
-            parser2.report(digits === 0 ? 0 : 153);
-          }
-        } else if ((char | 32) === 98) {
-          kind = 2 | 128;
-          char = advanceChar(parser2);
-          while (CharTypes[char] & (128 | 4096)) {
-            if (char === 95) {
-              if (!allowSeparator) {
-                parser2.report(152);
-              }
-              allowSeparator = 0;
-              char = advanceChar(parser2);
-              continue;
-            }
-            allowSeparator = 1;
-            value = value * 2 + (char - 48);
-            digits++;
-            char = advanceChar(parser2);
-          }
-          if (digits === 0 || !allowSeparator) {
-            parser2.report(digits === 0 ? 0 : 153);
-          }
-        } else if (CharTypes[char] & 32) {
-          if (context & 1)
-            parser2.report(1);
-          kind = 1;
-          while (CharTypes[char] & 16) {
-            if (CharTypes[char] & 512) {
-              kind = 32;
-              atStart = 0;
-              break;
-            }
-            value = value * 8 + (char - 48);
-            char = advanceChar(parser2);
-          }
-        } else if (CharTypes[char] & 512) {
-          if (context & 1)
-            parser2.report(1);
-          parser2.flags |= 64;
-          kind = 32;
-        } else if (char === 95) {
-          parser2.report(0);
-        }
-      }
-      if (kind & 48) {
-        if (atStart) {
-          while (digit >= 0 && CharTypes[char] & (16 | 4096)) {
-            if (char === 95) {
-              char = advanceChar(parser2);
-              if (char === 95 || kind & 32) {
-                throw new ParseError(parser2.currentLocation, { index: parser2.index + 1, line: parser2.line, column: parser2.column }, 152);
-              }
-              allowSeparator = 1;
-              continue;
-            }
-            allowSeparator = 0;
-            value = 10 * value + (char - 48);
-            char = advanceChar(parser2);
-            --digit;
-          }
-          if (allowSeparator) {
-            throw new ParseError(parser2.currentLocation, { index: parser2.index + 1, line: parser2.line, column: parser2.column }, 153);
-          }
-          if (digit >= 0 && !isIdentifierStart(char) && char !== 46) {
-            parser2.tokenValue = value;
-            if (parser2.options.raw)
-              parser2.tokenRaw = parser2.source.slice(parser2.tokenIndex, parser2.index);
-            return 134283266;
-          }
-        }
-        value += scanDecimalDigitsOrSeparator(parser2, char);
-        char = parser2.currentChar;
-        if (char === 46) {
-          if (advanceChar(parser2) === 95)
-            parser2.report(0);
-          kind = 64;
-          value += "." + scanDecimalDigitsOrSeparator(parser2, parser2.currentChar);
-          char = parser2.currentChar;
-        }
-      }
-    }
-    const end = parser2.index;
-    let isBigInt = 0;
-    if (char === 110 && kind & 128) {
-      isBigInt = 1;
-      char = advanceChar(parser2);
-    } else {
-      if ((char | 32) === 101) {
-        char = advanceChar(parser2);
-        if (CharTypes[char] & 256)
-          char = advanceChar(parser2);
-        const { index } = parser2;
-        if ((CharTypes[char] & 16) === 0)
-          parser2.report(11);
-        value += parser2.source.substring(end, index) + scanDecimalDigitsOrSeparator(parser2, char);
-        char = parser2.currentChar;
-      }
-    }
-    if (parser2.index < parser2.end && CharTypes[char] & 16 || isIdentifierStart(char)) {
-      parser2.report(13);
-    }
-    if (isBigInt) {
-      parser2.tokenRaw = parser2.source.slice(parser2.tokenIndex, parser2.index);
-      parser2.tokenValue = BigInt(parser2.tokenRaw.slice(0, -1).replaceAll("_", ""));
-      return 134283388;
-    }
-    parser2.tokenValue = kind & (1 | 2 | 8 | 4) ? value : kind & 32 ? parseFloat(parser2.source.substring(parser2.tokenIndex, parser2.index)) : +value;
-    if (parser2.options.raw)
-      parser2.tokenRaw = parser2.source.slice(parser2.tokenIndex, parser2.index);
-    return 134283266;
-  }
-  __name(scanNumber, "scanNumber");
-  function scanDecimalDigitsOrSeparator(parser2, char) {
-    let allowSeparator = 0;
-    let start = parser2.index;
-    let ret = "";
-    while (CharTypes[char] & (16 | 4096)) {
-      if (char === 95) {
-        const { index } = parser2;
-        char = advanceChar(parser2);
-        if (char === 95) {
-          throw new ParseError(parser2.currentLocation, { index: parser2.index + 1, line: parser2.line, column: parser2.column }, 152);
-        }
-        allowSeparator = 1;
-        ret += parser2.source.substring(start, index);
-        start = parser2.index;
-        continue;
-      }
-      allowSeparator = 0;
-      char = advanceChar(parser2);
-    }
-    if (allowSeparator) {
-      throw new ParseError(parser2.currentLocation, { index: parser2.index + 1, line: parser2.line, column: parser2.column }, 153);
-    }
-    return ret + parser2.source.substring(start, parser2.index);
-  }
-  __name(scanDecimalDigitsOrSeparator, "scanDecimalDigitsOrSeparator");
-  var KeywordDescTable = [
-    "end of source",
-    "identifier",
-    "number",
-    "string",
-    "regular expression",
-    "false",
-    "true",
-    "null",
-    "template continuation",
-    "template tail",
-    "=>",
-    "(",
-    "{",
-    ".",
-    "...",
-    "}",
-    ")",
-    ";",
-    ",",
-    "[",
-    "]",
-    ":",
-    "?",
-    "'",
-    '"',
-    "++",
-    "--",
-    "=",
-    "<<=",
-    ">>=",
-    ">>>=",
-    "**=",
-    "+=",
-    "-=",
-    "*=",
-    "/=",
-    "%=",
-    "^=",
-    "|=",
-    "&=",
-    "||=",
-    "&&=",
-    "??=",
-    "typeof",
-    "delete",
-    "void",
-    "!",
-    "~",
-    "+",
-    "-",
-    "in",
-    "instanceof",
-    "*",
-    "%",
-    "/",
-    "**",
-    "&&",
-    "||",
-    "===",
-    "!==",
-    "==",
-    "!=",
-    "<=",
-    ">=",
-    "<",
-    ">",
-    "<<",
-    ">>",
-    ">>>",
-    "&",
-    "|",
-    "^",
-    "var",
-    "let",
-    "const",
-    "break",
-    "case",
-    "catch",
-    "class",
-    "continue",
-    "debugger",
-    "default",
-    "do",
-    "else",
-    "export",
-    "extends",
-    "finally",
-    "for",
-    "function",
-    "if",
-    "import",
-    "new",
-    "return",
-    "super",
-    "switch",
-    "this",
-    "throw",
-    "try",
-    "while",
-    "with",
-    "implements",
-    "interface",
-    "package",
-    "private",
-    "protected",
-    "public",
-    "static",
-    "yield",
-    "as",
-    "async",
-    "await",
-    "constructor",
-    "get",
-    "set",
-    "accessor",
-    "from",
-    "of",
-    "enum",
-    "eval",
-    "arguments",
-    "escaped keyword",
-    "escaped future reserved keyword",
-    "reserved if strict",
-    "#",
-    "BigIntLiteral",
-    "??",
-    "?.",
-    "WhiteSpace",
-    "Illegal",
-    "LineTerminator",
-    "PrivateField",
-    "Template",
-    "@",
-    "target",
-    "meta",
-    "LineFeed",
-    "Escaped",
-    "JSXText"
-  ];
-  var descKeywordTable = {
-    this: 86111,
-    function: 86104,
-    if: 20569,
-    return: 20572,
-    var: 86088,
-    else: 20563,
-    for: 20567,
-    new: 86107,
-    in: 8673330,
-    typeof: 16863275,
-    while: 20578,
-    case: 20556,
-    break: 20555,
-    try: 20577,
-    catch: 20557,
-    delete: 16863276,
-    throw: 86112,
-    switch: 86110,
-    continue: 20559,
-    default: 20561,
-    instanceof: 8411187,
-    do: 20562,
-    void: 16863277,
-    finally: 20566,
-    async: 209005,
-    await: 209006,
-    class: 86094,
-    const: 86090,
-    constructor: 12399,
-    debugger: 20560,
-    export: 20564,
-    extends: 20565,
-    false: 86021,
-    from: 209011,
-    get: 209008,
-    implements: 36964,
-    import: 86106,
-    interface: 36965,
-    let: 241737,
-    null: 86023,
-    of: 471156,
-    package: 36966,
-    private: 36967,
-    protected: 36968,
-    public: 36969,
-    set: 209009,
-    static: 36970,
-    super: 86109,
-    true: 86022,
-    with: 20579,
-    yield: 241771,
-    enum: 86133,
-    eval: 537079926,
-    as: 77932,
-    arguments: 537079927,
-    target: 209029,
-    meta: 209030,
-    accessor: 12402
-  };
-  function matchOrInsertSemicolon(parser2, context) {
-    var _a2, _b2;
-    if ((parser2.flags & 1) === 0 && (parser2.getToken() & 1048576) !== 1048576) {
-      parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
-    }
-    if (!consumeOpt(parser2, context, 1074790417)) {
-      (_b2 = (_a2 = parser2.options).onInsertedSemicolon) == null ? void 0 : _b2.call(_a2, parser2.startIndex);
-    }
-  }
-  __name(matchOrInsertSemicolon, "matchOrInsertSemicolon");
-  function isValidStrictMode(parser2, index, tokenIndex, tokenValue) {
-    if (index - tokenIndex < 13 && tokenValue === "use strict") {
-      if ((parser2.getToken() & 1048576) === 1048576 || parser2.flags & 1) {
-        return 1;
-      }
-    }
-    return 0;
-  }
-  __name(isValidStrictMode, "isValidStrictMode");
-  function optionalBit(parser2, context, t) {
-    if (parser2.getToken() !== t)
-      return 0;
-    nextToken(parser2, context);
-    return 1;
-  }
-  __name(optionalBit, "optionalBit");
-  function consumeOpt(parser2, context, t) {
-    if (parser2.getToken() !== t)
-      return false;
-    nextToken(parser2, context);
-    return true;
-  }
-  __name(consumeOpt, "consumeOpt");
-  function consume(parser2, context, t) {
-    if (parser2.getToken() !== t)
-      parser2.report(25, KeywordDescTable[t & 255]);
-    nextToken(parser2, context);
-  }
-  __name(consume, "consume");
-  function reinterpretToPattern(parser2, node) {
-    switch (node.type) {
-      case "ArrayExpression": {
-        node.type = "ArrayPattern";
-        const { elements } = node;
-        for (let i2 = 0, n = elements.length; i2 < n; ++i2) {
-          const element = elements[i2];
-          if (element)
-            reinterpretToPattern(parser2, element);
-        }
-        return;
-      }
-      case "ObjectExpression": {
-        node.type = "ObjectPattern";
-        const { properties } = node;
-        for (let i2 = 0, n = properties.length; i2 < n; ++i2) {
-          reinterpretToPattern(parser2, properties[i2]);
-        }
-        return;
-      }
-      case "AssignmentExpression":
-        node.type = "AssignmentPattern";
-        if (node.operator !== "=")
-          parser2.report(71);
-        delete node.operator;
-        reinterpretToPattern(parser2, node.left);
-        return;
-      case "Property":
-        reinterpretToPattern(parser2, node.value);
-        return;
-      case "SpreadElement":
-        node.type = "RestElement";
-        reinterpretToPattern(parser2, node.argument);
-    }
-  }
-  __name(reinterpretToPattern, "reinterpretToPattern");
-  function validateBindingIdentifier(parser2, context, kind, t, skipEvalArgCheck) {
-    if (context & 1) {
-      if ((t & 36864) === 36864) {
-        parser2.report(118);
-      }
-      if (!skipEvalArgCheck && (t & 537079808) === 537079808) {
-        parser2.report(119);
-      }
-    }
-    if ((t & 20480) === 20480 || t === -2147483528) {
-      parser2.report(102);
-    }
-    if (kind & (8 | 16) && (t & 255) === (241737 & 255)) {
-      parser2.report(100);
-    }
-    if (context & (2048 | 2) && t === 209006) {
-      parser2.report(110);
-    }
-    if (context & (1024 | 1) && t === 241771) {
-      parser2.report(97, "yield");
-    }
-  }
-  __name(validateBindingIdentifier, "validateBindingIdentifier");
-  function validateFunctionName(parser2, context, t) {
-    if (context & 1) {
-      if ((t & 36864) === 36864) {
-        parser2.report(118);
-      }
-      if ((t & 537079808) === 537079808) {
-        parser2.report(119);
-      }
-      if (t === -2147483527) {
-        parser2.report(95);
-      }
-      if (t === -2147483528) {
-        parser2.report(95);
-      }
-    }
-    if ((t & 20480) === 20480) {
-      parser2.report(102);
-    }
-    if (context & (2048 | 2) && t === 209006) {
-      parser2.report(110);
-    }
-    if (context & (1024 | 1) && t === 241771) {
-      parser2.report(97, "yield");
-    }
-  }
-  __name(validateFunctionName, "validateFunctionName");
-  function isStrictReservedWord(parser2, context, t) {
-    if (t === 209006) {
-      if (context & (2048 | 2))
-        parser2.report(110);
-      parser2.destructible |= 128;
-    }
-    if (t === 241771 && context & 1024)
-      parser2.report(97, "yield");
-    return (t & 20480) === 20480 || (t & 36864) === 36864 || t == -2147483527;
-  }
-  __name(isStrictReservedWord, "isStrictReservedWord");
-  function isPropertyWithPrivateFieldKey(expr) {
-    return !expr.property ? false : expr.property.type === "PrivateIdentifier";
-  }
-  __name(isPropertyWithPrivateFieldKey, "isPropertyWithPrivateFieldKey");
-  function isValidLabel(parser2, labels, name, isIterationStatement) {
-    while (labels) {
-      if (labels["$" + name]) {
-        if (isIterationStatement)
-          parser2.report(137);
-        return 1;
-      }
-      if (isIterationStatement && labels.loop)
-        isIterationStatement = 0;
-      labels = labels["$"];
-    }
-    return 0;
-  }
-  __name(isValidLabel, "isValidLabel");
-  function validateAndDeclareLabel(parser2, labels, name) {
-    let set = labels;
-    while (set) {
-      if (set["$" + name])
-        parser2.report(136, name);
-      set = set["$"];
-    }
-    labels["$" + name] = 1;
-  }
-  __name(validateAndDeclareLabel, "validateAndDeclareLabel");
-  function isEqualTagName(elementName) {
-    switch (elementName.type) {
-      case "JSXIdentifier":
-        return elementName.name;
-      case "JSXNamespacedName":
-        return elementName.namespace + ":" + elementName.name;
-      case "JSXMemberExpression":
-        return isEqualTagName(elementName.object) + "." + isEqualTagName(elementName.property);
-    }
-  }
-  __name(isEqualTagName, "isEqualTagName");
-  function isValidIdentifier(context, t) {
-    if (context & (1 | 1024)) {
-      if (context & 2 && t === 209006)
-        return false;
-      if (context & 1024 && t === 241771)
-        return false;
-      return (t & 12288) === 12288;
-    }
-    return (t & 12288) === 12288 || (t & 36864) === 36864;
-  }
-  __name(isValidIdentifier, "isValidIdentifier");
-  function classifyIdentifier(parser2, context, t) {
-    if ((t & 537079808) === 537079808) {
-      if (context & 1)
-        parser2.report(119);
-      parser2.flags |= 512;
-    }
-    if (!isValidIdentifier(context, t))
-      parser2.report(0);
-  }
-  __name(classifyIdentifier, "classifyIdentifier");
-  function getOwnProperty(object, key) {
-    return Object.hasOwn(object, key) ? object[key] : void 0;
-  }
-  __name(getOwnProperty, "getOwnProperty");
-  function scanIdentifier(parser2, context, isValidAsKeyword) {
-    var _a2;
-    while (isIdPart[advanceChar(parser2)])
-      ;
-    parser2.tokenValue = parser2.source.slice(parser2.tokenIndex, parser2.index);
-    return parser2.currentChar !== 92 && parser2.currentChar <= 126 ? (_a2 = getOwnProperty(descKeywordTable, parser2.tokenValue)) != null ? _a2 : 208897 : scanIdentifierSlowCase(parser2, context, 0, isValidAsKeyword);
-  }
-  __name(scanIdentifier, "scanIdentifier");
-  function scanUnicodeIdentifier(parser2, context) {
-    const cookedChar = scanIdentifierUnicodeEscape(parser2);
-    if (!isIdentifierStart(cookedChar))
-      parser2.report(5);
-    parser2.tokenValue = String.fromCodePoint(cookedChar);
-    return scanIdentifierSlowCase(parser2, context, 1, CharTypes[cookedChar] & 4);
-  }
-  __name(scanUnicodeIdentifier, "scanUnicodeIdentifier");
-  function scanIdentifierSlowCase(parser2, context, hasEscape, isValidAsKeyword) {
-    let start = parser2.index;
-    while (parser2.index < parser2.end) {
-      if (parser2.currentChar === 92) {
-        parser2.tokenValue += parser2.source.slice(start, parser2.index);
-        hasEscape = 1;
-        const code = scanIdentifierUnicodeEscape(parser2);
-        if (!isIdentifierPart(code))
-          parser2.report(5);
-        isValidAsKeyword = isValidAsKeyword && CharTypes[code] & 4;
-        parser2.tokenValue += String.fromCodePoint(code);
-        start = parser2.index;
-      } else {
-        const merged = consumePossibleSurrogatePair(parser2);
-        if (merged > 0) {
-          if (!isIdentifierPart(merged)) {
-            parser2.report(20, String.fromCodePoint(merged));
-          }
-          parser2.currentChar = merged;
-          parser2.index++;
-          parser2.column++;
-        } else if (!isIdentifierPart(parser2.currentChar)) {
-          break;
-        }
-        advanceChar(parser2);
-      }
-    }
-    if (parser2.index <= parser2.end) {
-      parser2.tokenValue += parser2.source.slice(start, parser2.index);
-    }
-    const { length } = parser2.tokenValue;
-    if (isValidAsKeyword && length >= 2 && length <= 11) {
-      const token = getOwnProperty(descKeywordTable, parser2.tokenValue);
-      if (token === void 0)
-        return 208897 | (hasEscape ? -2147483648 : 0);
-      if (!hasEscape)
-        return token;
-      if (token === 209006) {
-        if ((context & (2 | 2048)) === 0) {
-          return token | -2147483648;
-        }
-        return -2147483528;
-      }
-      if (context & 1) {
-        if (token === 36970) {
-          return -2147483527;
-        }
-        if ((token & 36864) === 36864) {
-          return -2147483527;
-        }
-        if ((token & 20480) === 20480) {
-          if (context & 262144 && (context & 8) === 0) {
-            return token | -2147483648;
-          } else {
-            return -2147483528;
-          }
-        }
-        return 209018 | -2147483648;
-      }
-      if (context & 262144 && (context & 8) === 0 && (token & 20480) === 20480) {
-        return token | -2147483648;
-      }
-      if (token === 241771) {
-        return context & 262144 ? 209018 | -2147483648 : context & 1024 ? -2147483528 : token | -2147483648;
-      }
-      if (token === 209005) {
-        return 209018 | -2147483648;
-      }
-      if ((token & 36864) === 36864) {
-        return token | 12288 | -2147483648;
-      }
-      return -2147483528;
-    }
-    return 208897 | (hasEscape ? -2147483648 : 0);
-  }
-  __name(scanIdentifierSlowCase, "scanIdentifierSlowCase");
-  function scanPrivateIdentifier(parser2) {
-    let char = advanceChar(parser2);
-    if (char === 92)
-      return 130;
-    const merged = consumePossibleSurrogatePair(parser2);
-    if (merged)
-      char = merged;
-    if (!isIdentifierStart(char))
-      parser2.report(96);
-    return 130;
-  }
-  __name(scanPrivateIdentifier, "scanPrivateIdentifier");
-  function scanIdentifierUnicodeEscape(parser2) {
-    if (parser2.source.charCodeAt(parser2.index + 1) !== 117) {
-      parser2.report(5);
-    }
-    parser2.currentChar = parser2.source.charCodeAt(parser2.index += 2);
-    parser2.column += 2;
-    return scanUnicodeEscape(parser2);
-  }
-  __name(scanIdentifierUnicodeEscape, "scanIdentifierUnicodeEscape");
-  function scanUnicodeEscape(parser2) {
-    let codePoint = 0;
-    const char = parser2.currentChar;
-    if (char === 123) {
-      const begin = parser2.index - 2;
-      while (CharTypes[advanceChar(parser2)] & 64) {
-        codePoint = codePoint << 4 | toHex(parser2.currentChar);
-        if (codePoint > 1114111)
-          throw new ParseError({ index: begin, line: parser2.line, column: parser2.column }, parser2.currentLocation, 104);
-      }
-      if (parser2.currentChar !== 125) {
-        throw new ParseError({ index: begin, line: parser2.line, column: parser2.column }, parser2.currentLocation, 7);
-      }
-      advanceChar(parser2);
-      return codePoint;
-    }
-    if ((CharTypes[char] & 64) === 0)
-      parser2.report(7);
-    const char2 = parser2.source.charCodeAt(parser2.index + 1);
-    if ((CharTypes[char2] & 64) === 0)
-      parser2.report(7);
-    const char3 = parser2.source.charCodeAt(parser2.index + 2);
-    if ((CharTypes[char3] & 64) === 0)
-      parser2.report(7);
-    const char4 = parser2.source.charCodeAt(parser2.index + 3);
-    if ((CharTypes[char4] & 64) === 0)
-      parser2.report(7);
-    codePoint = toHex(char) << 12 | toHex(char2) << 8 | toHex(char3) << 4 | toHex(char4);
-    parser2.currentChar = parser2.source.charCodeAt(parser2.index += 4);
-    parser2.column += 4;
-    return codePoint;
-  }
-  __name(scanUnicodeEscape, "scanUnicodeEscape");
   var TokenLookup = [
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    127,
-    135,
-    127,
-    127,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
     129,
     128,
+    136,
     128,
     128,
+    130,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
+    129,
     128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    128,
-    127,
     16842798,
     134283267,
-    130,
+    131,
     208897,
     8391477,
     8390213,
@@ -8407,7 +8280,7 @@ format:`, anonymisedFormat);
     1077936155,
     8390721,
     22,
-    132,
+    133,
     208897,
     208897,
     208897,
@@ -8435,11 +8308,11 @@ format:`, anonymisedFormat);
     208897,
     208897,
     69271571,
-    136,
+    137,
     20,
     8389959,
     208897,
-    131,
+    132,
     4096,
     4096,
     4096,
@@ -8470,7 +8343,7 @@ format:`, anonymisedFormat);
     8389702,
     1074790415,
     16842799,
-    128
+    129
   ];
   function nextToken(parser2, context) {
     parser2.flags = (parser2.flags | 1) ^ 1;
@@ -8483,7 +8356,6 @@ format:`, anonymisedFormat);
   function scanSingleToken(parser2, context, state) {
     const isStartOfLine = parser2.index === 0;
     const { source } = parser2;
-    let start = parser2.currentLocation;
     while (parser2.index < parser2.end) {
       parser2.tokenIndex = parser2.index;
       parser2.tokenColumn = parser2.column;
@@ -8502,8 +8374,8 @@ format:`, anonymisedFormat);
           case 1074790417:
           case 18:
           case 16842799:
-          case 132:
-          case 128:
+          case 133:
+          case 129:
             advanceChar(parser2);
             return token;
           case 208897:
@@ -8514,20 +8386,20 @@ format:`, anonymisedFormat);
             return scanNumber(parser2, context, 16 | 128);
           case 134283267:
             return scanString(parser2, context, char);
-          case 131:
+          case 132:
             return scanTemplate(parser2, context);
-          case 136:
+          case 137:
             return scanUnicodeIdentifier(parser2, context);
-          case 130:
+          case 131:
             return scanPrivateIdentifier(parser2);
-          case 127:
+          case 128:
             advanceChar(parser2);
             break;
-          case 129:
+          case 130:
             state |= 1 | 4;
             scanNewLine(parser2);
             break;
-          case 135:
+          case 136:
             consumeLineFeed(parser2, state);
             state = state & -5 | 1;
             break;
@@ -8550,7 +8422,6 @@ format:`, anonymisedFormat);
                   parser2.column += 3;
                   parser2.currentChar = source.charCodeAt(parser2.index += 3);
                   state = skipSingleHTMLComment(parser2, source, state, context, 2, parser2.tokenStart);
-                  start = parser2.tokenStart;
                   continue;
                 }
                 return 8456256;
@@ -8629,10 +8500,9 @@ format:`, anonymisedFormat);
               advanceChar(parser2);
               if ((state & 1 || isStartOfLine) && parser2.currentChar === 62) {
                 if (!parser2.options.webcompat)
-                  parser2.report(112);
+                  parser2.report(114);
                 advanceChar(parser2);
-                state = skipSingleHTMLComment(parser2, source, state, context, 3, start);
-                start = parser2.tokenStart;
+                state = skipSingleHTMLComment(parser2, source, state, context, 3, parser2.tokenStart);
                 continue;
               }
               return 33619994;
@@ -8650,13 +8520,11 @@ format:`, anonymisedFormat);
               if (ch === 47) {
                 advanceChar(parser2);
                 state = skipSingleLineComment(parser2, source, state, 0, parser2.tokenStart);
-                start = parser2.tokenStart;
                 continue;
               }
               if (ch === 42) {
                 advanceChar(parser2);
                 state = skipMultiLineComment(parser2, source, state);
-                start = parser2.tokenStart;
                 continue;
               }
               if (context & 32) {
@@ -8690,7 +8558,7 @@ format:`, anonymisedFormat);
               advanceChar(parser2);
               if (parser2.currentChar === 61) {
                 advanceChar(parser2);
-                return 4194344;
+                return 4718632;
               }
               return 8913465;
             }
@@ -8733,7 +8601,7 @@ format:`, anonymisedFormat);
               advanceChar(parser2);
               if (parser2.currentChar === 61) {
                 advanceChar(parser2);
-                return 4194345;
+                return 4718633;
               }
               return 8913720;
             }
@@ -8749,9 +8617,9 @@ format:`, anonymisedFormat);
               advanceChar(parser2);
               if (parser2.currentChar === 61) {
                 advanceChar(parser2);
-                return 4194346;
+                return 4718634;
               }
-              return 276824445;
+              return 276824446;
             }
             if (ch === 46) {
               const index = parser2.index + 1;
@@ -8759,7 +8627,7 @@ format:`, anonymisedFormat);
                 ch = source.charCodeAt(index);
                 if (!(ch >= 48 && ch <= 57)) {
                   advanceChar(parser2);
-                  return 67108990;
+                  return 67108991;
                 }
               }
             }
@@ -8789,7 +8657,206 @@ format:`, anonymisedFormat);
     return 1048576;
   }
   __name(scanSingleToken, "scanSingleToken");
-  var entities = {
+  function matchOrInsertSemicolon(parser2, context) {
+    var _a2, _b2;
+    if ((parser2.flags & 1) === 0 && (parser2.getToken() & 1048576) !== 1048576) {
+      parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
+    }
+    if (!consumeOpt(parser2, context, 1074790417)) {
+      (_b2 = (_a2 = parser2.options).onInsertedSemicolon) == null ? void 0 : _b2.call(_a2, parser2.startIndex);
+    }
+  }
+  __name(matchOrInsertSemicolon, "matchOrInsertSemicolon");
+  function isValidStrictMode(parser2, index, tokenIndex, tokenValue) {
+    if (index - tokenIndex < 13 && tokenValue === "use strict") {
+      if ((parser2.getToken() & 1048576) === 1048576 || parser2.flags & 1) {
+        return 1;
+      }
+    }
+    return 0;
+  }
+  __name(isValidStrictMode, "isValidStrictMode");
+  function optionalBit(parser2, context, t) {
+    if (parser2.getToken() !== t)
+      return 0;
+    nextToken(parser2, context);
+    return 1;
+  }
+  __name(optionalBit, "optionalBit");
+  function consumeOpt(parser2, context, t) {
+    if (parser2.getToken() !== t)
+      return false;
+    nextToken(parser2, context);
+    return true;
+  }
+  __name(consumeOpt, "consumeOpt");
+  function consume(parser2, context, t) {
+    if (parser2.getToken() !== t)
+      parser2.report(25, KeywordDescTable[t & 255]);
+    nextToken(parser2, context);
+  }
+  __name(consume, "consume");
+  function reinterpretToPattern(parser2, node) {
+    switch (node.type) {
+      case "ArrayExpression": {
+        node.type = "ArrayPattern";
+        const { elements } = node;
+        for (let i2 = 0, n = elements.length; i2 < n; ++i2) {
+          const element = elements[i2];
+          if (element)
+            reinterpretToPattern(parser2, element);
+        }
+        return;
+      }
+      case "ObjectExpression": {
+        node.type = "ObjectPattern";
+        const { properties } = node;
+        for (let i2 = 0, n = properties.length; i2 < n; ++i2) {
+          reinterpretToPattern(parser2, properties[i2]);
+        }
+        return;
+      }
+      case "AssignmentExpression":
+        node.type = "AssignmentPattern";
+        if (node.operator !== "=")
+          parser2.report(71);
+        delete node.operator;
+        reinterpretToPattern(parser2, node.left);
+        return;
+      case "Property":
+        reinterpretToPattern(parser2, node.value);
+        return;
+      case "SpreadElement":
+        node.type = "RestElement";
+        reinterpretToPattern(parser2, node.argument);
+    }
+  }
+  __name(reinterpretToPattern, "reinterpretToPattern");
+  function validateBindingIdentifier(parser2, context, kind, t, skipEvalArgCheck) {
+    if (context & 1) {
+      if ((t & 36864) === 36864) {
+        parser2.report(120);
+      }
+      if (!skipEvalArgCheck && (t & 537079808) === 537079808) {
+        parser2.report(121);
+      }
+    }
+    if ((t & 20480) === 20480 || t === -2147483527) {
+      parser2.report(102);
+    }
+    if (kind & (8 | 16) && (t & 255) === (241737 & 255)) {
+      parser2.report(100);
+    }
+    if (context & (2048 | 2) && t === 209006) {
+      parser2.report(112);
+    }
+    if (context & (1024 | 1) && t === 241771) {
+      parser2.report(97, "yield");
+    }
+  }
+  __name(validateBindingIdentifier, "validateBindingIdentifier");
+  function validateFunctionName(parser2, context, t) {
+    if (context & 1) {
+      if ((t & 36864) === 36864) {
+        parser2.report(120);
+      }
+      if ((t & 537079808) === 537079808) {
+        parser2.report(121);
+      }
+      if (t === -2147483526) {
+        parser2.report(95);
+      }
+      if (t === -2147483527) {
+        parser2.report(95);
+      }
+    }
+    if ((t & 20480) === 20480) {
+      parser2.report(102);
+    }
+    if (context & (2048 | 2) && t === 209006) {
+      parser2.report(112);
+    }
+    if (context & (1024 | 1) && t === 241771) {
+      parser2.report(97, "yield");
+    }
+  }
+  __name(validateFunctionName, "validateFunctionName");
+  function isStrictReservedWord(parser2, context, t) {
+    var _a2;
+    if (t === 209006) {
+      if (context & (2048 | 2))
+        parser2.report(112);
+      if ((parser2.destructible & 128) === 0) {
+        (_a2 = parser2.firstAwaitLocation) != null ? _a2 : parser2.firstAwaitLocation = { start: parser2.tokenStart, end: parser2.currentLocation };
+      }
+      parser2.destructible |= 128;
+    }
+    if (t === 241771 && context & 1024)
+      parser2.report(97, "yield");
+    return (t & 20480) === 20480 || (t & 36864) === 36864 || t == -2147483526;
+  }
+  __name(isStrictReservedWord, "isStrictReservedWord");
+  function isPropertyWithPrivateFieldKey(expr) {
+    return !expr.property ? false : expr.property.type === "PrivateIdentifier";
+  }
+  __name(isPropertyWithPrivateFieldKey, "isPropertyWithPrivateFieldKey");
+  function isValidLabel(parser2, labels, name, isIterationStatement) {
+    while (labels) {
+      if (labels["$" + name]) {
+        if (isIterationStatement)
+          parser2.report(139);
+        return 1;
+      }
+      if (isIterationStatement && labels.loop)
+        isIterationStatement = 0;
+      labels = labels["$"];
+    }
+    return 0;
+  }
+  __name(isValidLabel, "isValidLabel");
+  function validateAndDeclareLabel(parser2, labels, name) {
+    let set = labels;
+    while (set) {
+      if (set["$" + name])
+        parser2.report(138, name);
+      set = set["$"];
+    }
+    labels["$" + name] = 1;
+  }
+  __name(validateAndDeclareLabel, "validateAndDeclareLabel");
+  function isEqualTagName(elementName) {
+    switch (elementName.type) {
+      case "JSXIdentifier":
+        return elementName.name;
+      case "JSXNamespacedName":
+        return elementName.namespace + ":" + elementName.name;
+      case "JSXMemberExpression":
+        return isEqualTagName(elementName.object) + "." + isEqualTagName(elementName.property);
+    }
+  }
+  __name(isEqualTagName, "isEqualTagName");
+  function isValidIdentifier(context, t) {
+    if (context & (1 | 1024)) {
+      if (context & 2 && t === 209006)
+        return false;
+      if (context & 1024 && t === 241771)
+        return false;
+      return (t & 12288) === 12288;
+    }
+    return (t & 12288) === 12288 || (t & 36864) === 36864;
+  }
+  __name(isValidIdentifier, "isValidIdentifier");
+  function classifyIdentifier(parser2, context, t) {
+    if ((t & 537079808) === 537079808) {
+      if (context & 1)
+        parser2.report(121);
+      parser2.flags |= 512;
+    }
+    if (!isValidIdentifier(context, t))
+      parser2.report(0);
+  }
+  __name(classifyIdentifier, "classifyIdentifier");
+  var entities = new Map(Object.entries({
     AElig: "\xC6",
     AMP: "&",
     Aacute: "\xC1",
@@ -10915,8 +10982,8 @@ format:`, anonymisedFormat);
     zscr: "\u{1D4CF}",
     zwj: "\u200D",
     zwnj: "\u200C"
-  };
-  var decodeMap = {
+  }));
+  var decodeMap = new Map(Object.entries({
     "0": 65533,
     "128": 8364,
     "130": 8218,
@@ -10945,16 +11012,16 @@ format:`, anonymisedFormat);
     "156": 339,
     "158": 382,
     "159": 376
-  };
+  }).map(([key, value]) => [Number(key), value]));
   function decodeHTMLStrict(text) {
-    return text.replace(/&(?:[a-zA-Z]+|#[xX][\da-fA-F]+|#\d+);/g, (key) => {
+    return text.replaceAll(/&(?:[a-zA-Z]+|#[xX][\da-fA-F]+|#\d+);/g, (key) => {
       var _a2;
       if (key.charAt(1) === "#") {
         const secondChar = key.charAt(2);
         const codePoint = secondChar === "X" || secondChar === "x" ? parseInt(key.slice(3), 16) : parseInt(key.slice(2), 10);
         return decodeCodePoint(codePoint);
       }
-      return (_a2 = getOwnProperty(entities, key.slice(1, -1))) != null ? _a2 : key;
+      return (_a2 = entities.get(key.slice(1, -1))) != null ? _a2 : key;
     });
   }
   __name(decodeHTMLStrict, "decodeHTMLStrict");
@@ -10963,7 +11030,7 @@ format:`, anonymisedFormat);
     if (codePoint >= 55296 && codePoint <= 57343 || codePoint > 1114111) {
       return "\uFFFD";
     }
-    return String.fromCodePoint((_a2 = getOwnProperty(decodeMap, codePoint)) != null ? _a2 : codePoint);
+    return String.fromCodePoint((_a2 = decodeMap.get(codePoint)) != null ? _a2 : codePoint);
   }
   __name(decodeCodePoint, "decodeCodePoint");
   function scanJSXAttributeValue(parser2, context) {
@@ -11010,6 +11077,12 @@ format:`, anonymisedFormat);
       parser2.setToken(2162700);
       return;
     }
+    if (parser2.currentChar === 125) {
+      parser2.report(180);
+    }
+    if (parser2.currentChar === 62) {
+      parser2.report(181);
+    }
     let state = 0;
     while (parser2.index < parser2.end) {
       const type = CharTypes[parser2.source.charCodeAt(parser2.index)];
@@ -11031,7 +11104,7 @@ format:`, anonymisedFormat);
     if (parser2.options.raw)
       parser2.tokenRaw = raw;
     parser2.tokenValue = decodeHTMLStrict(raw);
-    parser2.setToken(137);
+    parser2.setToken(138);
   }
   __name(nextJSXToken, "nextJSXToken");
   function rescanJSXIdentifier(parser2) {
@@ -11047,6 +11120,88 @@ format:`, anonymisedFormat);
     return parser2.getToken();
   }
   __name(rescanJSXIdentifier, "rescanJSXIdentifier");
+  var nextFeatures = 1 | 2 | 4;
+  function normalizeRanges(ranges) {
+    var _a2, _b2, _c;
+    if (!ranges)
+      return void 0;
+    if (ranges === true)
+      return { start: true, end: true, range: true };
+    return {
+      start: (_a2 = ranges.start) != null ? _a2 : false,
+      end: (_b2 = ranges.end) != null ? _b2 : false,
+      range: (_c = ranges.range) != null ? _c : false
+    };
+  }
+  __name(normalizeRanges, "normalizeRanges");
+  function normalizeOptions(rawOptions) {
+    let { features, next, ranges, module, sourceType, globalReturn, ...restOptions } = {
+      validateRegex: true,
+      features: 0,
+      ...rawOptions
+    };
+    if (next) {
+      features |= nextFeatures;
+    }
+    ranges = normalizeRanges(ranges);
+    if (module && !sourceType) {
+      sourceType = "module";
+    }
+    if (globalReturn && (!sourceType || sourceType === "script")) {
+      sourceType = "commonjs";
+    }
+    const options = {
+      ...restOptions,
+      ranges,
+      features,
+      sourceType
+    };
+    return options;
+  }
+  __name(normalizeOptions, "normalizeOptions");
+  var _PrivateScope = class _PrivateScope2 {
+    constructor(parser2, parent) {
+      __publicField2(this, "parser");
+      __publicField2(this, "parent");
+      __publicField2(this, "refs", /* @__PURE__ */ Object.create(null));
+      __publicField2(this, "privateIdentifiers", /* @__PURE__ */ new Map());
+      this.parser = parser2;
+      this.parent = parent;
+    }
+    addPrivateIdentifier(name, kind) {
+      const { privateIdentifiers } = this;
+      let focusKind = kind & (32 | 768);
+      if (!(focusKind & 768))
+        focusKind |= 768;
+      const value = privateIdentifiers.get(name);
+      if (this.hasPrivateIdentifier(name) && ((value & 32) !== (focusKind & 32) || value & focusKind & 768)) {
+        this.parser.report(148, name);
+      }
+      privateIdentifiers.set(name, this.hasPrivateIdentifier(name) ? value | focusKind : focusKind);
+    }
+    addPrivateIdentifierRef(name) {
+      var _a2, _b2;
+      (_b2 = (_a2 = this.refs)[name]) != null ? _b2 : _a2[name] = [];
+      this.refs[name].push(this.parser.tokenStart);
+    }
+    isPrivateIdentifierDefined(name) {
+      var _a2;
+      return this.hasPrivateIdentifier(name) || Boolean((_a2 = this.parent) == null ? void 0 : _a2.isPrivateIdentifierDefined(name));
+    }
+    validatePrivateIdentifierRefs() {
+      for (const name in this.refs) {
+        if (!this.isPrivateIdentifierDefined(name)) {
+          const { index, line, column } = this.refs[name][0];
+          throw new ParseError({ index, line, column }, { index: index + name.length, line, column: column + name.length }, 4, name);
+        }
+      }
+    }
+    hasPrivateIdentifier(name) {
+      return this.privateIdentifiers.has(name);
+    }
+  };
+  __name(_PrivateScope, "PrivateScope");
+  var PrivateScope = _PrivateScope;
   var _Scope = class _Scope2 {
     constructor(parser2, type = 2, parent) {
       __publicField2(this, "parser");
@@ -11080,16 +11235,16 @@ format:`, anonymisedFormat);
         if (value && value & 248) {
           if (parser2.options.webcompat && (context & 1) === 0 && (kind & 128 && value & 68 || value & 128 && kind & 68)) ;
           else {
-            parser2.report(145, name);
+            parser2.report(147, name);
           }
         }
         if (currentScope === this) {
           if (value && value & 1 && kind & 1) {
-            currentScope.recordScopeError(145, name);
+            currentScope.recordScopeError(147, name);
           }
         }
         if (value && (value & 256 || value & 512 && !parser2.options.webcompat)) {
-          parser2.report(145, name);
+          parser2.report(147, name);
         }
         currentScope.variableBindings.set(name, kind);
         currentScope = currentScope.parent;
@@ -11098,29 +11253,29 @@ format:`, anonymisedFormat);
     hasVariable(name) {
       return this.variableBindings.has(name);
     }
-    addBlockName(context, name, kind, origin2) {
+    addBlockName(context, name, kind, origin2 = 0) {
       var _a2;
       const { parser: parser2 } = this;
       const value = this.variableBindings.get(name);
       if (value && (value & 2) === 0) {
         if (kind & 1) {
-          this.recordScopeError(145, name);
+          this.recordScopeError(147, name);
         } else if (parser2.options.webcompat && (context & 1) === 0 && origin2 & 2 && value === 64 && kind === 64) ;
         else {
-          parser2.report(145, name);
+          parser2.report(147, name);
         }
       }
       if (this.type & 64 && ((_a2 = this.parent) == null ? void 0 : _a2.hasVariable(name)) && (this.parent.variableBindings.get(name) & 2) === 0) {
-        parser2.report(145, name);
+        parser2.report(147, name);
       }
       if (this.type & 512 && value && (value & 2) === 0) {
         if (kind & 1) {
-          this.recordScopeError(145, name);
+          this.recordScopeError(147, name);
         }
       }
       if (this.type & 32) {
         if (this.parent.variableBindings.get(name) & 768)
-          parser2.report(159, name);
+          parser2.report(161, name);
       }
       this.variableBindings.set(name, kind);
     }
@@ -11144,60 +11299,18 @@ format:`, anonymisedFormat);
   var Scope = _Scope;
   function createArrowHeadParsingScope(parser2, context, value) {
     const scope = parser2.createScope().createChildScope(512);
-    scope.addBlockName(context, value, 1, 0);
+    scope.addBlockName(context, value, 1);
     return scope;
   }
   __name(createArrowHeadParsingScope, "createArrowHeadParsingScope");
-  var _PrivateScope = class _PrivateScope2 {
-    constructor(parser2, parent) {
-      __publicField2(this, "parser");
-      __publicField2(this, "parent");
-      __publicField2(this, "refs", /* @__PURE__ */ Object.create(null));
-      __publicField2(this, "privateIdentifiers", /* @__PURE__ */ new Map());
-      this.parser = parser2;
-      this.parent = parent;
-    }
-    addPrivateIdentifier(name, kind) {
-      const { privateIdentifiers } = this;
-      let focusKind = kind & (32 | 768);
-      if (!(focusKind & 768))
-        focusKind |= 768;
-      const value = privateIdentifiers.get(name);
-      if (this.hasPrivateIdentifier(name) && ((value & 32) !== (focusKind & 32) || value & focusKind & 768)) {
-        this.parser.report(146, name);
-      }
-      privateIdentifiers.set(name, this.hasPrivateIdentifier(name) ? value | focusKind : focusKind);
-    }
-    addPrivateIdentifierRef(name) {
-      var _a2, _b2;
-      (_b2 = (_a2 = this.refs)[name]) != null ? _b2 : _a2[name] = [];
-      this.refs[name].push(this.parser.tokenStart);
-    }
-    isPrivateIdentifierDefined(name) {
-      var _a2;
-      return this.hasPrivateIdentifier(name) || Boolean((_a2 = this.parent) == null ? void 0 : _a2.isPrivateIdentifierDefined(name));
-    }
-    validatePrivateIdentifierRefs() {
-      for (const name in this.refs) {
-        if (!this.isPrivateIdentifierDefined(name)) {
-          const { index, line, column } = this.refs[name][0];
-          throw new ParseError({ index, line, column }, { index: index + name.length, line, column: column + name.length }, 4, name);
-        }
-      }
-    }
-    hasPrivateIdentifier(name) {
-      return this.privateIdentifiers.has(name);
-    }
-  };
-  __name(_PrivateScope, "PrivateScope");
-  var PrivateScope = _PrivateScope;
   var _Parser = class _Parser2 {
-    constructor(source, options = {}) {
+    constructor(source, rawOptions = {}) {
       __publicField2(this, "source");
-      __publicField2(this, "options");
       __publicField2(this, "lastOnToken", null);
+      __publicField2(this, "options");
       __publicField2(this, "token", 1048576);
       __publicField2(this, "flags", 0);
+      __publicField2(this, "features", 0);
       __publicField2(this, "index", 0);
       __publicField2(this, "line", 1);
       __publicField2(this, "column", 0);
@@ -11214,13 +11327,22 @@ format:`, anonymisedFormat);
       __publicField2(this, "currentChar", 0);
       __publicField2(this, "exportedNames", /* @__PURE__ */ new Set());
       __publicField2(this, "exportedBindings", /* @__PURE__ */ new Set());
-      __publicField2(this, "assignable", 1);
+      __publicField2(this, "assignable", 0);
       __publicField2(this, "destructible", 0);
+      __publicField2(this, "strictReservedRange", null);
+      __publicField2(this, "firstAwaitLocation", null);
       __publicField2(this, "leadingDecorators", { decorators: [] });
       this.source = source;
-      this.options = options;
       this.end = source.length;
       this.currentChar = source.charCodeAt(0);
+      this.options = normalizeOptions(rawOptions);
+      this.features = this.options.features;
+      if (Array.isArray(this.options.onComment)) {
+        this.options.onComment = pushComment(this.options.onComment, this.options);
+      }
+      if (Array.isArray(this.options.onToken)) {
+        this.options.onToken = pushToken(this.options.onToken, this.options);
+      }
     }
     getToken() {
       return this.token;
@@ -11264,11 +11386,15 @@ format:`, anonymisedFormat);
       return { index: this.index, line: this.line, column: this.column };
     }
     finishNode(node, start, end) {
-      if (this.options.ranges) {
-        node.start = start.index;
+      const { ranges } = this.options;
+      if (ranges) {
         const endIndex = end ? end.index : this.startIndex;
-        node.end = endIndex;
-        node.range = [start.index, endIndex];
+        if (ranges.start)
+          node.start = start.index;
+        if (ranges.end)
+          node.end = endIndex;
+        if (ranges.range)
+          node.range = [start.index, endIndex];
       }
       if (this.options.loc) {
         node.loc = {
@@ -11290,7 +11416,7 @@ format:`, anonymisedFormat);
     declareUnboundVariable(name) {
       const { exportedNames } = this;
       if (exportedNames.has(name)) {
-        this.report(147, name);
+        this.report(149, name);
       }
       exportedNames.add(name);
     }
@@ -11312,6 +11438,12 @@ format:`, anonymisedFormat);
       }
       return void 0;
     }
+    cloneIdentifier(original) {
+      return structuredClone(original);
+    }
+    cloneStringLiteral(original) {
+      return structuredClone(original);
+    }
   };
   __name(_Parser, "Parser");
   var Parser = _Parser;
@@ -11321,10 +11453,14 @@ format:`, anonymisedFormat);
         type,
         value
       };
-      if (options.ranges) {
-        comment.start = start;
-        comment.end = end;
-        comment.range = [start, end];
+      const { ranges } = options;
+      if (ranges) {
+        if (ranges.start)
+          comment.start = start;
+        if (ranges.end)
+          comment.end = end;
+        if (ranges.range)
+          comment.range = [start, end];
       }
       if (options.loc) {
         comment.loc = loc;
@@ -11338,10 +11474,14 @@ format:`, anonymisedFormat);
       const token = {
         token: type
       };
-      if (options.ranges) {
-        token.start = start;
-        token.end = end;
-        token.range = [start, end];
+      const { ranges } = options;
+      if (ranges) {
+        if (ranges.start)
+          token.start = start;
+        if (ranges.end)
+          token.end = end;
+        if (ranges.range)
+          token.range = [start, end];
       }
       if (options.loc) {
         token.loc = loc;
@@ -11350,29 +11490,17 @@ format:`, anonymisedFormat);
     };
   }
   __name(pushToken, "pushToken");
-  function normalizeOptions(rawOptions) {
-    const options = { ...rawOptions };
-    if (options.onComment) {
-      options.onComment = Array.isArray(options.onComment) ? pushComment(options.onComment, options) : options.onComment;
-    }
-    if (options.onToken) {
-      options.onToken = Array.isArray(options.onToken) ? pushToken(options.onToken, options) : options.onToken;
-    }
-    return options;
-  }
-  __name(normalizeOptions, "normalizeOptions");
   function parseSource(source, rawOptions = {}, context = 0) {
-    const options = normalizeOptions(rawOptions);
-    if (options.module)
+    const parser2 = new Parser(source, rawOptions);
+    if (parser2.options.sourceType === "module")
       context |= 2 | 1;
-    if (options.globalReturn)
-      context |= 4096;
-    if (options.impliedStrict)
+    if (parser2.options.sourceType === "commonjs")
+      context |= 4096 | 65536;
+    if (parser2.options.impliedStrict)
       context |= 1;
-    const parser2 = new Parser(source, options);
     skipHashBang(parser2);
     const scope = parser2.createScopeIfLexical();
-    let body = [];
+    let body;
     let sourceType = "script";
     if (context & 2) {
       sourceType = "module";
@@ -11380,7 +11508,7 @@ format:`, anonymisedFormat);
       if (scope) {
         for (const name of parser2.exportedBindings) {
           if (!scope.hasVariable(name))
-            parser2.report(148, name);
+            parser2.report(150, name);
         }
       }
     } else {
@@ -11412,7 +11540,7 @@ format:`, anonymisedFormat);
       statements.push(parseDirective(parser2, context, expr, token, tokenStart));
     }
     while (parser2.getToken() !== 1048576) {
-      statements.push(parseStatementListItem(parser2, context, scope, void 0, 4, {}));
+      statements.push(parseStatementListItem(parser2, context, scope, void 0, {}, 4));
     }
     return statements;
   }
@@ -11432,8 +11560,7 @@ format:`, anonymisedFormat);
   }
   __name(parseModuleItemList, "parseModuleItemList");
   function parseModuleItem(parser2, context, scope) {
-    var _a2;
-    if (parser2.getToken() === 132) {
+    if (parser2.getToken() === 133) {
       Object.assign(parser2.leadingDecorators, {
         start: parser2.tokenStart,
         decorators: parseDecorators(parser2, context, void 0)
@@ -11445,29 +11572,42 @@ format:`, anonymisedFormat);
         moduleItem = parseExportDeclaration(parser2, context, scope);
         break;
       case 86106:
+        if (parser2.leadingDecorators.decorators.length) {
+          parser2.report(172);
+        }
         moduleItem = parseImportDeclaration(parser2, context, scope);
         break;
       default:
-        moduleItem = parseStatementListItem(parser2, context, scope, void 0, 4, {});
-    }
-    if ((_a2 = parser2.leadingDecorators) == null ? void 0 : _a2.decorators.length) {
-      parser2.report(170);
+        moduleItem = parseStatementListItem(parser2, context, scope, void 0, {}, 4);
     }
     return moduleItem;
   }
   __name(parseModuleItem, "parseModuleItem");
-  function parseStatementListItem(parser2, context, scope, privateScope, origin2, labels) {
+  function parseStatementListItem(parser2, context, scope, privateScope, labels, origin2 = 2) {
     const start = parser2.tokenStart;
+    if (parser2.leadingDecorators.decorators.length && parser2.getToken() !== 86094) {
+      parser2.report(172);
+    }
     switch (parser2.getToken()) {
       case 86104:
-        return parseFunctionDeclaration(parser2, context, scope, privateScope, origin2, 1, 0, 0, start);
-      case 132:
+        return parseFunctionDeclaration(parser2, context, scope, privateScope, 1, 0, 0, start, origin2);
+      case 133:
+        if (!(parser2.features & 1)) {
+          parser2.report(30, "@");
+        }
       case 86094:
         return parseClassDeclaration(parser2, context, scope, privateScope, 0);
       case 86090:
-        return parseLexicalDeclaration(parser2, context, scope, privateScope, 16, 0);
+        return parseLexicalDeclaration(parser2, context, scope, privateScope, 16);
       case 241737:
         return parseLetIdentOrVarDeclarationStatement(parser2, context, scope, privateScope, origin2);
+      case 209013:
+        return parseUsingDeclarationOrExpressionStatement(parser2, context, scope, privateScope, labels, origin2);
+      case 209006:
+        if ((context & 2048 || context & 2 && context & 8) && nextTokenIsUsingOnSameLine(parser2)) {
+          return parseAwaitUsingDeclarationOrExpressionStatement(parser2, context, scope, privateScope, labels, origin2);
+        }
+        return parseStatement(parser2, context, scope, privateScope, labels, 1, origin2);
       case 20564:
         parser2.report(103, "export");
       case 86106:
@@ -11481,16 +11621,16 @@ format:`, anonymisedFormat);
             parser2.report(103, "import");
         }
       case 209005:
-        return parseAsyncArrowOrAsyncFunctionDeclaration(parser2, context, scope, privateScope, origin2, labels, 1);
+        return parseAsyncArrowOrAsyncFunctionDeclaration(parser2, context, scope, privateScope, labels, 1, origin2);
       default:
-        return parseStatement(parser2, context, scope, privateScope, origin2, labels, 1);
+        return parseStatement(parser2, context, scope, privateScope, labels, 1, origin2);
     }
   }
   __name(parseStatementListItem, "parseStatementListItem");
-  function parseStatement(parser2, context, scope, privateScope, origin2, labels, allowFuncDecl) {
+  function parseStatement(parser2, context, scope, privateScope, labels, allowFuncDecl, origin2 = 0) {
     switch (parser2.getToken()) {
       case 86088:
-        return parseVariableStatement(parser2, context, scope, privateScope, 0);
+        return parseVariableStatement(parser2, context, scope, privateScope);
       case 20572:
         return parseReturnStatement(parser2, context, privateScope);
       case 20569:
@@ -11520,21 +11660,21 @@ format:`, anonymisedFormat);
       case 20560:
         return parseDebuggerStatement(parser2, context);
       case 209005:
-        return parseAsyncArrowOrAsyncFunctionDeclaration(parser2, context, scope, privateScope, origin2, labels, 0);
+        return parseAsyncArrowOrAsyncFunctionDeclaration(parser2, context, scope, privateScope, labels, 0, origin2);
       case 20557:
-        parser2.report(162);
+        parser2.report(164);
       case 20566:
-        parser2.report(163);
+        parser2.report(165);
       case 86104:
         parser2.report(context & 1 ? 76 : !parser2.options.webcompat ? 78 : 77);
       case 86094:
         parser2.report(79);
       default:
-        return parseExpressionOrLabelledStatement(parser2, context, scope, privateScope, origin2, labels, allowFuncDecl);
+        return parseExpressionOrLabelledStatement(parser2, context, scope, privateScope, labels, allowFuncDecl, origin2);
     }
   }
   __name(parseStatement, "parseStatement");
-  function parseExpressionOrLabelledStatement(parser2, context, scope, privateScope, origin2, labels, allowFuncDecl) {
+  function parseExpressionOrLabelledStatement(parser2, context, scope, privateScope, labels, allowFuncDecl, origin2) {
     const { tokenValue, tokenStart } = parser2;
     const token = parser2.getToken();
     let expr;
@@ -11549,22 +11689,26 @@ format:`, anonymisedFormat);
       default:
         expr = parsePrimaryExpression(parser2, context, privateScope, 2, 0, 1, 0, 1, parser2.tokenStart);
     }
-    if (token & 143360 && parser2.getToken() === 21) {
-      return parseLabelledStatement(parser2, context, scope, privateScope, origin2, labels, tokenValue, expr, token, allowFuncDecl, tokenStart);
-    }
-    expr = parseMemberOrUpdateExpression(parser2, context, privateScope, expr, 0, 0, tokenStart);
-    expr = parseAssignmentExpression(parser2, context, privateScope, 0, 0, tokenStart, expr);
-    if (parser2.getToken() === 18) {
-      expr = parseSequenceExpression(parser2, context, privateScope, 0, tokenStart, expr);
-    }
-    return parseExpressionStatement(parser2, context, expr, tokenStart);
+    return finishExpressionOrLabelledStatement(parser2, context, scope, privateScope, labels, allowFuncDecl, expr, token, tokenValue, tokenStart, origin2);
   }
   __name(parseExpressionOrLabelledStatement, "parseExpressionOrLabelledStatement");
+  function finishExpressionOrLabelledStatement(parser2, context, scope, privateScope, labels, allowFuncDecl, initialExpression, token, tokenValue, tokenStart, origin2) {
+    if (token & 143360 && parser2.getToken() === 21) {
+      return parseLabelledStatement(parser2, context, scope, privateScope, labels, tokenValue, initialExpression, token, allowFuncDecl, tokenStart, origin2);
+    }
+    let expression = parseMemberOrUpdateExpression(parser2, context, privateScope, initialExpression, 0, 0, tokenStart);
+    expression = parseAssignmentExpression(parser2, context, privateScope, 0, 0, tokenStart, expression);
+    if (parser2.getToken() === 18) {
+      expression = parseSequenceExpression(parser2, context, privateScope, 0, tokenStart, expression);
+    }
+    return parseExpressionStatement(parser2, context, expression, tokenStart);
+  }
+  __name(finishExpressionOrLabelledStatement, "finishExpressionOrLabelledStatement");
   function parseBlock(parser2, context, scope, privateScope, labels, start = parser2.tokenStart, type = "BlockStatement") {
     const body = [];
     consume(parser2, context | 32, 2162700);
     while (parser2.getToken() !== 1074790415) {
-      body.push(parseStatementListItem(parser2, context, scope, privateScope, 2, { $: labels }));
+      body.push(parseStatementListItem(parser2, context, scope, privateScope, { $: labels }));
     }
     consume(parser2, context | 32, 1074790415);
     return parser2.finishNode({
@@ -11594,11 +11738,11 @@ format:`, anonymisedFormat);
     }, start);
   }
   __name(parseExpressionStatement, "parseExpressionStatement");
-  function parseLabelledStatement(parser2, context, scope, privateScope, origin2, labels, value, expr, token, allowFuncDecl, start) {
+  function parseLabelledStatement(parser2, context, scope, privateScope, labels, value, expr, token, allowFuncDecl, start, origin2) {
     validateBindingIdentifier(parser2, context, 0, token, 1);
     validateAndDeclareLabel(parser2, labels, value);
     nextToken(parser2, context | 32);
-    const body = allowFuncDecl && (context & 1) === 0 && parser2.options.webcompat && parser2.getToken() === 86104 ? parseFunctionDeclaration(parser2, context, scope == null ? void 0 : scope.createChildScope(), privateScope, origin2, 0, 0, 0, parser2.tokenStart) : parseStatement(parser2, context, scope, privateScope, origin2, labels, allowFuncDecl);
+    const body = allowFuncDecl && (context & 1) === 0 && parser2.options.webcompat && parser2.getToken() === 86104 ? parseFunctionDeclaration(parser2, context, scope == null ? void 0 : scope.createChildScope(), privateScope, 0, 0, 0, parser2.tokenStart, origin2) : parseStatement(parser2, context, scope, privateScope, labels, allowFuncDecl, origin2);
     return parser2.finishNode({
       type: "LabeledStatement",
       label: expr,
@@ -11606,19 +11750,19 @@ format:`, anonymisedFormat);
     }, start);
   }
   __name(parseLabelledStatement, "parseLabelledStatement");
-  function parseAsyncArrowOrAsyncFunctionDeclaration(parser2, context, scope, privateScope, origin2, labels, allowFuncDecl) {
+  function parseAsyncArrowOrAsyncFunctionDeclaration(parser2, context, scope, privateScope, labels, allowFuncDecl, origin2) {
     const { tokenValue, tokenStart: start } = parser2;
     const token = parser2.getToken();
     let expr = parseIdentifier(parser2, context);
     if (parser2.getToken() === 21) {
-      return parseLabelledStatement(parser2, context, scope, privateScope, origin2, labels, tokenValue, expr, token, 1, start);
+      return parseLabelledStatement(parser2, context, scope, privateScope, labels, tokenValue, expr, token, 1, start, origin2);
     }
     const asyncNewLine = parser2.flags & 1;
     if (!asyncNewLine) {
       if (parser2.getToken() === 86104) {
         if (!allowFuncDecl)
-          parser2.report(123);
-        return parseFunctionDeclaration(parser2, context, scope, privateScope, origin2, 1, 0, 1, start);
+          parser2.report(125);
+        return parseFunctionDeclaration(parser2, context, scope, privateScope, 1, 0, 1, start, origin2);
       }
       if (isValidIdentifier(context, parser2.getToken())) {
         expr = parseAsyncArrowAfterIdent(parser2, context, privateScope, 1, start);
@@ -11628,7 +11772,7 @@ format:`, anonymisedFormat);
       }
     }
     if (parser2.getToken() === 67174411) {
-      expr = parseAsyncArrowOrCallExpression(parser2, context, privateScope, expr, 1, 1, 0, asyncNewLine, start);
+      expr = parseAsyncArrowOrCallExpression(parser2, context, privateScope, expr, 1, 1, asyncNewLine, start);
     } else {
       if (parser2.getToken() === 10) {
         classifyIdentifier(parser2, context, token);
@@ -11715,7 +11859,7 @@ format:`, anonymisedFormat);
   __name(parseIfStatement, "parseIfStatement");
   function parseConsequentOrAlternative(parser2, context, scope, privateScope, labels) {
     const { tokenStart } = parser2;
-    return context & 1 || !parser2.options.webcompat || parser2.getToken() !== 86104 ? parseStatement(parser2, context, scope, privateScope, 0, { $: labels }, 0) : parseFunctionDeclaration(parser2, context, scope == null ? void 0 : scope.createChildScope(), privateScope, 0, 0, 0, 0, tokenStart);
+    return context & 1 || !parser2.options.webcompat || parser2.getToken() !== 86104 ? parseStatement(parser2, context, scope, privateScope, { $: labels }, 0) : parseFunctionDeclaration(parser2, context, scope == null ? void 0 : scope.createChildScope(), privateScope, 0, 0, 0, tokenStart);
   }
   __name(parseConsequentOrAlternative, "parseConsequentOrAlternative");
   function parseSwitchStatement(parser2, context, scope, privateScope, labels) {
@@ -11742,9 +11886,13 @@ format:`, anonymisedFormat);
       }
       consume(parser2, context | 32, 21);
       while (parser2.getToken() !== 20556 && parser2.getToken() !== 1074790415 && parser2.getToken() !== 20561) {
-        consequent.push(parseStatementListItem(parser2, context | 4, scope, privateScope, 2, {
+        const statement = parseStatementListItem(parser2, context | 4, scope, privateScope, {
           $: labels
-        }));
+        });
+        if (statement.type === "VariableDeclaration" && (statement.kind === "using" || statement.kind === "await using")) {
+          parser2.report(30, statement.kind);
+        }
+        consequent.push(statement);
       }
       cases.push(parser2.finishNode({
         type: "SwitchCase",
@@ -11775,7 +11923,7 @@ format:`, anonymisedFormat);
   }
   __name(parseWhileStatement, "parseWhileStatement");
   function parseIterationStatementBody(parser2, context, scope, privateScope, labels) {
-    return parseStatement(parser2, (context | 131072) ^ 131072 | 128, scope, privateScope, 0, { loop: 1, $: labels }, 0);
+    return parseStatement(parser2, (context | 131072) ^ 131072 | 128, scope, privateScope, { loop: 1, $: labels }, 0);
   }
   __name(parseIterationStatementBody, "parseIterationStatementBody");
   function parseContinueStatement(parser2, context, labels) {
@@ -11788,7 +11936,7 @@ format:`, anonymisedFormat);
       const { tokenValue } = parser2;
       label = parseIdentifier(parser2, context | 32);
       if (!isValidLabel(parser2, labels, tokenValue, 1))
-        parser2.report(138, tokenValue);
+        parser2.report(140, tokenValue);
     }
     matchOrInsertSemicolon(parser2, context | 32);
     return parser2.finishNode({
@@ -11805,7 +11953,7 @@ format:`, anonymisedFormat);
       const { tokenValue } = parser2;
       label = parseIdentifier(parser2, context | 32);
       if (!isValidLabel(parser2, labels, tokenValue, 0))
-        parser2.report(138, tokenValue);
+        parser2.report(140, tokenValue);
     } else if ((context & (4 | 128)) === 0) {
       parser2.report(69);
     }
@@ -11824,7 +11972,7 @@ format:`, anonymisedFormat);
     consume(parser2, context | 32, 67174411);
     const object = parseExpressions(parser2, context, privateScope, 0, 1, parser2.tokenStart);
     consume(parser2, context | 32, 16);
-    const body = parseStatement(parser2, context, scope, privateScope, 2, labels, 0);
+    const body = parseStatement(parser2, context, scope, privateScope, labels, 0, 2);
     return parser2.finishNode({
       type: "WithStatement",
       object,
@@ -11868,10 +12016,9 @@ format:`, anonymisedFormat);
   __name(parseTryStatement, "parseTryStatement");
   function parseCatchBlock(parser2, context, scope, privateScope, labels, start) {
     let param = null;
-    let additionalScope = scope;
     if (consumeOpt(parser2, context, 67174411)) {
       scope = scope == null ? void 0 : scope.createChildScope(4);
-      param = parseBindingPattern(parser2, context, scope, privateScope, (parser2.getToken() & 2097152) === 2097152 ? 256 : 512, 0);
+      param = parseBindingPattern(parser2, context, scope, privateScope, (parser2.getToken() & 2097152) === 2097152 ? 256 : 512);
       if (parser2.getToken() === 18) {
         parser2.report(86);
       } else if (parser2.getToken() === 1077936155) {
@@ -11879,7 +12026,7 @@ format:`, anonymisedFormat);
       }
       consume(parser2, context | 32, 16);
     }
-    additionalScope = scope == null ? void 0 : scope.createChildScope(32);
+    const additionalScope = scope == null ? void 0 : scope.createChildScope(32);
     const body = parseBlock(parser2, context, additionalScope, privateScope, { $: labels });
     return parser2.finishNode({
       type: "CatchClause",
@@ -11915,8 +12062,8 @@ format:`, anonymisedFormat);
     const { tokenValue, tokenStart } = parser2;
     const token = parser2.getToken();
     let expr = parseIdentifier(parser2, context);
-    if (parser2.getToken() & (143360 | 2097152)) {
-      const declarations = parseVariableDeclarationList(parser2, context, scope, privateScope, 8, 0);
+    if (parser2.getToken() & (143360 | 2097152) && (parser2.getToken() & 20480) !== 20480) {
+      const declarations = parseVariableDeclarationList(parser2, context, scope, privateScope, 8);
       matchOrInsertSemicolon(parser2, context | 32);
       return parser2.finishNode({
         type: "VariableDeclaration",
@@ -11928,7 +12075,7 @@ format:`, anonymisedFormat);
     if (context & 1)
       parser2.report(85);
     if (parser2.getToken() === 21) {
-      return parseLabelledStatement(parser2, context, scope, privateScope, origin2, {}, tokenValue, expr, token, 0, tokenStart);
+      return parseLabelledStatement(parser2, context, scope, privateScope, {}, tokenValue, expr, token, 0, tokenStart, origin2);
     }
     if (parser2.getToken() === 10) {
       let scope2 = void 0;
@@ -11946,19 +12093,98 @@ format:`, anonymisedFormat);
     return parseExpressionStatement(parser2, context, expr, tokenStart);
   }
   __name(parseLetIdentOrVarDeclarationStatement, "parseLetIdentOrVarDeclarationStatement");
-  function parseLexicalDeclaration(parser2, context, scope, privateScope, kind, origin2) {
+  function nextTokenIsUsingOnSameLine(parser2) {
+    const { index: parserIndex, source } = parser2;
+    let index = parserIndex;
+    while (index < parser2.end) {
+      const char = source.charCodeAt(index);
+      if (char === 10 || char === 13 || char === 8232 || char === 8233)
+        return false;
+      if (/\s/u.test(source[index])) {
+        index++;
+        continue;
+      }
+      if (char === 47 && source.charCodeAt(index + 1) === 42) {
+        index += 2;
+        while (index < parser2.end) {
+          const commentChar = source.charCodeAt(index);
+          if (commentChar === 10 || commentChar === 13 || commentChar === 8232 || commentChar === 8233) {
+            return false;
+          }
+          if (commentChar === 42 && source.charCodeAt(index + 1) === 47) {
+            index += 2;
+            break;
+          }
+          index++;
+        }
+        continue;
+      }
+      break;
+    }
+    if (source.slice(index, index + 5) !== "using")
+      return false;
+    const following = source.codePointAt(index + 5);
+    return following === void 0 || following !== 92 && !isIdentifierPart(following);
+  }
+  __name(nextTokenIsUsingOnSameLine, "nextTokenIsUsingOnSameLine");
+  function isResourceBindingStart(token) {
+    return (token & 143360) === 143360 && (token & 20480) !== 20480;
+  }
+  __name(isResourceBindingStart, "isResourceBindingStart");
+  function parseUsingDeclarationOrExpressionStatement(parser2, context, scope, privateScope, labels, origin2) {
+    const { tokenStart, tokenValue } = parser2;
+    const token = parser2.getToken();
+    const expression = parseIdentifier(parser2, context);
+    if ((parser2.flags & 1) === 0 && isResourceBindingStart(parser2.getToken())) {
+      if (origin2 & 4 && context & 8 && (context & 2) === 0 && (context & 4096) === 0) {
+        parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
+      }
+      return parseLexicalDeclaration(parser2, context, scope, privateScope, 16, origin2, "using", tokenStart, 1);
+    }
+    parser2.assignable = 1;
+    return finishExpressionOrLabelledStatement(parser2, context, scope, privateScope, labels, 1, expression, token, tokenValue, tokenStart, origin2);
+  }
+  __name(parseUsingDeclarationOrExpressionStatement, "parseUsingDeclarationOrExpressionStatement");
+  function parseAwaitUsingDeclarationOrExpressionStatement(parser2, context, scope, privateScope, labels, origin2) {
     const start = parser2.tokenStart;
-    nextToken(parser2, context);
-    const declarations = parseVariableDeclarationList(parser2, context, scope, privateScope, kind, origin2);
+    if (context & 524288)
+      parser2.report(179);
+    nextToken(parser2, context | 32);
+    let argument;
+    if ((parser2.flags & 1) === 0 && parser2.getToken() === 209013) {
+      const usingStart = parser2.tokenStart;
+      const usingIdentifier = parseIdentifier(parser2, context);
+      if ((parser2.flags & 1) === 0 && isResourceBindingStart(parser2.getToken())) {
+        return parseLexicalDeclaration(parser2, context, scope, privateScope, 16, origin2, "await using", start, 1);
+      }
+      argument = parseMemberOrUpdateExpression(parser2, context, privateScope, usingIdentifier, 0, 0, usingStart);
+    } else {
+      argument = parseLeftHandSideExpression(parser2, context, privateScope, 0, 0, 1);
+    }
+    if (parser2.getToken() === 8391735)
+      parser2.report(33);
+    parser2.assignable = 2;
+    const expression = parser2.finishNode({
+      type: "AwaitExpression",
+      argument
+    }, start);
+    return finishExpressionOrLabelledStatement(parser2, context, scope, privateScope, labels, 0, expression, 1048576, "", start, origin2);
+  }
+  __name(parseAwaitUsingDeclarationOrExpressionStatement, "parseAwaitUsingDeclarationOrExpressionStatement");
+  function parseLexicalDeclaration(parser2, context, scope, privateScope, kind, origin2 = 0, declarationKind, declarationStart = parser2.tokenStart, keywordConsumed = 0) {
+    const start = declarationStart;
+    if (!keywordConsumed)
+      nextToken(parser2, context);
+    const declarations = parseVariableDeclarationList(parser2, context, scope, privateScope, kind, origin2, declarationKind);
     matchOrInsertSemicolon(parser2, context | 32);
     return parser2.finishNode({
       type: "VariableDeclaration",
-      kind: kind & 8 ? "let" : "const",
+      kind: declarationKind != null ? declarationKind : kind & 8 ? "let" : "const",
       declarations
     }, start);
   }
   __name(parseLexicalDeclaration, "parseLexicalDeclaration");
-  function parseVariableStatement(parser2, context, scope, privateScope, origin2) {
+  function parseVariableStatement(parser2, context, scope, privateScope, origin2 = 0) {
     const start = parser2.tokenStart;
     nextToken(parser2, context);
     const declarations = parseVariableDeclarationList(parser2, context, scope, privateScope, 4, origin2);
@@ -11970,14 +12196,21 @@ format:`, anonymisedFormat);
     }, start);
   }
   __name(parseVariableStatement, "parseVariableStatement");
-  function parseVariableDeclarationList(parser2, context, scope, privateScope, kind, origin2) {
+  function parseVariableDeclarationList(parser2, context, scope, privateScope, kind, origin2 = 0, declarationKind) {
     let bindingCount = 1;
-    const list = [
-      parseVariableDeclaration(parser2, context, scope, privateScope, kind, origin2)
-    ];
+    const firstDeclaration = parseVariableDeclaration(parser2, context, scope, privateScope, kind, origin2, declarationKind);
+    const list = [firstDeclaration];
+    const resourceNames = declarationKind && parser2.options.lexical ? /* @__PURE__ */ new Set([firstDeclaration.id.name]) : void 0;
     while (consumeOpt(parser2, context, 18)) {
       bindingCount++;
-      list.push(parseVariableDeclaration(parser2, context, scope, privateScope, kind, origin2));
+      const declaration = parseVariableDeclaration(parser2, context, scope, privateScope, kind, origin2, declarationKind);
+      if (resourceNames) {
+        const { name } = declaration.id;
+        if (resourceNames.has(name))
+          parser2.report(147, name);
+        resourceNames.add(name);
+      }
+      list.push(declaration);
     }
     if (bindingCount > 1 && origin2 & 32 && parser2.getToken() & 262144) {
       parser2.report(61, KeywordDescTable[parser2.getToken() & 255]);
@@ -11985,21 +12218,24 @@ format:`, anonymisedFormat);
     return list;
   }
   __name(parseVariableDeclarationList, "parseVariableDeclarationList");
-  function parseVariableDeclaration(parser2, context, scope, privateScope, kind, origin2) {
+  function parseVariableDeclaration(parser2, context, scope, privateScope, kind, origin2, declarationKind) {
     const { tokenStart } = parser2;
     const token = parser2.getToken();
     let init = null;
+    if (declarationKind && (token & 2097152) === 2097152) {
+      parser2.report(50);
+    }
     const id = parseBindingPattern(parser2, context, scope, privateScope, kind, origin2);
     if (parser2.getToken() === 1077936155) {
       nextToken(parser2, context | 32);
-      init = parseExpression(parser2, context, privateScope, 1, 0, parser2.tokenStart);
-      if (origin2 & 32 || (token & 2097152) === 0) {
-        if (parser2.getToken() === 471156 || parser2.getToken() === 8673330 && (token & 2097152 || (kind & 4) === 0 || context & 1)) {
+      init = parseExpression(parser2, context, privateScope, 1, 0, parser2.tokenStart, origin2);
+      if (origin2 & 32) {
+        if (parser2.getToken() === 471156 || parser2.getToken() === 8673330 && (token & 2097152 || (kind & 4) === 0 || context & 1 || !parser2.options.webcompat)) {
           throw new ParseError(tokenStart, parser2.currentLocation, 60, parser2.getToken() === 471156 ? "of" : "in");
         }
       }
     } else if ((kind & 16 || (token & 2097152) > 0) && (parser2.getToken() & 262144) !== 262144) {
-      parser2.report(59, kind & 16 ? "const" : "destructuring");
+      parser2.report(59, declarationKind != null ? declarationKind : kind & 16 ? "const" : "destructuring");
     }
     return parser2.finishNode({
       type: "VariableDeclarator",
@@ -12018,24 +12254,21 @@ format:`, anonymisedFormat);
     let update = null;
     let destructible = 0;
     let init = null;
-    let isVarDecl = parser2.getToken() === 86088 || parser2.getToken() === 241737 || parser2.getToken() === 86090;
+    let isVarDecl = parser2.getToken() === 86088 || parser2.getToken() === 241737 || parser2.getToken() === 86090 || parser2.getToken() === 209013;
+    let resourceDeclarationKind;
+    let consumedForOfDelimiter = false;
     let right;
     const { tokenStart } = parser2;
     const token = parser2.getToken();
     if (isVarDecl) {
       if (token === 241737) {
         init = parseIdentifier(parser2, context);
-        if (parser2.getToken() & (143360 | 2097152)) {
-          if (parser2.getToken() === 8673330) {
-            if (context & 1)
-              parser2.report(67);
-          } else {
-            init = parser2.finishNode({
-              type: "VariableDeclaration",
-              kind: "let",
-              declarations: parseVariableDeclarationList(parser2, context | 131072, scope, privateScope, 8, 32)
-            }, tokenStart);
-          }
+        if (parser2.getToken() & (143360 | 2097152) && (parser2.getToken() & 20480) !== 20480) {
+          init = parser2.finishNode({
+            type: "VariableDeclaration",
+            kind: "let",
+            declarations: parseVariableDeclarationList(parser2, context | 131072, scope, privateScope, 8, 32)
+          }, tokenStart);
           parser2.assignable = 1;
         } else if (context & 1) {
           parser2.report(67);
@@ -12044,7 +12277,74 @@ format:`, anonymisedFormat);
           parser2.assignable = 1;
           init = parseMemberOrUpdateExpression(parser2, context, privateScope, init, 0, 0, tokenStart);
           if (parser2.getToken() === 471156)
-            parser2.report(115);
+            parser2.report(117);
+        }
+      } else if (token === 209013) {
+        const usingIdentifier = parseIdentifier(parser2, context);
+        if ((parser2.flags & 1) !== 0 || !isResourceBindingStart(parser2.getToken())) {
+          isVarDecl = false;
+          parser2.assignable = 1;
+          init = parseMemberOrUpdateExpression(parser2, context, privateScope, usingIdentifier, 0, 0, tokenStart);
+        } else if (parser2.getToken() === 471156) {
+          const ofStart = parser2.tokenStart;
+          const ofToken = parser2.getToken();
+          const ofValue = parser2.tokenValue;
+          const ofIdentifier = parseIdentifier(parser2, context);
+          if (parser2.getToken() !== 1077936155 && parser2.getToken() !== 8673330 && parser2.getToken() !== 1074790417 && parser2.getToken() !== 18) {
+            isVarDecl = false;
+            consumedForOfDelimiter = true;
+            parser2.assignable = 1;
+            init = usingIdentifier;
+          } else {
+            resourceDeclarationKind = "using";
+            validateBindingIdentifier(parser2, context, 16, ofToken, 0);
+            scope == null ? void 0 : scope.addBlockName(context, ofValue, 16, 32);
+            let declarationInitializer = null;
+            if (parser2.getToken() === 1077936155) {
+              nextToken(parser2, context | 32);
+              declarationInitializer = parseExpression(parser2, context | 131072, privateScope, 1, 0, parser2.tokenStart);
+              if ((parser2.getToken() & 262144) === 262144) {
+                throw new ParseError(ofStart, parser2.currentLocation, 60, parser2.getToken() === 471156 ? "of" : "in");
+              }
+            } else if (parser2.getToken() !== 8673330) {
+              parser2.report(59, resourceDeclarationKind);
+            }
+            const declarations = [
+              parser2.finishNode({
+                type: "VariableDeclarator",
+                id: ofIdentifier,
+                init: declarationInitializer
+              }, ofStart)
+            ];
+            const resourceNames = parser2.options.lexical ? /* @__PURE__ */ new Set([ofValue]) : void 0;
+            while (consumeOpt(parser2, context | 131072, 18)) {
+              const declaration = parseVariableDeclaration(parser2, context | 131072, scope, privateScope, 16, 32, resourceDeclarationKind);
+              if (resourceNames) {
+                const { name } = declaration.id;
+                if (resourceNames.has(name))
+                  parser2.report(147, name);
+                resourceNames.add(name);
+              }
+              declarations.push(declaration);
+            }
+            if (declarations.length > 1 && parser2.getToken() & 262144) {
+              parser2.report(61, KeywordDescTable[parser2.getToken() & 255]);
+            }
+            init = parser2.finishNode({
+              type: "VariableDeclaration",
+              kind: resourceDeclarationKind,
+              declarations
+            }, tokenStart);
+            parser2.assignable = 1;
+          }
+        } else {
+          resourceDeclarationKind = "using";
+          init = parser2.finishNode({
+            type: "VariableDeclaration",
+            kind: resourceDeclarationKind,
+            declarations: parseVariableDeclarationList(parser2, context | 131072, scope, privateScope, 16, 32, resourceDeclarationKind)
+          }, tokenStart);
+          parser2.assignable = 1;
         }
       } else {
         nextToken(parser2, context);
@@ -12058,6 +12358,38 @@ format:`, anonymisedFormat);
           declarations: parseVariableDeclarationList(parser2, context | 131072, scope, privateScope, 16, 32)
         }, tokenStart);
         parser2.assignable = 1;
+      }
+    } else if (token === 209006 && (context & 2048 || context & 2 && context & 8)) {
+      if (context & 524288)
+        parser2.report(179);
+      nextToken(parser2, context | 32);
+      let awaitArgument;
+      if ((parser2.flags & 1) === 0 && parser2.getToken() === 209013) {
+        const usingStart = parser2.tokenStart;
+        const usingIdentifier = parseIdentifier(parser2, context);
+        if ((parser2.flags & 1) === 0 && isResourceBindingStart(parser2.getToken())) {
+          resourceDeclarationKind = "await using";
+          isVarDecl = true;
+          init = parser2.finishNode({
+            type: "VariableDeclaration",
+            kind: resourceDeclarationKind,
+            declarations: parseVariableDeclarationList(parser2, context | 131072, scope, privateScope, 16, 32, resourceDeclarationKind)
+          }, tokenStart);
+          parser2.assignable = 1;
+        } else {
+          awaitArgument = parseMemberOrUpdateExpression(parser2, context, privateScope, usingIdentifier, 0, 0, usingStart);
+        }
+      } else {
+        awaitArgument = parseLeftHandSideExpression(parser2, context, privateScope, 0, 0, 1);
+      }
+      if (!isVarDecl) {
+        if (parser2.getToken() === 8391735)
+          parser2.report(33);
+        parser2.assignable = 2;
+        init = parser2.finishNode({
+          type: "AwaitExpression",
+          argument: awaitArgument
+        }, tokenStart);
       }
     } else if (token === 1074790417) {
       if (forAwait)
@@ -12074,12 +12406,13 @@ format:`, anonymisedFormat);
     } else {
       init = parseLeftHandSideExpression(parser2, context | 131072, privateScope, 1, 0, 1);
     }
-    if ((parser2.getToken() & 262144) === 262144) {
-      if (parser2.getToken() === 471156) {
+    if (consumedForOfDelimiter || (parser2.getToken() & 262144) === 262144) {
+      if (consumedForOfDelimiter || parser2.getToken() === 471156) {
         if (parser2.assignable & 2)
           parser2.report(80, forAwait ? "await" : "of");
         reinterpretToPattern(parser2, init);
-        nextToken(parser2, context | 32);
+        if (!consumedForOfDelimiter)
+          nextToken(parser2, context | 32);
         right = parseExpression(parser2, context, privateScope, 1, 0, parser2.tokenStart);
         consume(parser2, context | 32, 16);
         const body3 = parseIterationStatementBody(parser2, context, scope, privateScope, labels);
@@ -12091,6 +12424,8 @@ format:`, anonymisedFormat);
           await: forAwait
         }, start);
       }
+      if (resourceDeclarationKind)
+        parser2.report(30, "in");
       if (parser2.assignable & 2)
         parser2.report(80, "in");
       reinterpretToPattern(parser2, init);
@@ -12136,31 +12471,104 @@ format:`, anonymisedFormat);
   __name(parseForStatement, "parseForStatement");
   function parseRestrictedIdentifier(parser2, context, scope) {
     if (!isValidIdentifier(context, parser2.getToken()))
-      parser2.report(118);
+      parser2.report(120);
     if ((parser2.getToken() & 537079808) === 537079808)
-      parser2.report(119);
-    scope == null ? void 0 : scope.addBlockName(context, parser2.tokenValue, 8, 0);
+      parser2.report(121);
+    scope == null ? void 0 : scope.addBlockName(context, parser2.tokenValue, 8);
     return parseIdentifier(parser2, context);
   }
   __name(parseRestrictedIdentifier, "parseRestrictedIdentifier");
   function parseImportDeclaration(parser2, context, scope) {
     const start = parser2.tokenStart;
     nextToken(parser2, context);
-    let source = null;
+    let source;
+    let sourceParsed = false;
+    let phase = null;
     const { tokenStart } = parser2;
     let specifiers = [];
     if (parser2.getToken() === 134283267) {
       source = parseLiteral(parser2, context);
     } else {
       if (parser2.getToken() & 143360) {
-        const local = parseRestrictedIdentifier(parser2, context, scope);
-        specifiers = [
-          parser2.finishNode({
-            type: "ImportDefaultSpecifier",
-            local
-          }, tokenStart)
-        ];
-        if (consumeOpt(parser2, context, 18)) {
+        const token = parser2.getToken();
+        const { tokenValue } = parser2;
+        const isPhaseDefer = parser2.features & 2 && (token & -2147483648) === 0 && tokenValue == "defer";
+        const isPhaseSource = parser2.features & 4 && (token & -2147483648) === 0 && tokenValue == "source";
+        if (isPhaseDefer || isPhaseSource) {
+          const phaseOrLocal = parseIdentifier(parser2, context);
+          if (tokenValue === "defer") {
+            if (parser2.getToken() === 8391476) {
+              phase = "defer";
+              specifiers = [parseImportNamespaceSpecifier(parser2, context, scope)];
+            } else if (parser2.getToken() === 209011 || parser2.getToken() === 18) {
+              scope == null ? void 0 : scope.addBlockName(context, tokenValue, 8);
+              specifiers = [
+                parser2.finishNode({
+                  type: "ImportDefaultSpecifier",
+                  local: phaseOrLocal
+                }, tokenStart)
+              ];
+            } else {
+              parser2.report(108);
+            }
+          } else if (parser2.getToken() === 209011) {
+            const fromToken = parser2.getToken();
+            const fromStart = parser2.tokenStart;
+            const fromLocal = parseIdentifier(parser2, context);
+            if (parser2.getToken() === 209011) {
+              validateBindingIdentifier(parser2, context, 16, fromToken, 0);
+              scope == null ? void 0 : scope.addBlockName(context, fromLocal.name, 8);
+              phase = "source";
+              specifiers = [
+                parser2.finishNode({
+                  type: "ImportDefaultSpecifier",
+                  local: fromLocal
+                }, fromStart)
+              ];
+            } else {
+              scope == null ? void 0 : scope.addBlockName(context, tokenValue, 8);
+              specifiers = [
+                parser2.finishNode({
+                  type: "ImportDefaultSpecifier",
+                  local: phaseOrLocal
+                }, tokenStart)
+              ];
+              if (parser2.getToken() !== 134283267)
+                parser2.report(105, "Import");
+              source = parseLiteral(parser2, context);
+              sourceParsed = true;
+            }
+          } else if (parser2.getToken() & 143360) {
+            phase = "source";
+            const localStart = parser2.tokenStart;
+            const local = parseRestrictedIdentifier(parser2, context, scope);
+            specifiers = [
+              parser2.finishNode({
+                type: "ImportDefaultSpecifier",
+                local
+              }, localStart)
+            ];
+          } else if (parser2.getToken() === 18) {
+            scope == null ? void 0 : scope.addBlockName(context, tokenValue, 8);
+            specifiers = [
+              parser2.finishNode({
+                type: "ImportDefaultSpecifier",
+                local: phaseOrLocal
+              }, tokenStart)
+            ];
+          } else {
+            parser2.report(109);
+          }
+        } else {
+          const local = parseRestrictedIdentifier(parser2, context, scope);
+          specifiers = [
+            parser2.finishNode({
+              type: "ImportDefaultSpecifier",
+              local
+            }, tokenStart)
+          ];
+        }
+        if (phase === null && !sourceParsed && consumeOpt(parser2, context, 18)) {
           switch (parser2.getToken()) {
             case 8391476:
               specifiers.push(parseImportNamespaceSpecifier(parser2, context, scope));
@@ -12188,14 +12596,16 @@ format:`, anonymisedFormat);
             parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
         }
       }
-      source = parseModuleSpecifier(parser2, context);
+      if (!sourceParsed)
+        source = parseModuleSpecifier(parser2, context);
     }
     const attributes = parseImportAttributes(parser2, context);
     const node = {
       type: "ImportDeclaration",
       specifiers,
       source,
-      attributes
+      attributes,
+      ...parser2.features & 2 || parser2.features & 4 ? { phase } : null
     };
     matchOrInsertSemicolon(parser2, context | 32);
     return parser2.finishNode(node, start);
@@ -12238,11 +12648,11 @@ format:`, anonymisedFormat);
         local = parseIdentifier(parser2, context);
       } else if (imported.type === "Identifier") {
         validateBindingIdentifier(parser2, context, 16, token, 0);
-        local = imported;
+        local = parser2.cloneIdentifier(imported);
       } else {
         parser2.report(25, KeywordDescTable[77932 & 255]);
       }
-      scope == null ? void 0 : scope.addBlockName(context, tokenValue, 8, 0);
+      scope == null ? void 0 : scope.addBlockName(context, tokenValue, 8);
       specifiers.push(parser2.finishNode({
         type: "ImportSpecifier",
         local,
@@ -12280,17 +12690,24 @@ format:`, anonymisedFormat);
   function parseExportDeclaration(parser2, context, scope) {
     const start = parser2.leadingDecorators.decorators.length ? parser2.leadingDecorators.start : parser2.tokenStart;
     nextToken(parser2, context | 32);
+    const isDefaultExport = consumeOpt(parser2, context | 32, 20561);
+    if (parser2.leadingDecorators.decorators.length && parser2.getToken() !== 86094) {
+      parser2.report(172);
+    }
     const specifiers = [];
     let declaration = null;
     let source = null;
     let attributes = [];
-    if (consumeOpt(parser2, context | 32, 20561)) {
+    if (isDefaultExport) {
       switch (parser2.getToken()) {
         case 86104: {
-          declaration = parseFunctionDeclaration(parser2, context, scope, void 0, 4, 1, 1, 0, parser2.tokenStart);
+          declaration = parseFunctionDeclaration(parser2, context, scope, void 0, 1, 1, 0, parser2.tokenStart, 4);
           break;
         }
-        case 132:
+        case 133:
+          if (!(parser2.features & 1)) {
+            parser2.report(30, "@");
+          }
         case 86094:
           declaration = parseClassDeclaration(parser2, context, scope, void 0, 1);
           break;
@@ -12300,10 +12717,10 @@ format:`, anonymisedFormat);
           const { flags } = parser2;
           if ((flags & 1) === 0) {
             if (parser2.getToken() === 86104) {
-              declaration = parseFunctionDeclaration(parser2, context, scope, void 0, 4, 1, 1, 1, tokenStart);
+              declaration = parseFunctionDeclaration(parser2, context, scope, void 0, 1, 1, 1, tokenStart, 4);
             } else {
               if (parser2.getToken() === 67174411) {
-                declaration = parseAsyncArrowOrCallExpression(parser2, context, void 0, declaration, 1, 1, 0, flags, tokenStart);
+                declaration = parseAsyncArrowOrCallExpression(parser2, context, void 0, declaration, 1, 1, flags, tokenStart);
                 declaration = parseMemberOrUpdateExpression(parser2, context, void 0, declaration, 0, 0, tokenStart);
                 declaration = parseAssignmentExpression(parser2, context, void 0, 0, 0, tokenStart, declaration);
               } else if (parser2.getToken() & 143360) {
@@ -12378,7 +12795,7 @@ format:`, anonymisedFormat);
               tmpExportedNames.push(parser2.tokenValue);
               tmpExportedBindings.push(parser2.tokenValue);
             }
-            exported = local;
+            exported = local.type === "Literal" ? parser2.cloneStringLiteral(local) : parser2.cloneIdentifier(local);
           }
           specifiers.push(parser2.finishNode({
             type: "ExportSpecifier",
@@ -12399,7 +12816,7 @@ format:`, anonymisedFormat);
           }
         } else {
           if (hasLiteralLocal) {
-            parser2.report(172);
+            parser2.report(174);
           }
           if (scope) {
             tmpExportedNames.forEach((n) => parser2.declareUnboundVariable(n));
@@ -12409,12 +12826,15 @@ format:`, anonymisedFormat);
         matchOrInsertSemicolon(parser2, context | 32);
         break;
       }
-      case 132:
+      case 133:
+        if (!(parser2.features & 1)) {
+          parser2.report(30, "@");
+        }
       case 86094:
         declaration = parseClassDeclaration(parser2, context, scope, void 0, 2);
         break;
       case 86104:
-        declaration = parseFunctionDeclaration(parser2, context, scope, void 0, 4, 1, 2, 0, parser2.tokenStart);
+        declaration = parseFunctionDeclaration(parser2, context, scope, void 0, 1, 2, 0, parser2.tokenStart, 4);
         break;
       case 241737:
         declaration = parseLexicalDeclaration(parser2, context, scope, void 0, 8, 64);
@@ -12429,7 +12849,7 @@ format:`, anonymisedFormat);
         const { tokenStart } = parser2;
         nextToken(parser2, context);
         if ((parser2.flags & 1) === 0 && parser2.getToken() === 86104) {
-          declaration = parseFunctionDeclaration(parser2, context, scope, void 0, 4, 1, 2, 1, tokenStart);
+          declaration = parseFunctionDeclaration(parser2, context, scope, void 0, 1, 2, 1, tokenStart, 4);
           break;
         }
       }
@@ -12446,8 +12866,8 @@ format:`, anonymisedFormat);
     return parser2.finishNode(node, start);
   }
   __name(parseExportDeclaration, "parseExportDeclaration");
-  function parseExpression(parser2, context, privateScope, canAssign, inGroup, start) {
-    let expr = parsePrimaryExpression(parser2, context, privateScope, 2, 0, canAssign, inGroup, 1, start);
+  function parseExpression(parser2, context, privateScope, canAssign, inGroup, start, origin2 = 0) {
+    let expr = parsePrimaryExpression(parser2, context, privateScope, 2, 0, canAssign, inGroup, 1, start, origin2);
     expr = parseMemberOrUpdateExpression(parser2, context, privateScope, expr, inGroup, 0, start);
     return parseAssignmentExpression(parser2, context, privateScope, inGroup, 0, start, expr);
   }
@@ -12472,6 +12892,8 @@ format:`, anonymisedFormat);
     const token = parser2.getToken();
     if ((token & 4194304) === 4194304) {
       if (parser2.assignable & 2)
+        parser2.report(26);
+      if ((token & 524288) === 524288 && parser2.assignable & 4)
         parser2.report(26);
       if (!isPattern && token === 1077936155 && left.type === "ArrayExpression" || left.type === "ObjectExpression") {
         reinterpretToPattern(parser2, left);
@@ -12540,7 +12962,7 @@ format:`, anonymisedFormat);
       t = parser2.getToken();
       precedence = t & 3840;
       if (t & 524288 && operator & 268435456 || operator & 524288 && t & 268435456) {
-        parser2.report(165);
+        parser2.report(167);
       }
       if (precedence + ((t === 8391735) << 8) - ((bit === t) << 12) <= minPrecedence)
         break;
@@ -12568,9 +12990,9 @@ format:`, anonymisedFormat);
       parser2.report(33);
     if (context & 1 && unaryOperator === 16863276) {
       if (arg.type === "Identifier") {
-        parser2.report(121);
+        parser2.report(123);
       } else if (isPropertyWithPrivateFieldKey(arg)) {
-        parser2.report(127);
+        parser2.report(129);
       }
     }
     parser2.assignable = 2;
@@ -12600,7 +13022,7 @@ format:`, anonymisedFormat);
       }
     }
     if (!inNew && parser2.getToken() === 67174411) {
-      return parseAsyncArrowOrCallExpression(parser2, context, privateScope, expr, canAssign, 1, 0, flags, start);
+      return parseAsyncArrowOrCallExpression(parser2, context, privateScope, expr, canAssign, 1, flags, start);
     }
     if (parser2.getToken() === 10) {
       classifyIdentifier(parser2, context, token);
@@ -12625,7 +13047,7 @@ format:`, anonymisedFormat);
       if (!canAssign)
         parser2.report(26);
       if (parser2.getToken() === 22)
-        parser2.report(124);
+        parser2.report(126);
       let argument = null;
       let delegate = false;
       if ((parser2.flags & 1) === 0) {
@@ -12649,19 +13071,24 @@ format:`, anonymisedFormat);
   }
   __name(parseYieldExpressionOrIdentifier, "parseYieldExpressionOrIdentifier");
   function parseAwaitExpressionOrIdentifier(parser2, context, privateScope, inNew, inGroup, start) {
-    if (inGroup)
+    var _a2;
+    if (inGroup) {
+      if ((parser2.destructible & 128) === 0) {
+        (_a2 = parser2.firstAwaitLocation) != null ? _a2 : parser2.firstAwaitLocation = { start, end: parser2.currentLocation };
+      }
       parser2.destructible |= 128;
+    }
     if (context & 524288)
-      parser2.report(177);
+      parser2.report(179);
     const possibleIdentifierOrArrowFunc = parseIdentifierOrArrow(parser2, context, privateScope);
     const isIdentifier = possibleIdentifierOrArrowFunc.type === "ArrowFunctionExpression" || (parser2.getToken() & 65536) === 0;
     if (isIdentifier) {
       if (context & 2048)
-        throw new ParseError(start, { index: parser2.startIndex, line: parser2.startLine, column: parser2.startColumn }, 176);
+        throw new ParseError(start, { index: parser2.startIndex, line: parser2.startLine, column: parser2.startColumn }, 178);
       if (context & 2)
-        throw new ParseError(start, { index: parser2.startIndex, line: parser2.startLine, column: parser2.startColumn }, 110);
+        throw new ParseError(start, { index: parser2.startIndex, line: parser2.startLine, column: parser2.startColumn }, 112);
       if (context & 8192 && context & 2048)
-        throw new ParseError(start, { index: parser2.startIndex, line: parser2.startLine, column: parser2.startColumn }, 110);
+        throw new ParseError(start, { index: parser2.startIndex, line: parser2.startLine, column: parser2.startColumn }, 112);
       return possibleIdentifierOrArrowFunc;
     }
     if (context & 8192) {
@@ -12684,8 +13111,9 @@ format:`, anonymisedFormat);
     return possibleIdentifierOrArrowFunc;
   }
   __name(parseAwaitExpressionOrIdentifier, "parseAwaitExpressionOrIdentifier");
-  function parseFunctionBody(parser2, context, scope, privateScope, origin2, funcNameToken, functionScope) {
+  function parseFunctionBody(parser2, context, scope, privateScope, funcNameToken, functionScope, origin2 = 0) {
     const { tokenStart } = parser2;
+    parser2.flags &= -4161;
     consume(parser2, context | 32, 2162700);
     const body = [];
     if (parser2.getToken() !== 1074790415) {
@@ -12711,22 +13139,26 @@ format:`, anonymisedFormat);
       if (context & 1) {
         if (funcNameToken) {
           if ((funcNameToken & 537079808) === 537079808) {
-            parser2.report(119);
+            parser2.report(121);
           }
           if ((funcNameToken & 36864) === 36864) {
             parser2.report(40);
           }
         }
         if (parser2.flags & 512)
-          parser2.report(119);
-        if (parser2.flags & 256)
-          parser2.report(118);
+          parser2.report(121);
+        if (parser2.flags & 256) {
+          if (parser2.strictReservedRange) {
+            throw new ParseError(parser2.strictReservedRange[0], parser2.strictReservedRange[1], 120);
+          }
+          parser2.report(120);
+        }
       }
     }
     parser2.flags = (parser2.flags | 512 | 256 | 64 | 4096) ^ (512 | 256 | 64 | 4096);
     parser2.destructible = (parser2.destructible | 256) ^ 256;
     while (parser2.getToken() !== 1074790415) {
-      body.push(parseStatementListItem(parser2, context, scope, privateScope, 4, {}));
+      body.push(parseStatementListItem(parser2, context, scope, privateScope, {}, 4));
     }
     consume(parser2, origin2 & (16 | 8) ? context | 32 : context, 1074790415);
     parser2.flags &= -4289;
@@ -12742,8 +13174,8 @@ format:`, anonymisedFormat);
     const { tokenStart } = parser2;
     nextToken(parser2, context);
     switch (parser2.getToken()) {
-      case 67108990:
-        parser2.report(167);
+      case 67108991:
+        parser2.report(169);
       case 67174411: {
         if ((context & 512) === 0)
           parser2.report(28);
@@ -12791,10 +13223,10 @@ format:`, anonymisedFormat);
       switch (parser2.getToken()) {
         case 67108877: {
           nextToken(parser2, (context | 262144 | 8) ^ 8);
-          if (context & 16 && parser2.getToken() === 130 && parser2.tokenValue === "super") {
-            parser2.report(173);
+          if (context & 16 && parser2.getToken() === 131 && parser2.tokenValue === "super") {
+            parser2.report(175);
           }
-          parser2.assignable = 1;
+          parser2.assignable = (parser2.flags & 2048) === 2048 ? 2 : 1;
           const property = parsePropertyOrPrivatePropertyName(parser2, context | 64, privateScope);
           expr = parser2.finishNode({
             type: "MemberExpression",
@@ -12806,6 +13238,10 @@ format:`, anonymisedFormat);
           break;
         }
         case 69271571: {
+          if ((parser2.flags & 8192) === 8192) {
+            parser2.flags = (parser2.flags | 8192) ^ 8192;
+            return expr;
+          }
           let restoreHasOptionalChaining = false;
           if ((parser2.flags & 2048) === 2048) {
             restoreHasOptionalChaining = true;
@@ -12815,7 +13251,7 @@ format:`, anonymisedFormat);
           const { tokenStart } = parser2;
           const property = parseExpressions(parser2, context, privateScope, inGroup, 1, tokenStart);
           consume(parser2, context, 20);
-          parser2.assignable = 1;
+          parser2.assignable = restoreHasOptionalChaining ? 2 : 1;
           expr = parser2.finishNode({
             type: "MemberExpression",
             object: expr,
@@ -12839,7 +13275,11 @@ format:`, anonymisedFormat);
             parser2.flags = (parser2.flags | 2048) ^ 2048;
           }
           const args = parseArguments(parser2, context, privateScope, inGroup);
-          parser2.assignable = 2;
+          if (!(context & 1) && parser2.options.webcompat) {
+            parser2.assignable = 4;
+          } else {
+            parser2.assignable = 2;
+          }
           expr = parser2.finishNode({
             type: "CallExpression",
             callee: expr,
@@ -12851,7 +13291,7 @@ format:`, anonymisedFormat);
           }
           break;
         }
-        case 67108990: {
+        case 67108991: {
           nextToken(parser2, (context | 262144 | 8) ^ 8);
           parser2.flags |= 2048;
           parser2.assignable = 2;
@@ -12860,7 +13300,7 @@ format:`, anonymisedFormat);
         }
         default:
           if ((parser2.flags & 2048) === 2048) {
-            parser2.report(166);
+            parser2.report(168);
           }
           parser2.assignable = 2;
           expr = parser2.finishNode({
@@ -12905,7 +13345,11 @@ format:`, anonymisedFormat);
       }, start);
     } else if (parser2.getToken() === 67174411) {
       const args = parseArguments(parser2, context, privateScope, 0);
-      parser2.assignable = 2;
+      if (!(context & 1) && parser2.options.webcompat) {
+        parser2.assignable = 4;
+      } else {
+        parser2.assignable = 2;
+      }
       node = parser2.finishNode({
         type: "CallExpression",
         callee: expr,
@@ -12930,10 +13374,10 @@ format:`, anonymisedFormat);
   }
   __name(parseOptionalChain, "parseOptionalChain");
   function parsePropertyOrPrivatePropertyName(parser2, context, privateScope) {
-    if ((parser2.getToken() & 143360) === 0 && parser2.getToken() !== -2147483528 && parser2.getToken() !== -2147483527 && parser2.getToken() !== 130) {
-      parser2.report(160);
+    if ((parser2.getToken() & 143360) === 0 && parser2.getToken() !== -2147483527 && parser2.getToken() !== -2147483526 && parser2.getToken() !== 131) {
+      parser2.report(162);
     }
-    return parser2.getToken() === 130 ? parsePrivateIdentifier(parser2, context, privateScope, 0) : parseIdentifier(parser2, context);
+    return parser2.getToken() === 131 ? parsePrivateIdentifier(parser2, context, privateScope, 0) : parseIdentifier(parser2, context);
   }
   __name(parsePropertyOrPrivatePropertyName, "parsePropertyOrPrivatePropertyName");
   function parseUpdateExpressionPrefixed(parser2, context, privateScope, inNew, isLHS, start) {
@@ -12956,7 +13400,7 @@ format:`, anonymisedFormat);
     }, start);
   }
   __name(parseUpdateExpressionPrefixed, "parseUpdateExpressionPrefixed");
-  function parsePrimaryExpression(parser2, context, privateScope, kind, inNew, canAssign, inGroup, isLHS, start) {
+  function parsePrimaryExpression(parser2, context, privateScope, kind, inNew, canAssign, inGroup, isLHS, start, origin2 = 0) {
     if ((parser2.getToken() & 143360) === 143360) {
       switch (parser2.getToken()) {
         case 209006:
@@ -12976,13 +13420,13 @@ format:`, anonymisedFormat);
         if ((token & 36864) === 36864) {
           parser2.flags |= 256;
         }
-        return parseArrowFromIdentifier(parser2, context, privateScope, tokenValue, expr, inNew, canAssign, 0, start);
+        return parseArrowFromIdentifier(parser2, context, privateScope, tokenValue, expr, inNew, canAssign, 0, start, origin2);
       }
       if (context & 16 && !(context & 32768) && !(context & 8192) && parser2.tokenValue === "arguments")
-        parser2.report(130);
+        parser2.report(132);
       if ((token & 255) === (241737 & 255)) {
         if (context & 1)
-          parser2.report(113);
+          parser2.report(115);
         if (kind & (8 | 16))
           parser2.report(100);
       }
@@ -13011,7 +13455,7 @@ format:`, anonymisedFormat);
       case 69271571:
         return parseArrayLiteral(parser2, context, privateScope, canAssign ? 0 : 1, inGroup);
       case 67174411:
-        return parseParenthesizedExpression(parser2, context | 64, privateScope, canAssign, 1, 0, start);
+        return parseParenthesizedExpression(parser2, context | 64, privateScope, canAssign, 1, start, origin2);
       case 86021:
       case 86022:
       case 86023:
@@ -13020,7 +13464,10 @@ format:`, anonymisedFormat);
         return parseThisExpression(parser2, context);
       case 65540:
         return parseRegExpLiteral(parser2, context);
-      case 132:
+      case 133:
+        if (!(parser2.features & 1)) {
+          parser2.report(30, "@");
+        }
       case 86094:
         return parseClassExpression(parser2, context, privateScope, inGroup, start);
       case 86109:
@@ -13031,9 +13478,9 @@ format:`, anonymisedFormat);
         return parseTemplate(parser2, context, privateScope);
       case 86107:
         return parseNewExpression(parser2, context, privateScope, inGroup);
-      case 134283388:
+      case 134283389:
         return parseBigIntLiteral(parser2, context);
-      case 130:
+      case 131:
         return parsePrivateIdentifier(parser2, context, privateScope, 0);
       case 86106:
         return parseImportCallOrMetaExpression(parser2, context, privateScope, inNew, inGroup, start);
@@ -13050,24 +13497,37 @@ format:`, anonymisedFormat);
   function parseImportCallOrMetaExpression(parser2, context, privateScope, inNew, inGroup, start) {
     let expr = parseIdentifier(parser2, context);
     if (parser2.getToken() === 67108877) {
-      return parseImportMetaExpression(parser2, context, expr, start);
+      return parseImportMetaExpression(parser2, context, expr, start, privateScope, inGroup, inNew);
     }
     if (inNew)
-      parser2.report(142);
+      parser2.report(144);
     expr = parseImportExpression(parser2, context, privateScope, inGroup, start);
     parser2.assignable = 2;
     return parseMemberOrUpdateExpression(parser2, context, privateScope, expr, inGroup, 0, start);
   }
   __name(parseImportCallOrMetaExpression, "parseImportCallOrMetaExpression");
-  function parseImportMetaExpression(parser2, context, meta, start) {
-    if ((context & 2) === 0)
-      parser2.report(169);
+  function parseImportMetaExpression(parser2, context, meta, start, privateScope, inGroup = 0, inNew = 0) {
+    const propertyStart = parser2.tokenStart;
+    const propertyEnd = parser2.currentLocation;
     nextToken(parser2, context);
     const token = parser2.getToken();
-    if (token !== 209030 && parser2.tokenValue !== "meta") {
-      parser2.report(174);
+    const isPhaseDefer = parser2.features & 2 && (token & -2147483648) === 0 && parser2.tokenValue === "defer";
+    const isPhaseSource = parser2.features & 4 && (token & -2147483648) === 0 && parser2.tokenValue === "source";
+    if (isPhaseDefer || isPhaseSource) {
+      if (inNew)
+        parser2.report(144);
+      nextToken(parser2, context);
+      const expression = parseImportExpression(parser2, context, privateScope, inGroup, start, parser2.tokenValue);
+      parser2.assignable = 2;
+      return expression;
+    }
+    if ((context & 2) === 0) {
+      throw new ParseError(propertyStart, propertyEnd, 171);
+    }
+    if (token !== 209031 && parser2.tokenValue !== "meta") {
+      parser2.report(176);
     } else if (token & -2147483648) {
-      parser2.report(175);
+      parser2.report(177);
     }
     parser2.assignable = 2;
     return parser2.finishNode({
@@ -13077,10 +13537,10 @@ format:`, anonymisedFormat);
     }, start);
   }
   __name(parseImportMetaExpression, "parseImportMetaExpression");
-  function parseImportExpression(parser2, context, privateScope, inGroup, start) {
+  function parseImportExpression(parser2, context, privateScope, inGroup, start, phase = null) {
     consume(parser2, context | 32, 67174411);
     if (parser2.getToken() === 14)
-      parser2.report(143);
+      parser2.report(145);
     const source = parseExpression(parser2, context, privateScope, 1, inGroup, parser2.tokenStart);
     let options = null;
     if (parser2.getToken() === 18) {
@@ -13094,7 +13554,8 @@ format:`, anonymisedFormat);
     const node = {
       type: "ImportExpression",
       source,
-      options
+      options,
+      ...parser2.features & 2 || parser2.features & 4 ? { phase } : null
     };
     consume(parser2, context, 16);
     return parser2.finishNode(node, start);
@@ -13113,7 +13574,7 @@ format:`, anonymisedFormat);
       const value = parseStringLiteral(parser2, context);
       const keyContent = key.type === "Literal" ? key.value : key.name;
       if (keysContent.has(keyContent)) {
-        parser2.report(145, `${keyContent}`);
+        parser2.report(147, keyContent);
       }
       keysContent.add(keyContent);
       attributes.push(parser2.finishNode({
@@ -13147,21 +13608,12 @@ format:`, anonymisedFormat);
     }
   }
   __name(parseIdentifierOrStringLiteral, "parseIdentifierOrStringLiteral");
-  function validateStringWellFormed(parser2, str) {
-    const len = str.length;
-    for (let i2 = 0; i2 < len; i2++) {
-      const code = str.charCodeAt(i2);
-      if ((code & 64512) !== 55296)
-        continue;
-      if (code > 56319 || ++i2 >= len || (str.charCodeAt(i2) & 64512) !== 56320) {
-        parser2.report(171, JSON.stringify(str.charAt(i2--)));
-      }
-    }
-  }
-  __name(validateStringWellFormed, "validateStringWellFormed");
   function parseModuleExportName(parser2, context) {
     if (parser2.getToken() === 134283267) {
-      validateStringWellFormed(parser2, parser2.tokenValue);
+      const value = parser2.tokenValue;
+      if (!value.isWellFormed()) {
+        parser2.report(173);
+      }
       return parseLiteral(parser2, context);
     } else if (parser2.getToken() & 143360) {
       return parseIdentifier(parser2, context);
@@ -13220,6 +13672,7 @@ format:`, anonymisedFormat);
       consume(parser2, context, 67174409);
       quasis.push(parseTemplateElement(parser2, tokenValue2, tokenRaw2, tokenStart2, true));
     }
+    parser2.assignable = 2;
     return parser2.finishNode({
       type: "TemplateLiteral",
       expressions,
@@ -13237,11 +13690,16 @@ format:`, anonymisedFormat);
       tail
     }, start);
     const tailSize = tail ? 1 : 2;
-    if (parser2.options.ranges) {
-      node.start += 1;
-      node.range[0] += 1;
-      node.end -= tailSize;
-      node.range[1] -= tailSize;
+    const { ranges } = parser2.options;
+    if (ranges) {
+      if (ranges.start)
+        node.start += 1;
+      if (ranges.end)
+        node.end -= tailSize;
+      if (ranges.range) {
+        node.range[0] += 1;
+        node.range[1] -= tailSize;
+      }
     }
     if (parser2.options.loc) {
       node.loc.start.column += 1;
@@ -13297,35 +13755,35 @@ format:`, anonymisedFormat);
   __name(parseIdentifier, "parseIdentifier");
   function parseLiteral(parser2, context) {
     const { tokenValue, tokenRaw, tokenStart } = parser2;
-    if (parser2.getToken() === 134283388) {
+    if (parser2.getToken() === 134283389) {
       return parseBigIntLiteral(parser2, context);
+    }
+    const node = {
+      type: "Literal",
+      value: tokenValue
+    };
+    if (parser2.options.raw) {
+      node.raw = tokenRaw;
     }
     nextToken(parser2, context);
     parser2.assignable = 2;
-    return parser2.finishNode(parser2.options.raw ? {
-      type: "Literal",
-      value: tokenValue,
-      raw: tokenRaw
-    } : {
-      type: "Literal",
-      value: tokenValue
-    }, tokenStart);
+    return parser2.finishNode(node, tokenStart);
   }
   __name(parseLiteral, "parseLiteral");
   function parseNullOrTrueOrFalseLiteral(parser2, context) {
     const start = parser2.tokenStart;
     const raw = KeywordDescTable[parser2.getToken() & 255];
     const value = parser2.getToken() === 86023 ? null : raw === "true";
-    nextToken(parser2, context);
-    parser2.assignable = 2;
-    return parser2.finishNode(parser2.options.raw ? {
-      type: "Literal",
-      value,
-      raw
-    } : {
+    const node = {
       type: "Literal",
       value
-    }, start);
+    };
+    if (parser2.options.raw) {
+      node.raw = raw;
+    }
+    nextToken(parser2, context);
+    parser2.assignable = 2;
+    return parser2.finishNode(node, start);
   }
   __name(parseNullOrTrueOrFalseLiteral, "parseNullOrTrueOrFalseLiteral");
   function parseThisExpression(parser2, context) {
@@ -13337,7 +13795,7 @@ format:`, anonymisedFormat);
     }, tokenStart);
   }
   __name(parseThisExpression, "parseThisExpression");
-  function parseFunctionDeclaration(parser2, context, scope, privateScope, origin2, allowGen, flags, isAsync, start) {
+  function parseFunctionDeclaration(parser2, context, scope, privateScope, allowGen, flags, isAsync, start, origin2 = 0) {
     nextToken(parser2, context | 32);
     const isGenerator = allowGen ? optionalBit(parser2, context, 8391476) : 0;
     let id = null;
@@ -13376,7 +13834,7 @@ format:`, anonymisedFormat);
     functionScope = functionScope == null ? void 0 : functionScope.createChildScope(256);
     const params = parseFormalParametersOrFormalList(parser2, (context | 8192) & -524289, functionScope, privateScope, 0, 1);
     const modifierFlags = 8 | 4 | 128 | 524288;
-    const body = parseFunctionBody(parser2, (context | modifierFlags) ^ modifierFlags | 32768 | 4096, functionScope == null ? void 0 : functionScope.createChildScope(64), privateScope, 8, funcNameToken, functionScope);
+    const body = parseFunctionBody(parser2, (context | modifierFlags) ^ modifierFlags | 32768 | 4096, functionScope == null ? void 0 : functionScope.createChildScope(64), privateScope, funcNameToken, functionScope, 8);
     return parser2.finishNode({
       type: "FunctionDeclaration",
       id,
@@ -13404,7 +13862,7 @@ format:`, anonymisedFormat);
     context = (context | modifierFlags) ^ modifierFlags | 65536 | generatorAndAsyncFlags | (isGenerator ? 0 : 262144);
     scope = scope == null ? void 0 : scope.createChildScope(256);
     const params = parseFormalParametersOrFormalList(parser2, (context | 8192) & -524289, scope, privateScope, inGroup, 1);
-    const body = parseFunctionBody(parser2, context & -131229 | 32768 | 4096, scope == null ? void 0 : scope.createChildScope(64), privateScope, 0, funcNameToken, scope);
+    const body = parseFunctionBody(parser2, context & -131229 | 32768 | 4096, scope == null ? void 0 : scope.createChildScope(64), privateScope, funcNameToken, scope);
     parser2.assignable = 2;
     return parser2.finishNode({
       type: "FunctionExpression",
@@ -13417,7 +13875,7 @@ format:`, anonymisedFormat);
   }
   __name(parseFunctionExpression, "parseFunctionExpression");
   function parseArrayLiteral(parser2, context, privateScope, skipInitializer, inGroup) {
-    const expr = parseArrayExpressionOrPattern(parser2, context, void 0, privateScope, skipInitializer, inGroup, 0, 2, 0);
+    const expr = parseArrayExpressionOrPattern(parser2, context, void 0, privateScope, skipInitializer, inGroup, 0, 2);
     if (parser2.destructible & 64) {
       parser2.report(63);
     }
@@ -13427,7 +13885,7 @@ format:`, anonymisedFormat);
     return expr;
   }
   __name(parseArrayLiteral, "parseArrayLiteral");
-  function parseArrayExpressionOrPattern(parser2, context, scope, privateScope, skipInitializer, inGroup, isPattern, kind, origin2) {
+  function parseArrayExpressionOrPattern(parser2, context, scope, privateScope, skipInitializer, inGroup, isPattern, kind, origin2 = 0) {
     const { tokenStart: start } = parser2;
     nextToken(parser2, context | 32);
     const elements = [];
@@ -13474,7 +13932,7 @@ format:`, anonymisedFormat);
                 destructible |= 16;
               left = parseAssignmentExpression(parser2, context, privateScope, inGroup, isPattern, tokenStart, left);
             } else if (parser2.getToken() !== 1077936155) {
-              destructible |= parser2.assignable & 2 ? 16 : 32;
+              destructible |= parser2.assignable & 1 ? 32 : 16;
             }
           }
         } else if (token & 2097152) {
@@ -13493,11 +13951,11 @@ format:`, anonymisedFormat);
             if (parser2.getToken() !== 18 && parser2.getToken() !== 20) {
               left = parseAssignmentExpression(parser2, context, privateScope, inGroup, isPattern, tokenStart, left);
             } else if (parser2.getToken() !== 1077936155) {
-              destructible |= parser2.assignable & 2 ? 16 : 32;
+              destructible |= parser2.assignable & 1 ? 32 : 16;
             }
           }
         } else if (token === 14) {
-          left = parseSpreadOrRestElement(parser2, context, scope, privateScope, 20, kind, origin2, 0, inGroup, isPattern);
+          left = parseSpreadOrRestElement(parser2, context, scope, privateScope, 20, kind, 0, inGroup, isPattern, origin2);
           destructible |= parser2.destructible;
           if (parser2.getToken() !== 18 && parser2.getToken() !== 20)
             parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
@@ -13556,7 +14014,7 @@ format:`, anonymisedFormat);
     }, start);
   }
   __name(parseArrayOrObjectAssignmentPattern, "parseArrayOrObjectAssignmentPattern");
-  function parseSpreadOrRestElement(parser2, context, scope, privateScope, closingToken, kind, origin2, isAsync, inGroup, isPattern) {
+  function parseSpreadOrRestElement(parser2, context, scope, privateScope, closingToken, kind, isAsync, inGroup, isPattern, origin2 = 0) {
     const { tokenStart: start } = parser2;
     nextToken(parser2, context | 32);
     let argument = null;
@@ -13591,7 +14049,7 @@ format:`, anonymisedFormat);
         if (parser2.destructible & 8)
           parser2.report(71);
         argument = parseMemberOrUpdateExpression(parser2, context, privateScope, argument, inGroup, 0, tokenStart);
-        destructible |= parser2.assignable & 2 ? 16 : 0;
+        destructible |= parser2.assignable & 1 ? 0 : 16;
         if ((parser2.getToken() & 4194304) === 4194304) {
           if (parser2.getToken() !== 1077936155)
             destructible |= 16;
@@ -13603,7 +14061,7 @@ format:`, anonymisedFormat);
           if (consumeOpt(parser2, context | 32, 22)) {
             argument = parseConditionalExpression(parser2, context, privateScope, argument, tokenStart);
           }
-          destructible |= parser2.assignable & 2 ? 16 : 32;
+          destructible |= parser2.assignable & 1 ? 32 : 16;
         }
       } else {
         destructible |= closingToken === 1074790415 && token !== 1077936155 ? 16 : parser2.destructible;
@@ -13628,7 +14086,7 @@ format:`, anonymisedFormat);
       }
       parser2.destructible = destructible;
       if (parser2.getToken() !== closingToken && parser2.getToken() !== 18)
-        parser2.report(161);
+        parser2.report(163);
       return parser2.finishNode({
         type: isPattern ? "RestElement" : "SpreadElement",
         argument
@@ -13670,7 +14128,7 @@ format:`, anonymisedFormat);
     let scope = parser2.createScopeIfLexical(256);
     const params = parseMethodFormals(parser2, (context | 8192) & -524289, scope, privateScope, kind, 1, inGroup);
     scope = scope == null ? void 0 : scope.createChildScope(64);
-    const body = parseFunctionBody(parser2, context & -655373 | 32768 | 4096, scope, privateScope, 0, void 0, scope == null ? void 0 : scope.parent);
+    const body = parseFunctionBody(parser2, context & -655373 | 32768 | 4096, scope, privateScope, void 0, scope == null ? void 0 : scope.parent);
     return parser2.finishNode({
       type: "FunctionExpression",
       params,
@@ -13682,7 +14140,7 @@ format:`, anonymisedFormat);
   }
   __name(parseMethodDefinition, "parseMethodDefinition");
   function parseObjectLiteral(parser2, context, privateScope, skipInitializer, inGroup) {
-    const expr = parseObjectLiteralOrPattern(parser2, context, void 0, privateScope, skipInitializer, inGroup, 0, 2, 0);
+    const expr = parseObjectLiteralOrPattern(parser2, context, void 0, privateScope, skipInitializer, inGroup, 0, 2);
     if (parser2.destructible & 64) {
       parser2.report(63);
     }
@@ -13692,7 +14150,7 @@ format:`, anonymisedFormat);
     return expr;
   }
   __name(parseObjectLiteral, "parseObjectLiteral");
-  function parseObjectLiteralOrPattern(parser2, context, scope, privateScope, skipInitializer, inGroup, isPattern, kind, origin2) {
+  function parseObjectLiteralOrPattern(parser2, context, scope, privateScope, skipInitializer, inGroup, isPattern, kind, origin2 = 0) {
     const { tokenStart: start } = parser2;
     nextToken(parser2, context);
     const properties = [];
@@ -13703,13 +14161,13 @@ format:`, anonymisedFormat);
       const { tokenValue, tokenStart } = parser2;
       const token = parser2.getToken();
       if (token === 14) {
-        properties.push(parseSpreadOrRestElement(parser2, context, scope, privateScope, 1074790415, kind, origin2, 0, inGroup, isPattern));
+        properties.push(parseSpreadOrRestElement(parser2, context, scope, privateScope, 1074790415, kind, 0, inGroup, isPattern, origin2));
       } else {
         let state = 0;
         let key = null;
         let value;
-        if (parser2.getToken() & 143360 || parser2.getToken() === -2147483528 || parser2.getToken() === -2147483527) {
-          if (parser2.getToken() === -2147483527)
+        if (parser2.getToken() & 143360 || parser2.getToken() === -2147483527 || parser2.getToken() === -2147483526) {
+          if (parser2.getToken() === -2147483526)
             destructible |= 16;
           key = parseIdentifier(parser2, context);
           if (parser2.getToken() === 18 || parser2.getToken() === 1074790415 || parser2.getToken() === 1077936155) {
@@ -13726,12 +14184,12 @@ format:`, anonymisedFormat);
               destructible |= parser2.destructible & 256 ? 256 : 0 | parser2.destructible & 128 ? 128 : 0;
               value = parser2.finishNode({
                 type: "AssignmentPattern",
-                left: parser2.options.uniqueKeyInPattern ? Object.assign({}, key) : key,
+                left: parser2.cloneIdentifier(key),
                 right
               }, tokenStart);
             } else {
-              destructible |= (token === 209006 ? 128 : 0) | (token === -2147483528 ? 16 : 0);
-              value = parser2.options.uniqueKeyInPattern ? Object.assign({}, key) : key;
+              destructible |= (token === 209006 ? 128 : 0) | (token === -2147483527 ? 16 : 0);
+              value = parser2.cloneIdentifier(key);
             }
           } else if (consumeOpt(parser2, context | 32, 21)) {
             const { tokenStart: tokenStart2 } = parser2;
@@ -13793,7 +14251,7 @@ format:`, anonymisedFormat);
                   if (consumeOpt(parser2, context | 32, 22)) {
                     value = parseConditionalExpression(parser2, context, privateScope, value, tokenStart2);
                   }
-                  destructible |= parser2.assignable & 2 ? 16 : 32;
+                  destructible |= parser2.assignable & 1 ? 32 : 16;
                 }
               }
             } else {
@@ -13822,11 +14280,11 @@ format:`, anonymisedFormat);
             value = parseMethodDefinition(parser2, context, privateScope, state, inGroup, parser2.tokenStart);
           } else if (parser2.getToken() & 143360) {
             destructible |= 16;
-            if (token === -2147483528)
+            if (token === -2147483527)
               parser2.report(95);
             if (token === 209005) {
               if (parser2.flags & 1)
-                parser2.report(132);
+                parser2.report(134);
               state |= 16 | 1;
             } else if (token === 209008) {
               state |= 256;
@@ -13872,7 +14330,7 @@ format:`, anonymisedFormat);
             key = parseLiteral(parser2, context);
             value = parseMethodDefinition(parser2, context, privateScope, state, inGroup, parser2.tokenStart);
           } else {
-            parser2.report(133);
+            parser2.report(135);
           }
         } else if ((parser2.getToken() & 134217728) === 134217728) {
           key = parseLiteral(parser2, context);
@@ -13924,7 +14382,7 @@ format:`, anonymisedFormat);
                   if (consumeOpt(parser2, context | 32, 22)) {
                     value = parseConditionalExpression(parser2, context, privateScope, value, tokenStart2);
                   }
-                  destructible |= parser2.assignable & 2 ? 16 : 32;
+                  destructible |= parser2.assignable & 1 ? 32 : 16;
                 }
               }
             } else {
@@ -13947,9 +14405,9 @@ format:`, anonymisedFormat);
           } else if (parser2.getToken() === 67174411) {
             state |= 1;
             value = parseMethodDefinition(parser2, context, privateScope, state, inGroup, parser2.tokenStart);
-            destructible = parser2.assignable | 16;
+            destructible = 16;
           } else {
-            parser2.report(134);
+            parser2.report(136);
           }
         } else if (parser2.getToken() === 69271571) {
           key = parseComputedPropertyName(parser2, context, privateScope, inGroup);
@@ -13964,7 +14422,7 @@ format:`, anonymisedFormat);
               const token2 = parser2.getToken();
               value = parseMemberOrUpdateExpression(parser2, context, privateScope, value, inGroup, 0, tokenStart2);
               if ((parser2.getToken() & 4194304) === 4194304) {
-                destructible |= parser2.assignable & 2 ? 16 : token2 === 1077936155 ? 0 : 32;
+                destructible |= parser2.assignable & 1 ? token2 === 1077936155 ? 0 : 32 : 16;
                 value = parseAssignmentExpressionOrPattern(parser2, context, privateScope, inGroup, isPattern, tokenStart2, value);
               } else if (parser2.getToken() === 18 || parser2.getToken() === 1074790415) {
                 if (token2 === 1077936155 || token2 === 1074790415 || token2 === 18) {
@@ -14003,7 +14461,7 @@ format:`, anonymisedFormat);
                   if (consumeOpt(parser2, context | 32, 22)) {
                     value = parseConditionalExpression(parser2, context, privateScope, value, tokenStart2);
                   }
-                  destructible |= parser2.assignable & 2 ? 16 : 32;
+                  destructible |= parser2.assignable & 1 ? 32 : 16;
                 }
               }
             } else {
@@ -14053,7 +14511,7 @@ format:`, anonymisedFormat);
             key = parseComputedPropertyName(parser2, context, privateScope, inGroup);
             value = parseMethodDefinition(parser2, context, privateScope, state, inGroup, parser2.tokenStart);
           } else {
-            parser2.report(126);
+            parser2.report(128);
           }
         } else {
           parser2.report(30, KeywordDescTable[token & 255]);
@@ -14090,9 +14548,12 @@ format:`, anonymisedFormat);
   }
   __name(parseObjectLiteralOrPattern, "parseObjectLiteralOrPattern");
   function parseMethodFormals(parser2, context, scope, privateScope, kind, type, inGroup) {
+    var _a2;
     consume(parser2, context, 67174411);
     const params = [];
     parser2.flags = (parser2.flags | 128) ^ 128;
+    parser2.strictReservedRange = null;
+    parser2.firstAwaitLocation = null;
     if (parser2.getToken() === 16) {
       if (kind & 512) {
         parser2.report(37, "Setter", "one", "");
@@ -14116,19 +14577,20 @@ format:`, anonymisedFormat);
         if ((context & 1) === 0) {
           if ((parser2.getToken() & 36864) === 36864) {
             parser2.flags |= 256;
+            (_a2 = parser2.strictReservedRange) != null ? _a2 : parser2.strictReservedRange = [tokenStart, parser2.currentLocation];
           }
           if ((parser2.getToken() & 537079808) === 537079808) {
             parser2.flags |= 512;
           }
         }
-        left = parseAndClassifyIdentifier(parser2, context, scope, kind | 1, 0);
+        left = parseAndClassifyIdentifier(parser2, context, scope, kind | 1);
       } else {
         if (parser2.getToken() === 2162700) {
-          left = parseObjectLiteralOrPattern(parser2, context, scope, privateScope, 1, inGroup, 1, type, 0);
+          left = parseObjectLiteralOrPattern(parser2, context, scope, privateScope, 1, inGroup, 1, type);
         } else if (parser2.getToken() === 69271571) {
-          left = parseArrayExpressionOrPattern(parser2, context, scope, privateScope, 1, inGroup, 1, type, 0);
+          left = parseArrayExpressionOrPattern(parser2, context, scope, privateScope, 1, inGroup, 1, type);
         } else if (parser2.getToken() === 14) {
-          left = parseSpreadOrRestElement(parser2, context, scope, privateScope, 16, type, 0, 0, inGroup, 1);
+          left = parseSpreadOrRestElement(parser2, context, scope, privateScope, 16, type, 0, inGroup, 1);
         }
         isNonSimpleParameterList = 1;
         if (parser2.destructible & (32 | 16))
@@ -14169,7 +14631,7 @@ format:`, anonymisedFormat);
     return key;
   }
   __name(parseComputedPropertyName, "parseComputedPropertyName");
-  function parseParenthesizedExpression(parser2, context, privateScope, canAssign, kind, origin2, start) {
+  function parseParenthesizedExpression(parser2, context, privateScope, canAssign, kind, start, origin2) {
     var _a2;
     parser2.flags = (parser2.flags | 128) ^ 128;
     const parenthesesStart = parser2.tokenStart;
@@ -14177,10 +14639,13 @@ format:`, anonymisedFormat);
     const scope = (_a2 = parser2.createScopeIfLexical()) == null ? void 0 : _a2.createChildScope(512);
     context = (context | 131072) ^ 131072;
     if (consumeOpt(parser2, context, 16)) {
-      return parseParenthesizedArrow(parser2, context, scope, privateScope, [], canAssign, 0, start);
+      return parseParenthesizedArrow(parser2, context, scope, privateScope, [], canAssign, 0, start, origin2);
     }
     let destructible = 0;
+    const previousAwaitYield = parser2.destructible & (256 | 128);
     parser2.destructible &= -385;
+    const previousFirstAwaitLocation = parser2.firstAwaitLocation;
+    parser2.firstAwaitLocation = null;
     let expr;
     let expressions = [];
     let isSequence = 0;
@@ -14192,13 +14657,13 @@ format:`, anonymisedFormat);
       const { tokenStart } = parser2;
       const token = parser2.getToken();
       if (token & 143360) {
-        scope == null ? void 0 : scope.addBlockName(context, parser2.tokenValue, 1, 0);
+        scope == null ? void 0 : scope.addBlockName(context, parser2.tokenValue, 1);
         if ((token & 537079808) === 537079808) {
           isNonSimpleParameterList = 1;
         } else if ((token & 36864) === 36864) {
           hasStrictReserved = 1;
         }
-        expr = parsePrimaryExpression(parser2, context, privateScope, kind, 0, 1, 1, 1, tokenStart);
+        expr = parsePrimaryExpression(parser2, context, privateScope, kind, 0, 1, 1, 1, tokenStart, 0);
         if (parser2.getToken() === 16 || parser2.getToken() === 18) {
           if (parser2.assignable & 2) {
             destructible |= 16;
@@ -14216,13 +14681,13 @@ format:`, anonymisedFormat);
           }
         }
       } else if ((token & 2097152) === 2097152) {
-        expr = token === 2162700 ? parseObjectLiteralOrPattern(parser2, context | 262144, scope, privateScope, 0, 1, 0, kind, origin2) : parseArrayExpressionOrPattern(parser2, context | 262144, scope, privateScope, 0, 1, 0, kind, origin2);
+        expr = token === 2162700 ? parseObjectLiteralOrPattern(parser2, context | 262144, scope, privateScope, 0, 1, 0, kind) : parseArrayExpressionOrPattern(parser2, context | 262144, scope, privateScope, 0, 1, 0, kind);
         destructible |= parser2.destructible;
         isNonSimpleParameterList = 1;
         parser2.assignable = 2;
         if (parser2.getToken() !== 16 && parser2.getToken() !== 18) {
           if (destructible & 8)
-            parser2.report(122);
+            parser2.report(124);
           expr = parseMemberOrUpdateExpression(parser2, context, privateScope, expr, 0, 0, tokenStart);
           destructible |= 16;
           if (parser2.getToken() !== 16 && parser2.getToken() !== 18) {
@@ -14230,7 +14695,7 @@ format:`, anonymisedFormat);
           }
         }
       } else if (token === 14) {
-        expr = parseSpreadOrRestElement(parser2, context, scope, privateScope, 16, kind, origin2, 0, 1, 0);
+        expr = parseSpreadOrRestElement(parser2, context, scope, privateScope, 16, kind, 0, 1, 0);
         if (parser2.destructible & 16)
           parser2.report(74);
         isNonSimpleParameterList = 1;
@@ -14262,7 +14727,10 @@ format:`, anonymisedFormat);
           }, tokenAfterParenthesesStart);
         }
         consume(parser2, context, 16);
-        parser2.destructible = destructible;
+        parser2.destructible = destructible | previousAwaitYield;
+        if (previousFirstAwaitLocation) {
+          parser2.firstAwaitLocation = previousFirstAwaitLocation;
+        }
         return parser2.options.preserveParens ? parser2.finishNode({
           type: "ParenthesizedExpression",
           expression: expr
@@ -14291,13 +14759,17 @@ format:`, anonymisedFormat);
     }
     consume(parser2, context, 16);
     if (destructible & 16 && destructible & 8)
-      parser2.report(151);
+      parser2.report(153);
     destructible |= parser2.destructible & 256 ? 256 : 0 | parser2.destructible & 128 ? 128 : 0;
     if (parser2.getToken() === 10) {
       if (destructible & (32 | 16))
         parser2.report(49);
-      if (context & (2048 | 2) && destructible & 128)
+      if (context & (2048 | 2) && destructible & 128) {
+        const loc = parser2.firstAwaitLocation;
+        if (loc)
+          throw new ParseError(loc.start, loc.end, 31);
         parser2.report(31);
+      }
       if (context & (1 | 1024) && destructible & 256) {
         parser2.report(32);
       }
@@ -14305,15 +14777,18 @@ format:`, anonymisedFormat);
         parser2.flags |= 128;
       if (hasStrictReserved)
         parser2.flags |= 256;
-      return parseParenthesizedArrow(parser2, context, scope, privateScope, isSequence ? expressions : [expr], canAssign, 0, start);
+      return parseParenthesizedArrow(parser2, context, scope, privateScope, isSequence ? expressions : [expr], canAssign, 0, start, origin2);
     }
     if (destructible & 64) {
       parser2.report(63);
     }
     if (destructible & 8) {
-      parser2.report(144);
+      parser2.report(146);
     }
-    parser2.destructible = (parser2.destructible | 256) ^ 256 | destructible;
+    parser2.destructible = (parser2.destructible | 256) ^ 256 | destructible | previousAwaitYield;
+    if (previousFirstAwaitLocation) {
+      parser2.firstAwaitLocation = previousFirstAwaitLocation;
+    }
     return parser2.options.preserveParens ? parser2.finishNode({
       type: "ParenthesizedExpression",
       expression: expr
@@ -14343,25 +14818,25 @@ format:`, anonymisedFormat);
     return expr;
   }
   __name(parseIdentifierOrArrow, "parseIdentifierOrArrow");
-  function parseArrowFromIdentifier(parser2, context, privateScope, value, expr, inNew, canAssign, isAsync, start) {
+  function parseArrowFromIdentifier(parser2, context, privateScope, value, expr, inNew, canAssign, isAsync, start, origin2 = 0) {
     if (!canAssign)
       parser2.report(57);
     if (inNew)
       parser2.report(51);
     parser2.flags &= -129;
     const scope = parser2.options.lexical ? createArrowHeadParsingScope(parser2, context, value) : void 0;
-    return parseArrowFunctionExpression(parser2, context, scope, privateScope, [expr], isAsync, start);
+    return parseArrowFunctionExpression(parser2, context, scope, privateScope, [expr], isAsync, start, origin2);
   }
   __name(parseArrowFromIdentifier, "parseArrowFromIdentifier");
-  function parseParenthesizedArrow(parser2, context, scope, privateScope, params, canAssign, isAsync, start) {
+  function parseParenthesizedArrow(parser2, context, scope, privateScope, params, canAssign, isAsync, start, origin2 = 0) {
     if (!canAssign)
       parser2.report(57);
     for (let i2 = 0; i2 < params.length; ++i2)
       reinterpretToPattern(parser2, params[i2]);
-    return parseArrowFunctionExpression(parser2, context, scope, privateScope, params, isAsync, start);
+    return parseArrowFunctionExpression(parser2, context, scope, privateScope, params, isAsync, start, origin2);
   }
   __name(parseParenthesizedArrow, "parseParenthesizedArrow");
-  function parseArrowFunctionExpression(parser2, context, scope, privateScope, params, isAsync, start) {
+  function parseArrowFunctionExpression(parser2, context, scope, privateScope, params, isAsync, start, origin2 = 0) {
     if (parser2.flags & 1)
       parser2.report(48);
     consume(parser2, context | 32, 10);
@@ -14376,28 +14851,32 @@ format:`, anonymisedFormat);
     } else {
       scope = scope == null ? void 0 : scope.createChildScope(64);
       const modifierFlags2 = 4 | 131072 | 8;
-      body = parseFunctionBody(parser2, (context | modifierFlags2) ^ modifierFlags2 | 4096, scope, privateScope, 16, void 0, void 0);
+      body = parseFunctionBody(parser2, (context | modifierFlags2) ^ modifierFlags2 | 4096, scope, privateScope, void 0, void 0, 16);
       switch (parser2.getToken()) {
         case 69271571:
           if ((parser2.flags & 1) === 0) {
-            parser2.report(116);
+            parser2.report(118);
           }
+          parser2.flags |= 8192;
           break;
         case 67108877:
         case 67174409:
         case 22:
-          parser2.report(117);
+          parser2.report(119);
         case 67174411:
           if ((parser2.flags & 1) === 0) {
-            parser2.report(116);
+            parser2.report(118);
           }
           parser2.flags |= 1024;
           break;
       }
-      if ((parser2.getToken() & 8388608) === 8388608 && (parser2.flags & 1) === 0)
-        parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
+      if ((parser2.getToken() & 8388608) === 8388608 && (parser2.flags & 1) === 0) {
+        if (parser2.getToken() !== 8673330 || origin2 !== 32) {
+          parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
+        }
+      }
       if ((parser2.getToken() & 33619968) === 33619968)
-        parser2.report(125);
+        parser2.report(127);
     }
     parser2.assignable = 2;
     return parser2.finishNode({
@@ -14411,8 +14890,11 @@ format:`, anonymisedFormat);
   }
   __name(parseArrowFunctionExpression, "parseArrowFunctionExpression");
   function parseFormalParametersOrFormalList(parser2, context, scope, privateScope, inGroup, kind) {
+    var _a2;
     consume(parser2, context, 67174411);
     parser2.flags = (parser2.flags | 128) ^ 128;
+    parser2.strictReservedRange = null;
+    parser2.firstAwaitLocation = null;
     const params = [];
     if (consumeOpt(parser2, context, 16))
       return params;
@@ -14426,19 +14908,20 @@ format:`, anonymisedFormat);
         if ((context & 1) === 0) {
           if ((token & 36864) === 36864) {
             parser2.flags |= 256;
+            (_a2 = parser2.strictReservedRange) != null ? _a2 : parser2.strictReservedRange = [tokenStart, parser2.currentLocation];
           }
           if ((token & 537079808) === 537079808) {
             parser2.flags |= 512;
           }
         }
-        left = parseAndClassifyIdentifier(parser2, context, scope, kind | 1, 0);
+        left = parseAndClassifyIdentifier(parser2, context, scope, kind | 1);
       } else {
         if (token === 2162700) {
-          left = parseObjectLiteralOrPattern(parser2, context, scope, privateScope, 1, inGroup, 1, kind, 0);
+          left = parseObjectLiteralOrPattern(parser2, context, scope, privateScope, 1, inGroup, 1, kind);
         } else if (token === 69271571) {
-          left = parseArrayExpressionOrPattern(parser2, context, scope, privateScope, 1, inGroup, 1, kind, 0);
+          left = parseArrayExpressionOrPattern(parser2, context, scope, privateScope, 1, inGroup, 1, kind);
         } else if (token === 14) {
-          left = parseSpreadOrRestElement(parser2, context, scope, privateScope, 16, kind, 0, 0, inGroup, 1);
+          left = parseSpreadOrRestElement(parser2, context, scope, privateScope, 16, kind, 0, inGroup, 1);
         } else {
           parser2.report(30, KeywordDescTable[token & 255]);
         }
@@ -14517,7 +15000,7 @@ format:`, anonymisedFormat);
     const id = parseIdentifier(parser2, context | 32);
     const { tokenStart } = parser2;
     if (consumeOpt(parser2, context, 67108877)) {
-      if (context & 65536 && parser2.getToken() === 209029) {
+      if (context & 65536 && parser2.getToken() === 209030) {
         parser2.assignable = 2;
         return parseMetaProperty(parser2, context, id, start);
       }
@@ -14529,8 +15012,8 @@ format:`, anonymisedFormat);
     }
     const expr = parsePrimaryExpression(parser2, context, privateScope, 2, 1, 0, inGroup, 1, tokenStart);
     context = (context | 131072) ^ 131072;
-    if (parser2.getToken() === 67108990)
-      parser2.report(168);
+    if (parser2.getToken() === 67108991)
+      parser2.report(170);
     const callee = parseMemberExpressionNoCall(parser2, context, privateScope, expr, inGroup, tokenStart);
     parser2.assignable = 2;
     return parser2.finishNode({
@@ -14562,10 +15045,12 @@ format:`, anonymisedFormat);
     return parseArrowFromIdentifier(parser2, context & -524289 | 2048, privateScope, parser2.tokenValue, parseIdentifier(parser2, context), 0, canAssign, 1, start);
   }
   __name(parseAsyncArrowAfterIdent, "parseAsyncArrowAfterIdent");
-  function parseAsyncArrowOrCallExpression(parser2, context, privateScope, callee, canAssign, kind, origin2, flags, start) {
+  function parseAsyncArrowOrCallExpression(parser2, context, privateScope, callee, canAssign, kind, flags, start) {
     var _a2;
     nextToken(parser2, context | 32);
     const scope = (_a2 = parser2.createScopeIfLexical()) == null ? void 0 : _a2.createChildScope(512);
+    const previousFirstAwaitLocation = parser2.firstAwaitLocation;
+    parser2.firstAwaitLocation = null;
     context = (context | 131072) ^ 131072;
     if (consumeOpt(parser2, context, 16)) {
       if (parser2.getToken() === 10) {
@@ -14573,6 +15058,13 @@ format:`, anonymisedFormat);
           parser2.report(48);
         return parseParenthesizedArrow(parser2, context, scope, privateScope, [], canAssign, 1, start);
       }
+      if (!(context & 1) && parser2.options.webcompat) {
+        parser2.assignable = 4;
+      } else {
+        parser2.assignable = 2;
+      }
+      if (previousFirstAwaitLocation)
+        parser2.firstAwaitLocation = previousFirstAwaitLocation;
       return parser2.finishNode({
         type: "CallExpression",
         callee,
@@ -14581,7 +15073,7 @@ format:`, anonymisedFormat);
       }, start);
     }
     let destructible = 0;
-    let expr = null;
+    let expr;
     let isNonSimpleParameterList = 0;
     parser2.destructible = (parser2.destructible | 256 | 128) ^ (256 | 128);
     const params = [];
@@ -14589,7 +15081,7 @@ format:`, anonymisedFormat);
       const { tokenStart } = parser2;
       const token = parser2.getToken();
       if (token & 143360) {
-        scope == null ? void 0 : scope.addBlockName(context, parser2.tokenValue, kind, 0);
+        scope == null ? void 0 : scope.addBlockName(context, parser2.tokenValue, kind);
         if ((token & 537079808) === 537079808) {
           parser2.flags |= 512;
         } else if ((token & 36864) === 36864) {
@@ -14613,12 +15105,12 @@ format:`, anonymisedFormat);
           }
         }
       } else if (token & 2097152) {
-        expr = token === 2162700 ? parseObjectLiteralOrPattern(parser2, context, scope, privateScope, 0, 1, 0, kind, origin2) : parseArrayExpressionOrPattern(parser2, context, scope, privateScope, 0, 1, 0, kind, origin2);
+        expr = token === 2162700 ? parseObjectLiteralOrPattern(parser2, context, scope, privateScope, 0, 1, 0, kind) : parseArrayExpressionOrPattern(parser2, context, scope, privateScope, 0, 1, 0, kind);
         destructible |= parser2.destructible;
         isNonSimpleParameterList = 1;
         if (parser2.getToken() !== 16 && parser2.getToken() !== 18) {
           if (destructible & 8)
-            parser2.report(122);
+            parser2.report(124);
           expr = parseMemberOrUpdateExpression(parser2, context, privateScope, expr, 0, 0, tokenStart);
           destructible |= 16;
           if ((parser2.getToken() & 8388608) === 8388608) {
@@ -14629,12 +15121,12 @@ format:`, anonymisedFormat);
           }
         }
       } else if (token === 14) {
-        expr = parseSpreadOrRestElement(parser2, context, scope, privateScope, 16, kind, origin2, 1, 1, 0);
+        expr = parseSpreadOrRestElement(parser2, context, scope, privateScope, 16, kind, 1, 1, 0);
         destructible |= (parser2.getToken() === 16 ? 0 : 16) | parser2.destructible;
         isNonSimpleParameterList = 1;
       } else {
         expr = parseExpression(parser2, context, privateScope, 1, 0, tokenStart);
-        destructible = parser2.assignable;
+        destructible = 0;
         params.push(expr);
         while (consumeOpt(parser2, context | 32, 18)) {
           params.push(parseExpression(parser2, context, privateScope, 1, 0, tokenStart));
@@ -14642,7 +15134,13 @@ format:`, anonymisedFormat);
         destructible |= parser2.assignable;
         consume(parser2, context, 16);
         parser2.destructible = destructible | 16;
-        parser2.assignable = 2;
+        if (!(context & 1) && parser2.options.webcompat) {
+          parser2.assignable = 4;
+        } else {
+          parser2.assignable = 2;
+        }
+        if (previousFirstAwaitLocation)
+          parser2.firstAwaitLocation = previousFirstAwaitLocation;
         return parser2.finishNode({
           type: "CallExpression",
           callee,
@@ -14661,8 +15159,12 @@ format:`, anonymisedFormat);
         parser2.report(27);
       if (parser2.flags & 1 || flags & 1)
         parser2.report(48);
-      if (destructible & 128)
+      if (destructible & 128) {
+        const loc = parser2.firstAwaitLocation;
+        if (loc)
+          throw new ParseError(loc.start, loc.end, 31);
         parser2.report(31);
+      }
       if (context & (1 | 1024) && destructible & 256)
         parser2.report(32);
       if (isNonSimpleParameterList)
@@ -14675,7 +15177,13 @@ format:`, anonymisedFormat);
     if (destructible & 8) {
       parser2.report(62);
     }
-    parser2.assignable = 2;
+    if (!(context & 1) && parser2.options.webcompat) {
+      parser2.assignable = 4;
+    } else {
+      parser2.assignable = 2;
+    }
+    if (previousFirstAwaitLocation)
+      parser2.firstAwaitLocation = previousFirstAwaitLocation;
     return parser2.finishNode({
       type: "CallExpression",
       callee,
@@ -14703,9 +15211,6 @@ format:`, anonymisedFormat);
     let start;
     let decorators;
     if (parser2.leadingDecorators.decorators.length) {
-      if (parser2.getToken() === 132) {
-        parser2.report(30, "@");
-      }
       start = parser2.leadingDecorators.start;
       decorators = [...parser2.leadingDecorators.decorators];
       parser2.leadingDecorators.decorators.length = 0;
@@ -14714,19 +15219,19 @@ format:`, anonymisedFormat);
       decorators = parseDecorators(parser2, context, privateScope);
     }
     context = (context | 16384 | 1) ^ 16384;
-    nextToken(parser2, context);
+    consume(parser2, context, 86094);
     let id = null;
     let superClass = null;
     const { tokenValue } = parser2;
     if (parser2.getToken() & 4096 && parser2.getToken() !== 20565) {
       if (isStrictReservedWord(parser2, context, parser2.getToken())) {
-        parser2.report(118);
+        parser2.report(120);
       }
       if ((parser2.getToken() & 537079808) === 537079808) {
-        parser2.report(119);
+        parser2.report(121);
       }
       if (scope) {
-        scope.addBlockName(context, tokenValue, 32, 0);
+        scope.addBlockName(context, tokenValue, 32);
         if (flags) {
           if (flags & 2) {
             parser2.declareUnboundVariable(tokenValue);
@@ -14745,13 +15250,13 @@ format:`, anonymisedFormat);
     } else {
       inheritedContext = (inheritedContext | 512) ^ 512;
     }
-    const body = parseClassBody(parser2, inheritedContext, context, scope, privateScope, 2, 8, 0);
+    const body = parseClassBody(parser2, inheritedContext, context, scope, privateScope, 2, 0, 8);
     return parser2.finishNode({
       type: "ClassDeclaration",
       id,
       superClass,
       body,
-      ...parser2.options.next ? { decorators } : null
+      ...parser2.features & 1 ? { decorators } : null
     }, start);
   }
   __name(parseClassDeclaration, "parseClassDeclaration");
@@ -14760,12 +15265,12 @@ format:`, anonymisedFormat);
     let superClass = null;
     const decorators = parseDecorators(parser2, context, privateScope);
     context = (context | 1 | 16384) ^ 16384;
-    nextToken(parser2, context);
+    consume(parser2, context, 86094);
     if (parser2.getToken() & 4096 && parser2.getToken() !== 20565) {
       if (isStrictReservedWord(parser2, context, parser2.getToken()))
-        parser2.report(118);
+        parser2.report(120);
       if ((parser2.getToken() & 537079808) === 537079808) {
-        parser2.report(119);
+        parser2.report(121);
       }
       id = parseIdentifier(parser2, context);
     }
@@ -14776,39 +15281,75 @@ format:`, anonymisedFormat);
     } else {
       inheritedContext = (inheritedContext | 512) ^ 512;
     }
-    const body = parseClassBody(parser2, inheritedContext, context, void 0, privateScope, 2, 0, inGroup);
+    const body = parseClassBody(parser2, inheritedContext, context, void 0, privateScope, 2, inGroup);
     parser2.assignable = 2;
     return parser2.finishNode({
       type: "ClassExpression",
       id,
       superClass,
       body,
-      ...parser2.options.next ? { decorators } : null
+      ...parser2.features & 1 ? { decorators } : null
     }, start);
   }
   __name(parseClassExpression, "parseClassExpression");
   function parseDecorators(parser2, context, privateScope) {
     const list = [];
-    if (parser2.options.next) {
-      while (parser2.getToken() === 132) {
-        list.push(parseDecoratorList(parser2, context, privateScope));
+    if (parser2.features & 1) {
+      while (parser2.getToken() === 133) {
+        list.push(parseDecorator(parser2, context, privateScope));
       }
     }
     return list;
   }
   __name(parseDecorators, "parseDecorators");
-  function parseDecoratorList(parser2, context, privateScope) {
+  function parseDecorator(parser2, context, privateScope) {
     const start = parser2.tokenStart;
     nextToken(parser2, context | 32);
-    let expression = parsePrimaryExpression(parser2, context, privateScope, 2, 0, 1, 0, 1, start);
-    expression = parseMemberOrUpdateExpression(parser2, context, privateScope, expression, 0, 0, parser2.tokenStart);
+    const expressionStart = parser2.tokenStart;
+    let expression;
+    if (parser2.getToken() === 67174411) {
+      expression = parsePrimaryExpression(parser2, context, privateScope, 2, 0, 1, 0, 1, start);
+    } else {
+      const token = parser2.getToken();
+      if ((token & 143360) !== 143360 && !isValidIdentifier(context, token) || context & 1 && (token & 36864) === 36864) {
+        parser2.report(30, KeywordDescTable[token & 255]);
+      }
+      if (token === 209006 && context & (2048 | 2)) {
+        parser2.report(112);
+      }
+      if (token === 241771 && context & 1024) {
+        parser2.report(97, "yield");
+      }
+      let memberExpression = parseIdentifier(parser2, context | 64);
+      while (parser2.getToken() === 67108877) {
+        nextToken(parser2, (context | 262144 | 8) ^ 8);
+        const property = parsePropertyOrPrivatePropertyName(parser2, context | 64, privateScope);
+        memberExpression = parser2.finishNode({
+          type: "MemberExpression",
+          object: memberExpression,
+          computed: false,
+          property,
+          optional: false
+        }, expressionStart);
+      }
+      expression = memberExpression;
+      if (parser2.getToken() === 67174411) {
+        const args = parseArguments(parser2, context, privateScope, 0);
+        expression = parser2.finishNode({
+          type: "CallExpression",
+          callee: memberExpression,
+          arguments: args,
+          optional: false
+        }, expressionStart);
+      }
+    }
     return parser2.finishNode({
       type: "Decorator",
       expression
     }, start);
   }
-  __name(parseDecoratorList, "parseDecoratorList");
-  function parseClassBody(parser2, context, inheritedContext, scope, parentScope, kind, origin2, inGroup) {
+  __name(parseDecorator, "parseDecorator");
+  function parseClassBody(parser2, context, inheritedContext, scope, parentScope, kind, inGroup, origin2 = 0) {
     const { tokenStart } = parser2;
     const privateScope = parser2.createPrivateScopeIfLexical(parentScope);
     consume(parser2, context | 32, 2162700);
@@ -14821,13 +15362,13 @@ format:`, anonymisedFormat);
       const decoratorStart = parser2.tokenStart;
       const decorators = parseDecorators(parser2, context, privateScope);
       if (decorators.length > 0 && parser2.tokenValue === "constructor") {
-        parser2.report(109);
+        parser2.report(111);
       }
       if (parser2.getToken() === 1074790415)
-        parser2.report(108);
+        parser2.report(110);
       if (consumeOpt(parser2, context, 1074790417)) {
         if (decorators.length > 0)
-          parser2.report(120);
+          parser2.report(122);
         continue;
       }
       body.push(parseClassElementList(parser2, context, scope, privateScope, inheritedContext, kind, decorators, 0, inGroup, decorators.length > 0 ? decoratorStart : parser2.tokenStart));
@@ -14845,7 +15386,7 @@ format:`, anonymisedFormat);
     let kind = isStatic ? 32 : 0;
     let key = null;
     const token = parser2.getToken();
-    if (token & (143360 | 36864) || token === -2147483528) {
+    if (token & (143360 | 36864) || token === -2147483527) {
       key = parseIdentifier(parser2, context);
       switch (token) {
         case 36970:
@@ -14863,6 +15404,9 @@ format:`, anonymisedFormat);
           break;
         case 209008:
           if (parser2.getToken() !== 67174411) {
+            if (parser2.getToken() === 8391476 && parser2.flags & 1) {
+              return parsePropertyDefinition(parser2, context, privateScope, key, kind, decorators, start);
+            }
             if ((parser2.getToken() & 1073741824) === 1073741824) {
               return parsePropertyDefinition(parser2, context, privateScope, key, kind, decorators, start);
             }
@@ -14871,6 +15415,9 @@ format:`, anonymisedFormat);
           break;
         case 209009:
           if (parser2.getToken() !== 67174411) {
+            if (parser2.getToken() === 8391476 && parser2.flags & 1) {
+              return parsePropertyDefinition(parser2, context, privateScope, key, kind, decorators, start);
+            }
             if ((parser2.getToken() & 1073741824) === 1073741824) {
               return parsePropertyDefinition(parser2, context, privateScope, key, kind, decorators, start);
             }
@@ -14882,7 +15429,7 @@ format:`, anonymisedFormat);
             if ((parser2.getToken() & 1073741824) === 1073741824) {
               return parsePropertyDefinition(parser2, context, privateScope, key, kind, decorators, start);
             }
-            if (parser2.options.next)
+            if (parser2.features & 1)
               kind |= 1024;
           }
           break;
@@ -14895,14 +15442,14 @@ format:`, anonymisedFormat);
     } else if (token === 8391476) {
       kind |= 8;
       nextToken(parser2, context);
-    } else if (parser2.getToken() === 130) {
+    } else if (parser2.getToken() === 131) {
       kind |= 8192;
       key = parsePrivateIdentifier(parser2, context | 16, privateScope, 768);
     } else if ((parser2.getToken() & 1073741824) === 1073741824) {
       kind |= 128;
     } else if (isStatic && token === 2162700) {
       return parseStaticBlock(parser2, context | 16, scope, privateScope, start);
-    } else if (token === -2147483527) {
+    } else if (token === -2147483526) {
       key = parseIdentifier(parser2, context);
       if (parser2.getToken() !== 67174411)
         parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
@@ -14910,23 +15457,23 @@ format:`, anonymisedFormat);
       parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
     }
     if (kind & (8 | 16 | 768 | 1024)) {
-      if (parser2.getToken() & 143360 || parser2.getToken() === -2147483528 || parser2.getToken() === -2147483527) {
+      if (parser2.getToken() & 143360 || parser2.getToken() === -2147483527 || parser2.getToken() === -2147483526) {
         key = parseIdentifier(parser2, context);
       } else if ((parser2.getToken() & 134217728) === 134217728) {
         key = parseLiteral(parser2, context);
       } else if (parser2.getToken() === 69271571) {
         kind |= 2;
         key = parseComputedPropertyName(parser2, context, privateScope, 0);
-      } else if (parser2.getToken() === 130) {
+      } else if (parser2.getToken() === 131) {
         kind |= 8192;
         key = parsePrivateIdentifier(parser2, context, privateScope, kind);
       } else
-        parser2.report(135);
+        parser2.report(137);
     }
     if ((kind & 2) === 0) {
       if (parser2.tokenValue === "constructor") {
         if ((parser2.getToken() & 1073741824) === 1073741824) {
-          parser2.report(129);
+          parser2.report(131);
         } else if ((kind & 32) === 0 && parser2.getToken() === 67174411) {
           if (kind & (768 | 16 | 128 | 8)) {
             parser2.report(53, "accessor");
@@ -14953,7 +15500,7 @@ format:`, anonymisedFormat);
       computed: (kind & 2) > 0,
       key,
       value,
-      ...parser2.options.next ? { decorators } : null
+      ...parser2.features & 1 ? { decorators } : null
     }, start);
   }
   __name(parseClassElementList, "parseClassElementList");
@@ -14962,7 +15509,7 @@ format:`, anonymisedFormat);
     nextToken(parser2, context);
     const { tokenValue } = parser2;
     if (tokenValue === "constructor")
-      parser2.report(128);
+      parser2.report(130);
     if (parser2.options.lexical) {
       if (!privateScope)
         parser2.report(4, tokenValue);
@@ -14986,8 +15533,8 @@ format:`, anonymisedFormat);
     if (parser2.getToken() === 1077936155) {
       nextToken(parser2, context | 32);
       const { tokenStart } = parser2;
-      if (parser2.getToken() === 537079927)
-        parser2.report(119);
+      if (parser2.getToken() === 537079928)
+        parser2.report(121);
       const modifierFlags = 1024 | 2048 | 8192 | ((state & 64) === 0 ? 512 | 16384 : 0);
       context = (context | modifierFlags) ^ modifierFlags | (state & 8 ? 1024 : 0) | (state & 16 ? 2048 : 0) | (state & 64 ? 16384 : 0) | 256 | 65536;
       value = parsePrimaryExpression(parser2, context | 16, privateScope, 2, 0, 1, 0, 1, tokenStart);
@@ -15003,16 +15550,16 @@ format:`, anonymisedFormat);
       value,
       static: (state & 32) > 0,
       computed: (state & 2) > 0,
-      ...parser2.options.next ? { decorators } : null
+      ...parser2.features & 1 ? { decorators } : null
     }, start);
   }
   __name(parsePropertyDefinition, "parsePropertyDefinition");
-  function parseBindingPattern(parser2, context, scope, privateScope, type, origin2) {
-    if (parser2.getToken() & 143360 || (context & 1) === 0 && parser2.getToken() === -2147483527)
-      return parseAndClassifyIdentifier(parser2, context, scope, type, origin2);
+  function parseBindingPattern(parser2, context, scope, privateScope, kind, origin2 = 0) {
+    if (parser2.getToken() & 143360 || (context & 1) === 0 && parser2.getToken() === -2147483526)
+      return parseAndClassifyIdentifier(parser2, context, scope, kind, origin2);
     if ((parser2.getToken() & 2097152) !== 2097152)
       parser2.report(30, KeywordDescTable[parser2.getToken() & 255]);
-    const left = parser2.getToken() === 69271571 ? parseArrayExpressionOrPattern(parser2, context, scope, privateScope, 1, 0, 1, type, origin2) : parseObjectLiteralOrPattern(parser2, context, scope, privateScope, 1, 0, 1, type, origin2);
+    const left = parser2.getToken() === 69271571 ? parseArrayExpressionOrPattern(parser2, context, scope, privateScope, 1, 0, 1, kind, origin2) : parseObjectLiteralOrPattern(parser2, context, scope, privateScope, 1, 0, 1, kind, origin2);
     if (parser2.destructible & 16)
       parser2.report(50);
     if (parser2.destructible & 32)
@@ -15020,13 +15567,13 @@ format:`, anonymisedFormat);
     return left;
   }
   __name(parseBindingPattern, "parseBindingPattern");
-  function parseAndClassifyIdentifier(parser2, context, scope, kind, origin2) {
+  function parseAndClassifyIdentifier(parser2, context, scope, kind, origin2 = 0) {
     const token = parser2.getToken();
     if (context & 1) {
       if ((token & 537079808) === 537079808) {
-        parser2.report(119);
-      } else if ((token & 36864) === 36864 || token === -2147483527) {
-        parser2.report(118);
+        parser2.report(121);
+      } else if ((token & 36864) === 36864 || token === -2147483526) {
+        parser2.report(120);
       }
     }
     if ((token & 20480) === 20480) {
@@ -15036,7 +15583,7 @@ format:`, anonymisedFormat);
       if (context & 1024)
         parser2.report(32);
       if (context & 2)
-        parser2.report(111);
+        parser2.report(113);
     }
     if ((token & 255) === (241737 & 255)) {
       if (kind & (8 | 16))
@@ -15044,9 +15591,9 @@ format:`, anonymisedFormat);
     }
     if (token === 209006) {
       if (context & 2048)
-        parser2.report(176);
+        parser2.report(178);
       if (context & 2)
-        parser2.report(110);
+        parser2.report(112);
     }
     const { tokenValue, tokenStart: start } = parser2;
     nextToken(parser2, context);
@@ -15079,7 +15626,7 @@ format:`, anonymisedFormat);
       [children, closingElement] = parseJSXChildrenAndClosingElement(parser2, context, privateScope, inJSXChild);
       const close = isEqualTagName(closingElement.name);
       if (isEqualTagName(openingElement.name) !== close)
-        parser2.report(155, close);
+        parser2.report(157, close);
     }
     return parser2.finishNode({
       type: "JSXElement",
@@ -15151,8 +15698,8 @@ format:`, anonymisedFormat);
   }
   __name(parseJSXChildrenAndClosingFragment, "parseJSXChildrenAndClosingFragment");
   function parseJSXChildOrClosingElement(parser2, context, privateScope, inJSXChild) {
-    if (parser2.getToken() === 137)
-      return parseJSXText(parser2, context);
+    if (parser2.getToken() === 138)
+      return parseJSXText(parser2);
     if (parser2.getToken() === 2162700)
       return parseJSXExpressionContainer(parser2, context, privateScope, 1, 0);
     if (parser2.getToken() === 8456256) {
@@ -15166,8 +15713,8 @@ format:`, anonymisedFormat);
   }
   __name(parseJSXChildOrClosingElement, "parseJSXChildOrClosingElement");
   function parseJSXChildOrClosingFragment(parser2, context, privateScope, inJSXChild) {
-    if (parser2.getToken() === 137)
-      return parseJSXText(parser2, context);
+    if (parser2.getToken() === 138)
+      return parseJSXText(parser2);
     if (parser2.getToken() === 2162700)
       return parseJSXExpressionContainer(parser2, context, privateScope, 1, 0);
     if (parser2.getToken() === 8456256) {
@@ -15180,9 +15727,9 @@ format:`, anonymisedFormat);
     parser2.report(0);
   }
   __name(parseJSXChildOrClosingFragment, "parseJSXChildOrClosingFragment");
-  function parseJSXText(parser2, context) {
+  function parseJSXText(parser2) {
     const start = parser2.tokenStart;
-    nextToken(parser2, context);
+    nextJSXToken(parser2);
     const node = {
       type: "JSXText",
       value: parser2.tokenValue
@@ -15282,7 +15829,7 @@ format:`, anonymisedFormat);
           value = parseJSXExpressionContainer(parser2, context, privateScope, 0, 1);
           break;
         default:
-          parser2.report(154);
+          parser2.report(156);
       }
     }
     return parser2.finishNode({
@@ -15308,10 +15855,10 @@ format:`, anonymisedFormat);
     const { tokenStart } = parser2;
     if (parser2.getToken() === 14)
       return parseJSXSpreadChild(parser2, context, privateScope, start);
-    let expression = null;
+    let expression;
     if (parser2.getToken() === 1074790415) {
       if (isAttr)
-        parser2.report(157);
+        parser2.report(159);
       expression = parseJSXEmptyExpression(parser2, {
         index: parser2.startIndex,
         line: parser2.startLine,
@@ -15363,8 +15910,9 @@ format:`, anonymisedFormat);
     }, start);
   }
   __name(parseJSXIdentifier, "parseJSXIdentifier");
+  var { version } = packageJson;
   function parseScript(source, options) {
-    return parseSource(source, options);
+    return parseSource(source, { ...options, sourceType: "script" });
   }
   __name(parseScript, "parseScript");
   var _JsAnalyzer = class _JsAnalyzer2 {
@@ -17465,10 +18013,19 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
       super();
       __publicField2(this, "avatars");
       __publicField2(this, "text");
+      __publicField2(this, "avatar_cluster_size");
+      __publicField2(this, "layout_type");
       __publicField2(this, "renderer_context");
       this.avatars = parser_exports.parseArray(data.avatars, AvatarView);
-      if (Reflect.has(data, "text"))
+      if ("text" in data) {
         this.text = Text2.fromAttributed(data.text);
+      }
+      if ("avatarClusterSize" in data) {
+        this.avatar_cluster_size = data.avatarClusterSize;
+      }
+      if ("layoutType" in data) {
+        this.layout_type = data.layoutType;
+      }
       this.renderer_context = new RendererContext(data.rendererContext);
     }
   };
@@ -18360,6 +18917,94 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_MacroMarkersList, "MacroMarkersList");
   __publicField2(_MacroMarkersList, "type", "MacroMarkersList");
   var MacroMarkersList = _MacroMarkersList;
+  var _ContentListItemView = class _ContentListItemView2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "title");
+      __publicField2(this, "action_button");
+      __publicField2(this, "avatar");
+      __publicField2(this, "image");
+      __publicField2(this, "metadata");
+      __publicField2(this, "renderer_context");
+      this.title = Text2.fromAttributed(data.title);
+      this.action_button = parser_exports.parseItem(data.actionButton);
+      this.avatar = parser_exports.parseItem(data.avatar);
+      this.image = Thumbnail.fromResponse(data.image);
+      this.metadata = parser_exports.parseItem(data.metadata);
+      if ("rendererContext" in data) {
+        this.renderer_context = new RendererContext(data.rendererContext);
+      }
+    }
+  };
+  __name(_ContentListItemView, "ContentListItemView");
+  __publicField2(_ContentListItemView, "type", "ContentListItemView");
+  var ContentListItemView = _ContentListItemView;
+  var _PlaylistCollaborationFormSchema = class _PlaylistCollaborationFormSchema2 {
+    constructor(data) {
+      __publicField2(this, "id");
+      __publicField2(this, "initial_values");
+      var _a2, _b2, _c, _d;
+      this.id = data.id;
+      if ("initialValues" in data) {
+        this.initial_values = {
+          collaborator_channel_ids: (_a2 = data.initialValues) == null ? void 0 : _a2.collaboratorChannelIds,
+          is_allow_new_collaborators_enabled: (_b2 = data.initialValues) == null ? void 0 : _b2.isAllowNewCollaboratorsEnabled,
+          is_collaboration_enabled: (_c = data.initialValues) == null ? void 0 : _c.isCollaborationEnabled,
+          is_invite_collaborators_button_enabled: (_d = data.initialValues) == null ? void 0 : _d.isInviteCollaboratorsButtonEnabled
+        };
+      }
+    }
+  };
+  __name(_PlaylistCollaborationFormSchema, "PlaylistCollaborationFormSchema");
+  var PlaylistCollaborationFormSchema = _PlaylistCollaborationFormSchema;
+  var _PlaylistCollaborationViewModelPlaylistCollaboratorData = class _PlaylistCollaborationViewModelPlaylistCollaboratorData2 {
+    constructor(data) {
+      __publicField2(this, "remove_collaborator_confirmation_dialog");
+      __publicField2(this, "external_channel_id");
+      __publicField2(this, "collaborator_content_list_item");
+      this.remove_collaborator_confirmation_dialog = parser_exports.parseItem(data.removeCollaboratorConfirmationDialog);
+      this.external_channel_id = data.externalChannelId;
+      this.collaborator_content_list_item = parser_exports.parseItem(data.collaboratorContentListItem);
+    }
+  };
+  __name(_PlaylistCollaborationViewModelPlaylistCollaboratorData, "PlaylistCollaborationViewModelPlaylistCollaboratorData");
+  var PlaylistCollaborationViewModelPlaylistCollaboratorData = _PlaylistCollaborationViewModelPlaylistCollaboratorData;
+  var _PlaylistCollaborationView = class _PlaylistCollaborationView2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "playlist_collaborators");
+      __publicField2(this, "turn_off_collaboration_dialog");
+      __publicField2(this, "copy_link_button");
+      __publicField2(this, "collaborate_playlist_collaboration_setting");
+      __publicField2(this, "playlist_collaboration_entity_key");
+      __publicField2(this, "playlist_collaborators_data");
+      __publicField2(this, "leave_collaborative_playlist_confirmation_dialog");
+      __publicField2(this, "collaboration_type");
+      __publicField2(this, "allow_new_collaborators_playlist_collaboration_setting");
+      __publicField2(this, "playlist_collaboration_form_schema");
+      __publicField2(this, "turn_off_allow_new_collaborators_dialog");
+      __publicField2(this, "invite_collaborators_button");
+      this.playlist_collaborators = parser_exports.parseArray(data.playlistCollaborators, ContentListItemView);
+      this.turn_off_collaboration_dialog = parser_exports.parseItem(data.turnOffCollaborationDialog);
+      this.copy_link_button = parser_exports.parseItem(data.copyLinkButton);
+      this.collaborate_playlist_collaboration_setting = parser_exports.parseItem(data.collaboratePlaylistCollaborationSetting);
+      if ("playlistCollaboratorsData" in data) {
+        this.playlist_collaborators_data = data.playlistCollaboratorsData.map((item) => new PlaylistCollaborationViewModelPlaylistCollaboratorData(item));
+      }
+      if ("playlistCollaborationFormSchema" in data) {
+        this.playlist_collaboration_form_schema = new PlaylistCollaborationFormSchema(data.playlistCollaborationFormSchema);
+      }
+      this.leave_collaborative_playlist_confirmation_dialog = parser_exports.parseItem(data.leaveCollaborativePlaylistConfirmationDialog);
+      this.allow_new_collaborators_playlist_collaboration_setting = parser_exports.parseItem(data.allowNewCollaboratorsPlaylistCollaborationSetting);
+      this.turn_off_allow_new_collaborators_dialog = parser_exports.parseItem(data.turnOffAllowNewCollaboratorsDialog);
+      this.invite_collaborators_button = parser_exports.parseItem(data.inviteCollaboratorsButton);
+      this.playlist_collaboration_entity_key = data.playlistCollaborationEntityKey;
+      this.collaboration_type = data.collaborationType;
+    }
+  };
+  __name(_PlaylistCollaborationView, "PlaylistCollaborationView");
+  __publicField2(_PlaylistCollaborationView, "type", "PlaylistCollaborationView");
+  var PlaylistCollaborationView = _PlaylistCollaborationView;
   var _ProductList = class _ProductList2 extends YTNode {
     constructor(data) {
       super();
@@ -19123,6 +19768,24 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_HypeFanCreditsSectionView, "HypeFanCreditsSectionView");
   __publicField2(_HypeFanCreditsSectionView, "type", "HypeFanCreditsSectionView");
   var HypeFanCreditsSectionView = _HypeFanCreditsSectionView;
+  var _VideoDescriptionYouchatSectionView = class _VideoDescriptionYouchatSectionView2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "section_title");
+      __publicField2(this, "sub_header_text");
+      __publicField2(this, "primary_button");
+      if ("sectionTitle" in data) {
+        this.section_title = Text2.fromAttributed(data.sectionTitle);
+      }
+      if ("subHeaderText" in data) {
+        this.sub_header_text = Text2.fromAttributed(data.subHeaderText);
+      }
+      this.primary_button = parser_exports.parseItem(data.primaryButton, ButtonView);
+    }
+  };
+  __name(_VideoDescriptionYouchatSectionView, "VideoDescriptionYouchatSectionView");
+  __publicField2(_VideoDescriptionYouchatSectionView, "type", "VideoDescriptionYouchatSectionView");
+  var VideoDescriptionYouchatSectionView = _VideoDescriptionYouchatSectionView;
   var _StructuredDescriptionContent = class _StructuredDescriptionContent2 extends YTNode {
     constructor(data) {
       super();
@@ -19134,7 +19797,7 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
         VideoDescriptionInfocardsSection,
         VideoDescriptionCourseSection,
         VideoDescriptionTranscriptSection,
-        VideoDescriptionTranscriptSection,
+        VideoDescriptionYouchatSectionView,
         HorizontalCardList,
         ReelShelf,
         VideoAttributesSectionView,
@@ -19158,12 +19821,23 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
       __publicField2(this, "identifier");
       __publicField2(this, "visibility");
       this.header = parser_exports.parseItem(data.header, EngagementPanelTitleHeader);
-      this.content = parser_exports.parseItem(data.content, [VideoAttributeView, SectionList, ContinuationItem, ClipSection, StructuredDescriptionContent, MacroMarkersList, ProductList]);
+      this.content = parser_exports.parseItem(data.content, [
+        PlaylistCollaborationView,
+        VideoAttributeView,
+        SectionList,
+        ContinuationItem,
+        ClipSection,
+        StructuredDescriptionContent,
+        MacroMarkersList,
+        ProductList
+      ]);
       this.panel_identifier = data.panelIdentifier;
-      this.identifier = data.identifier ? {
-        surface: data.identifier.surface,
-        tag: data.identifier.tag
-      } : void 0;
+      if ("identifier" in data) {
+        this.identifier = {
+          surface: data.identifier.surface,
+          tag: data.identifier.tag
+        };
+      }
       this.target_id = data.targetId;
       this.visibility = data.visibility;
     }
@@ -20263,24 +20937,6 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_CommentDialog, "CommentDialog");
   __publicField2(_CommentDialog, "type", "CommentDialog");
   var CommentDialog = _CommentDialog;
-  var _CommentReplies = class _CommentReplies2 extends YTNode {
-    constructor(data) {
-      super();
-      __publicField2(this, "contents");
-      __publicField2(this, "view_replies");
-      __publicField2(this, "hide_replies");
-      __publicField2(this, "view_replies_creator_thumbnail");
-      __publicField2(this, "has_channel_owner_replied");
-      this.contents = parser_exports.parseArray(data.contents);
-      this.view_replies = parser_exports.parseItem(data.viewReplies, Button);
-      this.hide_replies = parser_exports.parseItem(data.hideReplies, Button);
-      this.view_replies_creator_thumbnail = Thumbnail.fromResponse(data.viewRepliesCreatorThumbnail);
-      this.has_channel_owner_replied = !!data.viewRepliesCreatorThumbnail;
-    }
-  };
-  __name(_CommentReplies, "CommentReplies");
-  __publicField2(_CommentReplies, "type", "CommentReplies");
-  var CommentReplies = _CommentReplies;
   var _CommentReplyDialog = class _CommentReplyDialog2 extends YTNode {
     constructor(data) {
       super();
@@ -20299,112 +20955,6 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_CommentReplyDialog, "CommentReplyDialog");
   __publicField2(_CommentReplyDialog, "type", "CommentReplyDialog");
   var CommentReplyDialog = _CommentReplyDialog;
-  var _CommentsSimplebox = class _CommentsSimplebox2 extends YTNode {
-    constructor(data) {
-      super();
-      __publicField2(this, "simplebox_avatar");
-      __publicField2(this, "simplebox_placeholder");
-      this.simplebox_avatar = Thumbnail.fromResponse(data.simpleboxAvatar);
-      this.simplebox_placeholder = new Text2(data.simpleboxPlaceholder);
-    }
-  };
-  __name(_CommentsSimplebox, "CommentsSimplebox");
-  __publicField2(_CommentsSimplebox, "type", "CommentsSimplebox");
-  var CommentsSimplebox = _CommentsSimplebox;
-  var _CommentsEntryPointTeaser = class _CommentsEntryPointTeaser2 extends YTNode {
-    constructor(data) {
-      super();
-      __publicField2(this, "teaser_avatar");
-      __publicField2(this, "teaser_content");
-      if (Reflect.has(data, "teaserAvatar")) {
-        this.teaser_avatar = Thumbnail.fromResponse(data.teaserAvatar);
-      }
-      if (Reflect.has(data, "teaserContent")) {
-        this.teaser_content = new Text2(data.teaserContent);
-      }
-    }
-  };
-  __name(_CommentsEntryPointTeaser, "CommentsEntryPointTeaser");
-  __publicField2(_CommentsEntryPointTeaser, "type", "CommentsEntryPointTeaser");
-  var CommentsEntryPointTeaser = _CommentsEntryPointTeaser;
-  var _CommentsEntryPointHeader = class _CommentsEntryPointHeader2 extends YTNode {
-    constructor(data) {
-      super();
-      __publicField2(this, "header");
-      __publicField2(this, "comment_count");
-      __publicField2(this, "teaser_avatar");
-      __publicField2(this, "teaser_content");
-      __publicField2(this, "content_renderer");
-      __publicField2(this, "simplebox_placeholder");
-      if (Reflect.has(data, "headerText")) {
-        this.header = new Text2(data.headerText);
-      }
-      if (Reflect.has(data, "commentCount")) {
-        this.comment_count = new Text2(data.commentCount);
-      }
-      if (Reflect.has(data, "teaserAvatar") || Reflect.has(data, "simpleboxAvatar")) {
-        this.teaser_avatar = Thumbnail.fromResponse(data.teaserAvatar || data.simpleboxAvatar);
-      }
-      if (Reflect.has(data, "teaserContent")) {
-        this.teaser_content = new Text2(data.teaserContent);
-      }
-      if (Reflect.has(data, "contentRenderer")) {
-        this.content_renderer = parser_exports.parseItem(data.contentRenderer, [CommentsEntryPointTeaser, CommentsSimplebox]);
-      }
-      if (Reflect.has(data, "simpleboxPlaceholder")) {
-        this.simplebox_placeholder = new Text2(data.simpleboxPlaceholder);
-      }
-    }
-  };
-  __name(_CommentsEntryPointHeader, "CommentsEntryPointHeader");
-  __publicField2(_CommentsEntryPointHeader, "type", "CommentsEntryPointHeader");
-  var CommentsEntryPointHeader = _CommentsEntryPointHeader;
-  var _CommentsHeader = class _CommentsHeader2 extends YTNode {
-    constructor(data) {
-      super();
-      __publicField2(this, "title");
-      __publicField2(this, "count");
-      __publicField2(this, "comments_count");
-      __publicField2(this, "create_renderer");
-      __publicField2(this, "sort_menu");
-      __publicField2(this, "custom_emojis");
-      this.title = new Text2(data.titleText);
-      this.count = new Text2(data.countText);
-      this.comments_count = new Text2(data.commentsCount);
-      this.create_renderer = parser_exports.parseItem(data.createRenderer);
-      this.sort_menu = parser_exports.parseItem(data.sortMenu, SortFilterSubMenu);
-      if (Reflect.has(data, "customEmojis")) {
-        this.custom_emojis = data.customEmojis.map((emoji) => ({
-          emoji_id: emoji.emojiId,
-          shortcuts: emoji.shortcuts,
-          search_terms: emoji.searchTerms,
-          image: Thumbnail.fromResponse(emoji.image),
-          is_custom_emoji: emoji.isCustomEmoji
-        }));
-      }
-    }
-  };
-  __name(_CommentsHeader, "CommentsHeader");
-  __publicField2(_CommentsHeader, "type", "CommentsHeader");
-  var CommentsHeader = _CommentsHeader;
-  var _CommentSimplebox = class _CommentSimplebox2 extends YTNode {
-    constructor(data) {
-      super();
-      __publicField2(this, "submit_button");
-      __publicField2(this, "cancel_button");
-      __publicField2(this, "author_thumbnail");
-      __publicField2(this, "placeholder");
-      __publicField2(this, "avatar_size");
-      this.submit_button = parser_exports.parseItem(data.submitButton, Button);
-      this.cancel_button = parser_exports.parseItem(data.cancelButton, Button);
-      this.author_thumbnail = Thumbnail.fromResponse(data.authorThumbnail);
-      this.placeholder = new Text2(data.placeholderText);
-      this.avatar_size = data.avatarSize;
-    }
-  };
-  __name(_CommentSimplebox, "CommentSimplebox");
-  __publicField2(_CommentSimplebox, "type", "CommentSimplebox");
-  var CommentSimplebox = _CommentSimplebox;
   var _VoiceReplyContainerView = class _VoiceReplyContainerView2 extends YTNode {
     constructor(data) {
       super();
@@ -20434,6 +20984,7 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
       __publicField2(this, "content");
       __publicField2(this, "published_time");
       __publicField2(this, "author_is_channel_owner");
+      __publicField2(this, "author_button_a11y");
       __publicField2(this, "creator_thumbnail_url");
       __publicField2(this, "like_button_a11y");
       __publicField2(this, "like_count");
@@ -20446,6 +20997,7 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
       __publicField2(this, "heart_active_tooltip");
       __publicField2(this, "reply_count");
       __publicField2(this, "reply_count_a11y");
+      __publicField2(this, "reply_level");
       __publicField2(this, "is_member");
       __publicField2(this, "member_badge");
       __publicField2(this, "author");
@@ -20464,9 +21016,12 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
       };
     }
     applyMutations(comment, toolbar_state, toolbar_surface, comment_surface) {
+      var _a2, _b2, _c, _d, _e, _f, _g;
       if (comment) {
         this.content = Text2.fromAttributed(comment.properties.content);
         this.published_time = comment.properties.publishedTime;
+        this.reply_level = ((_a2 = comment.properties) == null ? void 0 : _a2.replyLevel) ? (_b2 = comment.properties) == null ? void 0 : _b2.replyLevel : 0;
+        this.author_button_a11y = (_c = comment.properties) == null ? void 0 : _c.authorButtonA11y;
         this.author_is_channel_owner = !!comment.author.isCreator;
         this.creator_thumbnail_url = comment.toolbar.creatorThumbnailUrl;
         this.like_count = comment.toolbar.likeCountNotliked ? comment.toolbar.likeCountNotliked : "0";
@@ -20481,16 +21036,20 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
         this.reply_count_a11y = comment.toolbar.replyCountA11y;
         this.reply_count = comment.toolbar.replyCount ? comment.toolbar.replyCount : "0";
         this.is_member = !!comment.author.sponsorBadgeUrl;
-        if (Reflect.has(comment.author, "sponsorBadgeUrl")) {
+        if ("sponsorBadgeUrl" in comment.author) {
           this.member_badge = {
             url: comment.author.sponsorBadgeUrl,
-            a11y: comment.author.A11y
+            a11y: (_d = comment.author) == null ? void 0 : _d.sponsorBadgeA11y
           };
+        }
+        let thumbs = (_e = comment.avatar) == null ? void 0 : _e.image;
+        if (!thumbs && "avatarThumbnailUrl" in comment.author) {
+          thumbs = { thumbnails: [{ url: comment.author.avatarThumbnailUrl, width: 88, height: 88 }] };
         }
         this.author = new Author({
           simpleText: comment.author.displayName,
-          navigationEndpoint: comment.avatar.endpoint
-        }, comment.author, comment.avatar.image, comment.author.channelId);
+          navigationEndpoint: ((_f = comment.avatar) == null ? void 0 : _f.endpoint) || ((_g = comment.author) == null ? void 0 : _g.channelCommand)
+        }, comment.author, thumbs, comment.author.channelId);
       }
       if (toolbar_state) {
         this.is_hearted = toolbar_state.heartState === "TOOLBAR_HEART_STATE_HEARTED";
@@ -20621,9 +21180,56 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __publicField2(_CommentView, "type", "CommentView");
   var CommentView = _CommentView;
   var _actions2;
+  var _nextContinuationItem;
+  var _CommentsContinuation = class _CommentsContinuation2 {
+    constructor(actions, data) {
+      __publicField2(this, "replies", observe([]));
+      __privateAdd(this, _actions2);
+      __privateAdd(this, _nextContinuationItem);
+      __privateSet(this, _actions2, actions);
+      if (!data.on_response_received_endpoints || !data.on_response_received_endpoints_memo) {
+        throw new InnertubeError("Invalid response received for comments continuation", data);
+      }
+      const appendContinuationItemsNode = data.on_response_received_endpoints.firstOfType(AppendContinuationItemsAction);
+      if (appendContinuationItemsNode) {
+        for (const item of appendContinuationItemsNode.contents) {
+          if (item.is(CommentThread)) {
+            item.setActions(__privateGet(this, _actions2));
+            item.processRepliesData();
+            this.replies.push(item);
+          } else if (item.is(ContinuationItem)) {
+            __privateSet(this, _nextContinuationItem, item);
+          }
+        }
+      }
+    }
+    /**
+     * Indicates whether this comment thread has more replies that can be fetched.
+     */
+    get has_continuation() {
+      return !!__privateGet(this, _nextContinuationItem);
+    }
+    /**
+     * Retrieves next batch of replies.
+     */
+    async getContinuation() {
+      if (!__privateGet(this, _nextContinuationItem))
+        throw new InnertubeError("No continuation item found");
+      const loadMoreButton = __privateGet(this, _nextContinuationItem).button;
+      if (!loadMoreButton)
+        throw new InnertubeError('"Load more" button not found in continuation item');
+      const response = await loadMoreButton.endpoint.call(__privateGet(this, _actions2), { parse: true });
+      return new _CommentsContinuation2(__privateGet(this, _actions2), response);
+    }
+  };
+  _actions2 = /* @__PURE__ */ new WeakMap();
+  _nextContinuationItem = /* @__PURE__ */ new WeakMap();
+  __name(_CommentsContinuation, "CommentsContinuation");
+  var CommentsContinuation = _CommentsContinuation;
+  var _actions3;
   var _continuation;
   var _CommentThread_instances;
-  var getPatchedReplies_fn;
+  var processList_fn;
   var _CommentThread = class _CommentThread2 extends YTNode {
     constructor(data) {
       super();
@@ -20633,35 +21239,53 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
       __publicField2(this, "comment_replies_data");
       __publicField2(this, "is_moderated_elq_comment");
       __publicField2(this, "has_replies");
-      __privateAdd(this, _actions2);
+      __publicField2(this, "rendering_priority");
+      __privateAdd(this, _actions3);
       __privateAdd(this, _continuation);
       this.comment = parser_exports.parseItem(data.commentViewModel, CommentView);
       this.comment_replies_data = parser_exports.parseItem(data.replies, CommentReplies);
       this.is_moderated_elq_comment = data.isModeratedElqComment;
+      this.rendering_priority = data.renderingPriority;
       this.has_replies = !!this.comment_replies_data;
     }
+    /**
+     * Indicates whether this comment thread has more replies that can be fetched.
+     */
     get has_continuation() {
       if (!this.replies)
-        throw new InnertubeError("Cannot determine if there is a continuation because this thread's replies have not been loaded.");
+        throw new InnertubeError("Cannot determine if there is a continuation because this comment thread's replies have not been loaded");
       return !!__privateGet(this, _continuation);
+    }
+    /**
+     * Indicates whether this comment thread has prepopulated reply data. If false, you will need to call {@link CommentThread.getReplies} to fetch the initial batch of replies.
+     */
+    get is_prepopulated() {
+      var _a2;
+      return !!this.comment_replies_data && ((_a2 = this.comment_replies_data.sub_threads[0]) == null ? void 0 : _a2.is(_CommentThread2));
     }
     /**
      * Retrieves replies to this comment thread.
      */
     async getReplies() {
-      var _a2;
-      if (!__privateGet(this, _actions2))
-        throw new InnertubeError("Actions instance not set for this thread.");
+      if (!__privateGet(this, _actions3))
+        throw new InnertubeError("Actions instance not set for this comment thread");
       if (!this.comment_replies_data)
-        throw new InnertubeError("This comment has no replies.", this);
-      const continuation = (_a2 = this.comment_replies_data.contents) == null ? void 0 : _a2.firstOfType(ContinuationItem);
-      if (!continuation)
-        throw new InnertubeError("Replies continuation not found.");
-      const response = await continuation.endpoint.call(__privateGet(this, _actions2), { parse: true });
-      if (!response.on_response_received_endpoints_memo)
-        throw new InnertubeError("Unexpected response.", response);
-      this.replies = __privateMethod(this, _CommentThread_instances, getPatchedReplies_fn).call(this, response.on_response_received_endpoints_memo);
-      __privateSet(this, _continuation, response.on_response_received_endpoints_memo.getType(ContinuationItem)[0]);
+        throw new InnertubeError("This comment thread has no replies", this);
+      if (!this.is_prepopulated) {
+        const continuation = this.comment_replies_data.sub_threads.firstOfType(ContinuationItem);
+        if (!continuation)
+          throw new InnertubeError("Replies continuation item not found");
+        let endpoint = continuation.endpoint;
+        if (continuation.button)
+          endpoint = continuation.button.endpoint;
+        const response = await endpoint.call(__privateGet(this, _actions3), { parse: true });
+        if (!response.on_response_received_endpoints)
+          throw new InnertubeError("Unexpected response", response);
+        const appendContinuationItemsNode = response.on_response_received_endpoints.firstOfType(AppendContinuationItemsAction);
+        if (appendContinuationItemsNode) {
+          __privateMethod(this, _CommentThread_instances, processList_fn).call(this, appendContinuationItemsNode.contents.as(_CommentThread2, ContinuationItem));
+        }
+      }
       return this;
     }
     /**
@@ -20670,37 +21294,178 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
     async getContinuation() {
       var _a2;
       if (!this.replies)
-        throw new InnertubeError("Cannot retrieve continuation because this thread's replies have not been loaded.");
+        throw new InnertubeError("Cannot retrieve continuation because this comment thread's replies have not been loaded");
       if (!__privateGet(this, _continuation))
-        throw new InnertubeError("Continuation not found.");
-      if (!__privateGet(this, _actions2))
-        throw new InnertubeError("Actions instance not set for this thread.");
-      const load_more_button = (_a2 = __privateGet(this, _continuation).button) == null ? void 0 : _a2.as(Button);
-      if (!load_more_button)
-        throw new InnertubeError('"Load more" button not found.');
-      const response = await load_more_button.endpoint.call(__privateGet(this, _actions2), { parse: true });
-      if (!response.on_response_received_endpoints_memo)
-        throw new InnertubeError("Unexpected response.", response);
-      this.replies = __privateMethod(this, _CommentThread_instances, getPatchedReplies_fn).call(this, response.on_response_received_endpoints_memo);
-      __privateSet(this, _continuation, response.on_response_received_endpoints_memo.getType(ContinuationItem)[0]);
-      return this;
+        throw new InnertubeError("No continuation item found");
+      if (!__privateGet(this, _actions3))
+        throw new InnertubeError("Actions instance not set for this comment thread");
+      const loadMoreButton = (_a2 = __privateGet(this, _continuation).button) == null ? void 0 : _a2.as(Button);
+      if (!loadMoreButton)
+        throw new InnertubeError('Cannot retrieve continuation because the "Load more" button is missing');
+      const response = await loadMoreButton.endpoint.call(__privateGet(this, _actions3), { parse: true });
+      return new CommentsContinuation(__privateGet(this, _actions3), response);
     }
+    /**
+     * @internal
+     */
     setActions(actions) {
-      __privateSet(this, _actions2, actions);
+      __privateSet(this, _actions3, actions);
+    }
+    /**
+     * @internal
+     */
+    processRepliesData() {
+      if (this.is_prepopulated && !this.replies) {
+        __privateMethod(this, _CommentThread_instances, processList_fn).call(this, this.comment_replies_data.sub_threads);
+      }
     }
   };
-  _actions2 = /* @__PURE__ */ new WeakMap();
+  _actions3 = /* @__PURE__ */ new WeakMap();
   _continuation = /* @__PURE__ */ new WeakMap();
   _CommentThread_instances = /* @__PURE__ */ new WeakSet();
-  getPatchedReplies_fn = /* @__PURE__ */ __name(function(data) {
-    return observe(data.getType(CommentView).map((comment) => {
-      comment.setActions(__privateGet(this, _actions2));
-      return comment;
-    }));
-  }, "#getPatchedReplies");
+  processList_fn = /* @__PURE__ */ __name(function(contents) {
+    if (!__privateGet(this, _actions3))
+      throw new InnertubeError("Actions instance not set for this comment thread");
+    this.replies = observe([]);
+    for (const item of contents) {
+      if (item.is(_CommentThread)) {
+        item.setActions(__privateGet(this, _actions3));
+        item.processRepliesData();
+        this.replies.push(item);
+      } else if (item.is(ContinuationItem)) {
+        __privateSet(this, _continuation, item);
+      }
+    }
+  }, "#processList");
   __name(_CommentThread, "CommentThread");
   __publicField2(_CommentThread, "type", "CommentThread");
   var CommentThread = _CommentThread;
+  var _CommentReplies = class _CommentReplies2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "contents");
+      __publicField2(this, "sub_threads");
+      __publicField2(this, "view_replies");
+      __publicField2(this, "hide_replies");
+      __publicField2(this, "view_replies_creator_thumbnail");
+      __publicField2(this, "has_channel_owner_replied");
+      this.contents = parser_exports.parseArray(data.contents, [CommentView, ContinuationItem]);
+      this.sub_threads = parser_exports.parseArray(data.subThreads, [CommentThread, ContinuationItem]);
+      this.view_replies = parser_exports.parseItem(data.viewReplies, Button);
+      this.hide_replies = parser_exports.parseItem(data.hideReplies, Button);
+      this.view_replies_creator_thumbnail = Thumbnail.fromResponse(data.viewRepliesCreatorThumbnail);
+      this.has_channel_owner_replied = !!data.viewRepliesCreatorThumbnail;
+    }
+  };
+  __name(_CommentReplies, "CommentReplies");
+  __publicField2(_CommentReplies, "type", "CommentReplies");
+  var CommentReplies = _CommentReplies;
+  var _CommentsSimplebox = class _CommentsSimplebox2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "simplebox_avatar");
+      __publicField2(this, "simplebox_placeholder");
+      this.simplebox_avatar = Thumbnail.fromResponse(data.simpleboxAvatar);
+      this.simplebox_placeholder = new Text2(data.simpleboxPlaceholder);
+    }
+  };
+  __name(_CommentsSimplebox, "CommentsSimplebox");
+  __publicField2(_CommentsSimplebox, "type", "CommentsSimplebox");
+  var CommentsSimplebox = _CommentsSimplebox;
+  var _CommentsEntryPointTeaser = class _CommentsEntryPointTeaser2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "teaser_avatar");
+      __publicField2(this, "teaser_content");
+      if (Reflect.has(data, "teaserAvatar")) {
+        this.teaser_avatar = Thumbnail.fromResponse(data.teaserAvatar);
+      }
+      if (Reflect.has(data, "teaserContent")) {
+        this.teaser_content = new Text2(data.teaserContent);
+      }
+    }
+  };
+  __name(_CommentsEntryPointTeaser, "CommentsEntryPointTeaser");
+  __publicField2(_CommentsEntryPointTeaser, "type", "CommentsEntryPointTeaser");
+  var CommentsEntryPointTeaser = _CommentsEntryPointTeaser;
+  var _CommentsEntryPointHeader = class _CommentsEntryPointHeader2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "header");
+      __publicField2(this, "comment_count");
+      __publicField2(this, "teaser_avatar");
+      __publicField2(this, "teaser_content");
+      __publicField2(this, "content_renderer");
+      __publicField2(this, "simplebox_placeholder");
+      if (Reflect.has(data, "headerText")) {
+        this.header = new Text2(data.headerText);
+      }
+      if (Reflect.has(data, "commentCount")) {
+        this.comment_count = new Text2(data.commentCount);
+      }
+      if (Reflect.has(data, "teaserAvatar") || Reflect.has(data, "simpleboxAvatar")) {
+        this.teaser_avatar = Thumbnail.fromResponse(data.teaserAvatar || data.simpleboxAvatar);
+      }
+      if (Reflect.has(data, "teaserContent")) {
+        this.teaser_content = new Text2(data.teaserContent);
+      }
+      if (Reflect.has(data, "contentRenderer")) {
+        this.content_renderer = parser_exports.parseItem(data.contentRenderer, [CommentsEntryPointTeaser, CommentsSimplebox]);
+      }
+      if (Reflect.has(data, "simpleboxPlaceholder")) {
+        this.simplebox_placeholder = new Text2(data.simpleboxPlaceholder);
+      }
+    }
+  };
+  __name(_CommentsEntryPointHeader, "CommentsEntryPointHeader");
+  __publicField2(_CommentsEntryPointHeader, "type", "CommentsEntryPointHeader");
+  var CommentsEntryPointHeader = _CommentsEntryPointHeader;
+  var _CommentsHeader = class _CommentsHeader2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "title");
+      __publicField2(this, "count");
+      __publicField2(this, "comments_count");
+      __publicField2(this, "create_renderer");
+      __publicField2(this, "sort_menu");
+      __publicField2(this, "custom_emojis");
+      this.title = new Text2(data.titleText);
+      this.count = new Text2(data.countText);
+      this.comments_count = new Text2(data.commentsCount);
+      this.create_renderer = parser_exports.parseItem(data.createRenderer);
+      this.sort_menu = parser_exports.parseItem(data.sortMenu, SortFilterSubMenu);
+      if (Reflect.has(data, "customEmojis")) {
+        this.custom_emojis = data.customEmojis.map((emoji) => ({
+          emoji_id: emoji.emojiId,
+          shortcuts: emoji.shortcuts,
+          search_terms: emoji.searchTerms,
+          image: Thumbnail.fromResponse(emoji.image),
+          is_custom_emoji: emoji.isCustomEmoji
+        }));
+      }
+    }
+  };
+  __name(_CommentsHeader, "CommentsHeader");
+  __publicField2(_CommentsHeader, "type", "CommentsHeader");
+  var CommentsHeader = _CommentsHeader;
+  var _CommentSimplebox = class _CommentSimplebox2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "submit_button");
+      __publicField2(this, "cancel_button");
+      __publicField2(this, "author_thumbnail");
+      __publicField2(this, "placeholder");
+      __publicField2(this, "avatar_size");
+      this.submit_button = parser_exports.parseItem(data.submitButton, Button);
+      this.cancel_button = parser_exports.parseItem(data.cancelButton, Button);
+      this.author_thumbnail = Thumbnail.fromResponse(data.authorThumbnail);
+      this.placeholder = new Text2(data.placeholderText);
+      this.avatar_size = data.avatarSize;
+    }
+  };
+  __name(_CommentSimplebox, "CommentSimplebox");
+  __publicField2(_CommentSimplebox, "type", "CommentSimplebox");
+  var CommentSimplebox = _CommentSimplebox;
   var _PdgCommentChip = class _PdgCommentChip2 extends YTNode {
     constructor(data) {
       var _a2, _b2;
@@ -20892,7 +21657,7 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __publicField2(_CompactStation, "type", "CompactStation");
   var CompactStation = _CompactStation;
   var _CompositeVideoPrimaryInfo = class _CompositeVideoPrimaryInfo2 extends YTNode {
-    constructor(_data23) {
+    constructor(_data24) {
       super();
     }
   };
@@ -22017,15 +22782,33 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_ShareEntityEndpoint, "ShareEntityEndpoint");
   __publicField2(_ShareEntityEndpoint, "type", "ShareEntityEndpoint");
   var ShareEntityEndpoint = _ShareEntityEndpoint;
+  var API_PATH17 = "get_panel";
+  var _data20;
   var _ShowEngagementPanelEndpoint = class _ShowEngagementPanelEndpoint2 extends YTNode {
     constructor(data) {
       super();
+      __privateAdd(this, _data20);
       __publicField2(this, "panel_identifier");
       __publicField2(this, "source_panel_identifier");
+      __privateSet(this, _data20, data);
       this.panel_identifier = data.panelIdentifier;
       this.source_panel_identifier = data.sourcePanelIdentifier;
     }
+    getApiPath() {
+      return API_PATH17;
+    }
+    buildRequest() {
+      var _a2, _b2, _c;
+      const request = {};
+      const panelId = __privateGet(this, _data20).panelIdentifier || ((_a2 = __privateGet(this, _data20).identifier) == null ? void 0 : _a2.tag);
+      if (panelId)
+        request.panelId = panelId;
+      if ((_b2 = __privateGet(this, _data20).globalConfiguration) == null ? void 0 : _b2.params)
+        request.params = (_c = __privateGet(this, _data20).globalConfiguration) == null ? void 0 : _c.params;
+      return request;
+    }
   };
+  _data20 = /* @__PURE__ */ new WeakMap();
   __name(_ShowEngagementPanelEndpoint, "ShowEngagementPanelEndpoint");
   __publicField2(_ShowEngagementPanelEndpoint, "type", "ShowEngagementPanelEndpoint");
   var ShowEngagementPanelEndpoint = _ShowEngagementPanelEndpoint;
@@ -22046,39 +22829,9 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_SignalServiceEndpoint, "SignalServiceEndpoint");
   __publicField2(_SignalServiceEndpoint, "type", "SignalServiceEndpoint");
   var SignalServiceEndpoint = _SignalServiceEndpoint;
-  var API_PATH17 = "subscription/subscribe";
-  var _data20;
-  var _SubscribeEndpoint = class _SubscribeEndpoint2 extends YTNode {
-    constructor(data) {
-      super();
-      __privateAdd(this, _data20);
-      __privateSet(this, _data20, data);
-    }
-    getApiPath() {
-      return API_PATH17;
-    }
-    buildRequest() {
-      const request = {};
-      if (__privateGet(this, _data20).channelIds)
-        request.channelIds = __privateGet(this, _data20).channelIds;
-      if (__privateGet(this, _data20).siloName)
-        request.siloName = __privateGet(this, _data20).siloName;
-      if (__privateGet(this, _data20).params)
-        request.params = __privateGet(this, _data20).params;
-      if (__privateGet(this, _data20).botguardResponse)
-        request.botguardResponse = __privateGet(this, _data20).botguardResponse;
-      if (__privateGet(this, _data20).feature)
-        request.clientFeature = __privateGet(this, _data20).feature;
-      return request;
-    }
-  };
-  _data20 = /* @__PURE__ */ new WeakMap();
-  __name(_SubscribeEndpoint, "SubscribeEndpoint");
-  __publicField2(_SubscribeEndpoint, "type", "SubscribeEndpoint");
-  var SubscribeEndpoint = _SubscribeEndpoint;
-  var API_PATH18 = "subscription/unsubscribe";
+  var API_PATH18 = "subscription/subscribe";
   var _data21;
-  var _UnsubscribeEndpoint = class _UnsubscribeEndpoint2 extends YTNode {
+  var _SubscribeEndpoint = class _SubscribeEndpoint2 extends YTNode {
     constructor(data) {
       super();
       __privateAdd(this, _data21);
@@ -22095,16 +22848,20 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
         request.siloName = __privateGet(this, _data21).siloName;
       if (__privateGet(this, _data21).params)
         request.params = __privateGet(this, _data21).params;
+      if (__privateGet(this, _data21).botguardResponse)
+        request.botguardResponse = __privateGet(this, _data21).botguardResponse;
+      if (__privateGet(this, _data21).feature)
+        request.clientFeature = __privateGet(this, _data21).feature;
       return request;
     }
   };
   _data21 = /* @__PURE__ */ new WeakMap();
-  __name(_UnsubscribeEndpoint, "UnsubscribeEndpoint");
-  __publicField2(_UnsubscribeEndpoint, "type", "UnsubscribeEndpoint");
-  var UnsubscribeEndpoint = _UnsubscribeEndpoint;
-  var API_PATH19 = "next";
+  __name(_SubscribeEndpoint, "SubscribeEndpoint");
+  __publicField2(_SubscribeEndpoint, "type", "SubscribeEndpoint");
+  var SubscribeEndpoint = _SubscribeEndpoint;
+  var API_PATH19 = "subscription/unsubscribe";
   var _data22;
-  var _WatchNextEndpoint = class _WatchNextEndpoint2 extends YTNode {
+  var _UnsubscribeEndpoint = class _UnsubscribeEndpoint2 extends YTNode {
     constructor(data) {
       super();
       __privateAdd(this, _data22);
@@ -22115,20 +22872,46 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
     }
     buildRequest() {
       const request = {};
-      if (__privateGet(this, _data22).videoId)
-        request.videoId = __privateGet(this, _data22).videoId;
-      if (__privateGet(this, _data22).playlistId)
-        request.playlistId = __privateGet(this, _data22).playlistId;
-      if (__privateGet(this, _data22).index !== void 0 || __privateGet(this, _data22).playlistIndex !== void 0)
-        request.playlistIndex = __privateGet(this, _data22).index || __privateGet(this, _data22).playlistIndex;
-      if (__privateGet(this, _data22).playerParams || __privateGet(this, _data22).params)
-        request.params = __privateGet(this, _data22).playerParams || __privateGet(this, _data22).params;
-      request.racyCheckOk = !!__privateGet(this, _data22).racyCheckOk;
-      request.contentCheckOk = !!__privateGet(this, _data22).contentCheckOk;
+      if (__privateGet(this, _data22).channelIds)
+        request.channelIds = __privateGet(this, _data22).channelIds;
+      if (__privateGet(this, _data22).siloName)
+        request.siloName = __privateGet(this, _data22).siloName;
+      if (__privateGet(this, _data22).params)
+        request.params = __privateGet(this, _data22).params;
       return request;
     }
   };
   _data22 = /* @__PURE__ */ new WeakMap();
+  __name(_UnsubscribeEndpoint, "UnsubscribeEndpoint");
+  __publicField2(_UnsubscribeEndpoint, "type", "UnsubscribeEndpoint");
+  var UnsubscribeEndpoint = _UnsubscribeEndpoint;
+  var API_PATH20 = "next";
+  var _data23;
+  var _WatchNextEndpoint = class _WatchNextEndpoint2 extends YTNode {
+    constructor(data) {
+      super();
+      __privateAdd(this, _data23);
+      __privateSet(this, _data23, data);
+    }
+    getApiPath() {
+      return API_PATH20;
+    }
+    buildRequest() {
+      const request = {};
+      if (__privateGet(this, _data23).videoId)
+        request.videoId = __privateGet(this, _data23).videoId;
+      if (__privateGet(this, _data23).playlistId)
+        request.playlistId = __privateGet(this, _data23).playlistId;
+      if (__privateGet(this, _data23).index !== void 0 || __privateGet(this, _data23).playlistIndex !== void 0)
+        request.playlistIndex = __privateGet(this, _data23).index || __privateGet(this, _data23).playlistIndex;
+      if (__privateGet(this, _data23).playerParams || __privateGet(this, _data23).params)
+        request.params = __privateGet(this, _data23).playerParams || __privateGet(this, _data23).params;
+      request.racyCheckOk = !!__privateGet(this, _data23).racyCheckOk;
+      request.contentCheckOk = !!__privateGet(this, _data23).contentCheckOk;
+      return request;
+    }
+  };
+  _data23 = /* @__PURE__ */ new WeakMap();
   __name(_WatchNextEndpoint, "WatchNextEndpoint");
   __publicField2(_WatchNextEndpoint, "type", "WatchNextEndpoint");
   var WatchNextEndpoint = _WatchNextEndpoint;
@@ -23077,6 +23860,18 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_SortFilterHeader, "SortFilterHeader");
   __publicField2(_SortFilterHeader, "type", "SortFilterHeader");
   var SortFilterHeader = _SortFilterHeader;
+  var _RelatedChipCloud = class _RelatedChipCloud2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "content");
+      __publicField2(this, "show_prominent_chips");
+      this.content = parser_exports.parseItem(data.content);
+      this.show_prominent_chips = Boolean(data.showProminentChips);
+    }
+  };
+  __name(_RelatedChipCloud, "RelatedChipCloud");
+  __publicField2(_RelatedChipCloud, "type", "RelatedChipCloud");
+  var RelatedChipCloud = _RelatedChipCloud;
   var _ItemSection = class _ItemSection2 extends YTNode {
     constructor(data) {
       var _a2, _b2, _c;
@@ -23085,13 +23880,13 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
       __publicField2(this, "contents");
       __publicField2(this, "target_id");
       __publicField2(this, "continuation");
-      this.header = parser_exports.parseItem(data.header, [CommentsHeader, ItemSectionHeader, ItemSectionTabbedHeader, SortFilterHeader, FeedFilterChipBar, ChipBarView]);
+      this.header = parser_exports.parseItem(data.header, [CommentsHeader, ItemSectionHeader, ItemSectionTabbedHeader, SortFilterHeader, FeedFilterChipBar, ChipBarView, RelatedChipCloud]);
       this.contents = parser_exports.parseArray(data.contents);
       if (data.targetId || data.sectionIdentifier) {
         this.target_id = data.targetId || data.sectionIdentifier;
       }
       if (data.continuations) {
-        this.continuation = (_c = (_b2 = (_a2 = data.continuations) == null ? void 0 : _a2.at(0)) == null ? void 0 : _b2.nextContinuationData) == null ? void 0 : _c.continuation;
+        this.continuation = (_c = (_b2 = (_a2 = data.continuations) == null ? void 0 : _a2[0]) == null ? void 0 : _b2.nextContinuationData) == null ? void 0 : _c.continuation;
       }
     }
   };
@@ -24330,7 +25125,7 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __publicField2(_MultiPageMenuNotificationSection, "type", "MultiPageMenuNotificationSection");
   var MultiPageMenuNotificationSection = _MultiPageMenuNotificationSection;
   var _MusicMenuItemDivider = class _MusicMenuItemDivider2 extends YTNode {
-    constructor(_data23) {
+    constructor(_data24) {
       super();
     }
   };
@@ -24807,6 +25602,12 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_MusicResponsiveListItemFlexColumn, "MusicResponsiveListItemFlexColumn");
   __publicField2(_MusicResponsiveListItemFlexColumn, "type", "MusicResponsiveListItemFlexColumn");
   var MusicResponsiveListItemFlexColumn = _MusicResponsiveListItemFlexColumn;
+  var DURATION_TEXT = /^\d+(?::[0-5]\d)+$/;
+  function findDurationText(runs) {
+    var _a2;
+    return (_a2 = runs == null ? void 0 : runs.findLast((run) => DURATION_TEXT.test(run.text))) == null ? void 0 : _a2.text;
+  }
+  __name(findDurationText, "findDurationText");
   var _MusicResponsiveListItem_instances;
   var parseOther_fn;
   var parseVideoOrSong_fn;
@@ -24852,7 +25653,7 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
         video_id: ((_a2 = data == null ? void 0 : data.playlistItemData) == null ? void 0 : _a2.videoId) || null,
         playlist_set_video_id: ((_b2 = data == null ? void 0 : data.playlistItemData) == null ? void 0 : _b2.playlistSetVideoId) || null
       };
-      if (Reflect.has(data, "navigationEndpoint")) {
+      if ("navigationEndpoint" in data) {
         this.endpoint = new NavigationEndpoint(data.navigationEndpoint);
       }
       let page_type = (_f = (_e = (_d = (_c = this.endpoint) == null ? void 0 : _c.payload) == null ? void 0 : _d.browseEndpointContextSupportedConfigs) == null ? void 0 : _e.browseEndpointContextMusicConfig) == null ? void 0 : _f.pageType;
@@ -24898,19 +25699,19 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
             __privateMethod(this, _MusicResponsiveListItem_instances, parseOther_fn).call(this);
           }
       }
-      if (Reflect.has(data, "index")) {
+      if ("index" in data) {
         this.index = new Text2(data.index);
       }
-      if (Reflect.has(data, "thumbnail")) {
+      if ("thumbnail" in data) {
         this.thumbnail = parser_exports.parseItem(data.thumbnail, MusicThumbnail);
       }
-      if (Reflect.has(data, "badges")) {
+      if ("badges" in data) {
         this.badges = parser_exports.parseArray(data.badges);
       }
-      if (Reflect.has(data, "menu")) {
+      if ("menu" in data) {
         this.menu = parser_exports.parseItem(data.menu, Menu);
       }
-      if (Reflect.has(data, "overlay")) {
+      if ("overlay" in data) {
         this.overlay = parser_exports.parseItem(data.overlay, MusicItemThumbnailOverlay);
       }
     }
@@ -24946,25 +25747,25 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
     }
   }, "#parseVideoOrSong");
   parseSong_fn = /* @__PURE__ */ __name(function(playlist_item_data) {
-    var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
+    var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
     this.id = playlist_item_data.video_id || ((_b2 = (_a2 = this.endpoint) == null ? void 0 : _a2.payload) == null ? void 0 : _b2.videoId);
     this.title = this.flex_columns[0].title.toString();
-    const duration_text = ((_e = (_d = (_c = this.flex_columns.at(1)) == null ? void 0 : _c.title.runs) == null ? void 0 : _d.find((run) => /^\d+$/.test(run.text.replace(/:/g, "")))) == null ? void 0 : _e.text) || ((_g = (_f = this.fixed_columns[0]) == null ? void 0 : _f.title) == null ? void 0 : _g.toString());
+    const duration_text = findDurationText((_c = this.flex_columns.at(1)) == null ? void 0 : _c.title.runs) || ((_e = (_d = this.fixed_columns[0]) == null ? void 0 : _d.title) == null ? void 0 : _e.toString());
     if (duration_text) {
       this.duration = {
         text: duration_text,
         seconds: timeToSeconds(duration_text)
       };
     }
-    const album_run = ((_i = (_h = this.flex_columns.at(1)) == null ? void 0 : _h.title.runs) == null ? void 0 : _i.find((run) => isTextRun(run) && run.endpoint && run.endpoint.payload.browseId.startsWith("MPR"))) || ((_k = (_j = this.flex_columns.at(2)) == null ? void 0 : _j.title.runs) == null ? void 0 : _k.find((run) => isTextRun(run) && run.endpoint && run.endpoint.payload.browseId.startsWith("MPR")));
+    const album_run = ((_g = (_f = this.flex_columns.at(1)) == null ? void 0 : _f.title.runs) == null ? void 0 : _g.find((run) => isTextRun(run) && run.endpoint && run.endpoint.payload.browseId.startsWith("MPR"))) || ((_i = (_h = this.flex_columns.at(2)) == null ? void 0 : _h.title.runs) == null ? void 0 : _i.find((run) => isTextRun(run) && run.endpoint && run.endpoint.payload.browseId.startsWith("MPR")));
     if (album_run && isTextRun(album_run)) {
       this.album = {
-        id: (_m = (_l = album_run.endpoint) == null ? void 0 : _l.payload) == null ? void 0 : _m.browseId,
+        id: (_k = (_j = album_run.endpoint) == null ? void 0 : _j.payload) == null ? void 0 : _k.browseId,
         name: album_run.text,
         endpoint: album_run.endpoint
       };
     }
-    const artist_runs = (_o = (_n = this.flex_columns.at(1)) == null ? void 0 : _n.title.runs) == null ? void 0 : _o.filter((run) => isTextRun(run) && run.endpoint && run.endpoint.payload.browseId.startsWith("UC"));
+    const artist_runs = (_m = (_l = this.flex_columns.at(1)) == null ? void 0 : _l.title.runs) == null ? void 0 : _m.filter((run) => isTextRun(run) && run.endpoint && run.endpoint.payload.browseId.startsWith("UC"));
     if (artist_runs) {
       this.artists = artist_runs.map((run) => {
         var _a3, _b3;
@@ -24977,7 +25778,7 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
     }
   }, "#parseSong");
   parseVideo_fn = /* @__PURE__ */ __name(function(playlist_item_data) {
-    var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j;
+    var _a2, _b2, _c, _d, _e, _f;
     this.id = playlist_item_data.video_id;
     this.title = this.flex_columns[0].title.toString();
     this.views = (_c = (_b2 = (_a2 = this.flex_columns.at(1)) == null ? void 0 : _a2.title.runs) == null ? void 0 : _b2.find((run) => run.text.match(/(.*?) views/))) == null ? void 0 : _c.toString();
@@ -24992,7 +25793,7 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
         };
       });
     }
-    const duration_text = ((_g = (_f = this.flex_columns[1].title.runs) == null ? void 0 : _f.find((run) => /^\d+$/.test(run.text.replace(/:/g, "")))) == null ? void 0 : _g.text) || ((_j = (_i = (_h = this.fixed_columns[0]) == null ? void 0 : _h.title.runs) == null ? void 0 : _i.find((run) => /^\d+$/.test(run.text.replace(/:/g, "")))) == null ? void 0 : _j.text);
+    const duration_text = findDurationText(this.flex_columns[1].title.runs) || findDurationText((_f = this.fixed_columns[0]) == null ? void 0 : _f.title.runs);
     if (duration_text) {
       this.duration = {
         text: duration_text,
@@ -26646,16 +27447,6 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_ReelPlayerOverlay, "ReelPlayerOverlay");
   __publicField2(_ReelPlayerOverlay, "type", "ReelPlayerOverlay");
   var ReelPlayerOverlay = _ReelPlayerOverlay;
-  var _RelatedChipCloud = class _RelatedChipCloud2 extends YTNode {
-    constructor(data) {
-      super();
-      __publicField2(this, "content");
-      this.content = parser_exports.parseItem(data.content);
-    }
-  };
-  __name(_RelatedChipCloud, "RelatedChipCloud");
-  __publicField2(_RelatedChipCloud, "type", "RelatedChipCloud");
-  var RelatedChipCloud = _RelatedChipCloud;
   var _RichGrid = class _RichGrid2 extends YTNode {
     constructor(data) {
       super();
@@ -27403,6 +28194,16 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_ThumbnailLandscapePortrait, "ThumbnailLandscapePortrait");
   __publicField2(_ThumbnailLandscapePortrait, "type", "ThumbnailLandscapePortrait");
   var ThumbnailLandscapePortrait = _ThumbnailLandscapePortrait;
+  var _ThumbnailOverlayAvatarStackView = class _ThumbnailOverlayAvatarStackView2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "avatar_stack");
+      this.avatar_stack = parser_exports.parseItem(data.avatarStack, AvatarStackView);
+    }
+  };
+  __name(_ThumbnailOverlayAvatarStackView, "ThumbnailOverlayAvatarStackView");
+  __publicField2(_ThumbnailOverlayAvatarStackView, "type", "ThumbnailOverlayAvatarStackView");
+  var ThumbnailOverlayAvatarStackView = _ThumbnailOverlayAvatarStackView;
   var _ThumbnailOverlayEndorsement = class _ThumbnailOverlayEndorsement2 extends YTNode {
     constructor(data) {
       super();
@@ -27540,6 +28341,56 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_ThumbnailOverlayToggleButton, "ThumbnailOverlayToggleButton");
   __publicField2(_ThumbnailOverlayToggleButton, "type", "ThumbnailOverlayToggleButton");
   var ThumbnailOverlayToggleButton = _ThumbnailOverlayToggleButton;
+  var _TicketEvent = class _TicketEvent2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "title");
+      __publicField2(this, "time_month");
+      __publicField2(this, "time_day");
+      __publicField2(this, "link_text");
+      __publicField2(this, "button_text");
+      __publicField2(this, "endpoint");
+      __publicField2(this, "subtitle1");
+      __publicField2(this, "subtitle2");
+      __publicField2(this, "time_date");
+      __publicField2(this, "time_time");
+      __publicField2(this, "time_weekday");
+      __publicField2(this, "button_accessibility_text");
+      __publicField2(this, "has_multiple_offers");
+      this.title = data.title;
+      this.time_month = data.timeMonth;
+      this.time_day = data.timeDay;
+      this.link_text = data.linkText;
+      this.button_text = data.buttonText;
+      this.endpoint = new NavigationEndpoint(data.buttonCommand);
+      this.subtitle1 = data.subtitle1;
+      this.subtitle2 = data.subtitle2;
+      this.time_date = data.timeDate;
+      this.time_time = data.timeTime;
+      this.time_weekday = data.timeWeekday;
+      this.button_accessibility_text = data.buttonAccessibilityText;
+      this.has_multiple_offers = data.hasMultipleOffers;
+    }
+  };
+  __name(_TicketEvent, "TicketEvent");
+  __publicField2(_TicketEvent, "type", "TicketEvent");
+  var TicketEvent = _TicketEvent;
+  var _TicketShelf = class _TicketShelf2 extends YTNode {
+    constructor(data) {
+      super();
+      __publicField2(this, "title");
+      __publicField2(this, "events");
+      __publicField2(this, "information_text");
+      __publicField2(this, "use_calendar_avatar");
+      this.title = data.title;
+      this.events = parser_exports.parseArray(data.events, TicketEvent);
+      this.information_text = data.informationText;
+      this.use_calendar_avatar = data.useCalendarAvatar;
+    }
+  };
+  __name(_TicketShelf, "TicketShelf");
+  __publicField2(_TicketShelf, "type", "TicketShelf");
+  var TicketShelf = _TicketShelf;
   var _TitleAndButtonListHeader = class _TitleAndButtonListHeader2 extends YTNode {
     constructor(data) {
       super();
@@ -27815,10 +28666,15 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
       __publicField2(this, "text");
       __publicField2(this, "subscribed");
       __publicField2(this, "subscription_type");
-      this.text = new Text2(data.text);
-      this.subscribed = data.isSubscribed;
-      if ("subscriptionType" in data)
-        this.subscription_type = data.subscriptionType;
+      if ("text" in data) {
+        this.text = new Text2(data.text);
+      }
+      if ("subscribed" in data) {
+        this.subscribed = data.subscribed;
+      }
+      if ("type" in data) {
+        this.subscription_type = data.type;
+      }
     }
   };
   __name(_SubscriptionButton, "SubscriptionButton");
@@ -27827,14 +28683,29 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   var _VideoOwner = class _VideoOwner2 extends YTNode {
     constructor(data) {
       super();
+      __publicField2(this, "title");
+      __publicField2(this, "attributed_title");
       __publicField2(this, "subscription_button");
       __publicField2(this, "subscriber_count");
+      __publicField2(this, "avatar_stack");
+      __publicField2(this, "endpoint");
       __publicField2(this, "author");
-      if ("subscriptionButton" in data)
+      if ("title" in data) {
+        this.title = new Text2(data.title);
+      }
+      if ("attributedTitle" in data) {
+        this.attributed_title = Text2.fromAttributed(data.attributedTitle);
+      }
+      if ("subscriptionButton" in data) {
         this.subscription_button = new SubscriptionButton(data.subscriptionButton);
+      }
+      if ("navigationEndpoint" in data) {
+        this.endpoint = new NavigationEndpoint(data.navigationEndpoint);
+      }
+      this.avatar_stack = parser_exports.parseItem(data.avatarStack, AvatarStackView);
       this.subscriber_count = new Text2(data.subscriberCountText);
       this.author = new Author({
-        ...data.title,
+        ...data.title || data.attributedTitle,
         navigationEndpoint: data.navigationEndpoint
       }, data.badges, data.thumbnail);
     }
@@ -27992,11 +28863,11 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
   __name(_AnchoredSection, "AnchoredSection");
   __publicField2(_AnchoredSection, "type", "AnchoredSection");
   var AnchoredSection = _AnchoredSection;
-  var _actions3;
+  var _actions4;
   var _KidsBlocklistPickerItem = class _KidsBlocklistPickerItem2 extends YTNode {
     constructor(data) {
       super();
-      __privateAdd(this, _actions3);
+      __privateAdd(this, _actions4);
       __publicField2(this, "child_display_name");
       __publicField2(this, "child_account_description");
       __publicField2(this, "avatar");
@@ -28009,21 +28880,21 @@ ${rawJsonLines.slice(1).map((line) => indent + line).join("\n")}`;
       this.blocked_entity_key = data.blockedEntityKey;
     }
     async blockChannel() {
-      if (!__privateGet(this, _actions3))
+      if (!__privateGet(this, _actions4))
         throw new InnertubeError("An active caller must be provide to perform this operation.");
       const button = this.block_button;
       if (!button)
         throw new InnertubeError("Block button was not found.", { child_display_name: this.child_display_name });
       if (button.is_toggled)
         throw new InnertubeError("This channel is already blocked.", { child_display_name: this.child_display_name });
-      const response = await button.endpoint.call(__privateGet(this, _actions3), { parse: false });
+      const response = await button.endpoint.call(__privateGet(this, _actions4), { parse: false });
       return response;
     }
     setActions(actions) {
-      __privateSet(this, _actions3, actions);
+      __privateSet(this, _actions4, actions);
     }
   };
-  _actions3 = /* @__PURE__ */ new WeakMap();
+  _actions4 = /* @__PURE__ */ new WeakMap();
   __name(_KidsBlocklistPickerItem, "KidsBlocklistPickerItem");
   __publicField2(_KidsBlocklistPickerItem, "type", "KidsBlocklistPickerItem");
   var KidsBlocklistPickerItem = _KidsBlocklistPickerItem;
@@ -29698,6 +30569,10 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     if (engagement_panels.length) {
       parsed_data.engagement_panels = engagement_panels;
     }
+    const content = parseItem(data.content);
+    if (content) {
+      parsed_data.content = content;
+    }
     if (data.bgChallenge) {
       const interpreter_url = {
         private_do_not_access_or_else_trusted_resource_url_wrapped_value: data.bgChallenge.interpreterUrl.privateDoNotAccessOrElseTrustedResourceUrlWrappedValue,
@@ -30039,7 +30914,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   __name(_AccountInfo, "AccountInfo");
   var AccountInfo = _AccountInfo;
   var _page2;
-  var _actions4;
+  var _actions5;
   var _memo;
   var _continuation2;
   var _Feed_instances;
@@ -30049,7 +30924,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     constructor(actions, response, already_parsed = false) {
       __privateAdd(this, _Feed_instances);
       __privateAdd(this, _page2);
-      __privateAdd(this, _actions4);
+      __privateAdd(this, _actions5);
       __privateAdd(this, _memo);
       __privateAdd(this, _continuation2);
       if (__privateMethod(this, _Feed_instances, isParsed_fn).call(this, response) || already_parsed) {
@@ -30069,13 +30944,13 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       if (!memo)
         throw new InnertubeError("No memo found in feed");
       __privateSet(this, _memo, memo);
-      __privateSet(this, _actions4, actions);
+      __privateSet(this, _actions5, actions);
     }
     /**
      * Get all videos on a given page via memo
      */
     static getVideosFromMemo(memo) {
-      return observe(memo.getType(Video, GridVideo, ReelItem, ShortsLockupView, CompactVideo, LockupView, PlaylistVideo, PlaylistPanelVideo, WatchCardCompactVideo).filter((item) => !item.is(LockupView) || (item.content_type === "VIDEO" || item.content_type === "MOVIE" || item.content_type === "SHORT")));
+      return observe(memo.getType(Video, GridVideo, ReelItem, ShortsLockupView, CompactVideo, LockupView, PlaylistVideo, PlaylistPanelVideo, WatchCardCompactVideo).filter((item) => !item.is(LockupView) || (item.content_type === "VIDEO" || item.content_type === "MOVIE" || item.content_type === "SHORT" || item.content_type == "STATION")));
     }
     /**
      * Get all playlists on a given page via memo
@@ -30152,7 +31027,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       return node.secondary_contents;
     }
     get actions() {
-      return __privateGet(this, _actions4);
+      return __privateGet(this, _actions5);
     }
     /**
      * Get the original page data
@@ -30173,7 +31048,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       if (__privateGet(this, _continuation2)) {
         if (__privateGet(this, _continuation2).length === 0)
           throw new InnertubeError("There are no continuations");
-        return await __privateGet(this, _continuation2)[0].endpoint.call(__privateGet(this, _actions4), { parse: true });
+        return await __privateGet(this, _continuation2)[0].endpoint.call(__privateGet(this, _actions5), { parse: true });
       }
       __privateSet(this, _continuation2, __privateMethod(this, _Feed_instances, getBodyContinuations_fn).call(this));
       if (__privateGet(this, _continuation2))
@@ -30190,7 +31065,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page2 = /* @__PURE__ */ new WeakMap();
-  _actions4 = /* @__PURE__ */ new WeakMap();
+  _actions5 = /* @__PURE__ */ new WeakMap();
   _memo = /* @__PURE__ */ new WeakMap();
   _continuation2 = /* @__PURE__ */ new WeakMap();
   _Feed_instances = /* @__PURE__ */ new WeakSet();
@@ -30346,13 +31221,13 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     TabbedFeed: () => TabbedFeed
   });
   var _page3;
-  var _actions5;
+  var _actions6;
   var _cpn;
   var _playback_tracking;
   var _MediaInfo = class _MediaInfo2 {
     constructor(data, actions, cpn) {
       __privateAdd(this, _page3);
-      __privateAdd(this, _actions5);
+      __privateAdd(this, _actions6);
       __privateAdd(this, _cpn);
       __privateAdd(this, _playback_tracking);
       __publicField2(this, "basic_info");
@@ -30365,7 +31240,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       __publicField2(this, "playability_status");
       __publicField2(this, "player_config");
       var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v;
-      __privateSet(this, _actions5, actions);
+      __privateSet(this, _actions6, actions);
       const info2 = parser_exports.parseResponse(data[0].data.playerResponse ? data[0].data.playerResponse : data[0].data);
       const next = ((_a2 = data[1]) == null ? void 0 : _a2.data) ? parser_exports.parseResponse(data[1].data) : void 0;
       __privateSet(this, _page3, [info2, next]);
@@ -30427,14 +31302,14 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       if (typeof manifest_options.captions_format === "string" && ((_a2 = player_response.captions) == null ? void 0 : _a2.caption_tracks)) {
         captions = player_response.captions.caption_tracks;
       }
-      return FormatUtils_exports.toDash(this.streaming_data, (_b2 = this.page[0].video_details) == null ? void 0 : _b2.is_post_live_dvr, options.url_transformer, options.format_filter, __privateGet(this, _cpn), __privateGet(this, _actions5).session.player, __privateGet(this, _actions5), storyboards, captions, manifest_options);
+      return FormatUtils_exports.toDash(this.streaming_data, (_b2 = this.page[0].video_details) == null ? void 0 : _b2.is_post_live_dvr, options.url_transformer, options.format_filter, __privateGet(this, _cpn), __privateGet(this, _actions6).session.player, __privateGet(this, _actions6), storyboards, captions, manifest_options);
     }
     /**
      * Get a cleaned up representation of the adaptive_formats
      */
     getStreamingInfo(url_transformer, format_filter) {
       var _a2;
-      return getStreamingInfo(this.streaming_data, (_a2 = this.page[0].video_details) == null ? void 0 : _a2.is_post_live_dvr, url_transformer, format_filter, this.cpn, __privateGet(this, _actions5).session.player, __privateGet(this, _actions5), __privateGet(this, _page3)[0].storyboards ? __privateGet(this, _page3)[0].storyboards : void 0);
+      return getStreamingInfo(this.streaming_data, (_a2 = this.page[0].video_details) == null ? void 0 : _a2.is_post_live_dvr, url_transformer, format_filter, this.cpn, __privateGet(this, _actions6).session.player, __privateGet(this, _actions6), __privateGet(this, _page3)[0].storyboards ? __privateGet(this, _page3)[0].storyboards : void 0);
     }
     /**
      * Selects the format that best matches the given options.
@@ -30452,7 +31327,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       if (player_response.video_details && (player_response.video_details.is_live || player_response.video_details.is_post_live_dvr)) {
         throw new InnertubeError("Downloading is not supported for live and Post-Live-DVR videos, as they are split up into 5 second segments that are individual files, which require using a tool such as ffmpeg to stitch them together, so they cannot be returned in a single stream.");
       }
-      return FormatUtils_exports.download(options, __privateGet(this, _actions5), this.playability_status, this.streaming_data, __privateGet(this, _actions5).session.player, this.cpn);
+      return FormatUtils_exports.download(options, __privateGet(this, _actions6), this.playability_status, this.streaming_data, __privateGet(this, _actions6).session.player, this.cpn);
     }
     /**
      * Retrieves the video's transcript.
@@ -30485,7 +31360,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         rt: 0
       };
       const url = __privateGet(this, _playback_tracking).videostats_playback_url.replace("https://s.", replacement);
-      return await __privateGet(this, _actions5).stats(url, {
+      return await __privateGet(this, _actions6).stats(url, {
         client_name: client_name || Constants_exports.CLIENTS.WEB.NAME,
         client_version: client_version || Constants_exports.CLIENTS.WEB.VERSION
       }, url_params);
@@ -30501,13 +31376,13 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         final: "1"
       };
       const url = __privateGet(this, _playback_tracking).videostats_watchtime_url.replace("https://s.", replacement);
-      return await __privateGet(this, _actions5).stats(url, {
+      return await __privateGet(this, _actions6).stats(url, {
         client_name,
         client_version
       }, url_params);
     }
     get actions() {
-      return __privateGet(this, _actions5);
+      return __privateGet(this, _actions6);
     }
     /**
      * Content Playback Nonce.
@@ -30523,20 +31398,20 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page3 = /* @__PURE__ */ new WeakMap();
-  _actions5 = /* @__PURE__ */ new WeakMap();
+  _actions6 = /* @__PURE__ */ new WeakMap();
   _cpn = /* @__PURE__ */ new WeakMap();
   _playback_tracking = /* @__PURE__ */ new WeakMap();
   __name(_MediaInfo, "MediaInfo");
   var MediaInfo = _MediaInfo;
-  var _actions6;
+  var _actions7;
   var _tabs;
   var _TabbedFeed = class _TabbedFeed2 extends Feed {
     constructor(actions, data, already_parsed = false) {
       var _a2;
       super(actions, data, already_parsed);
-      __privateAdd(this, _actions6);
+      __privateAdd(this, _actions7);
       __privateAdd(this, _tabs);
-      __privateSet(this, _actions6, actions);
+      __privateSet(this, _actions7, actions);
       __privateSet(this, _tabs, (_a2 = this.page.contents_memo) == null ? void 0 : _a2.getType(Tab));
     }
     get tabs() {
@@ -30550,8 +31425,8 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         throw new InnertubeError(`Tab "${title}" not found`);
       if (tab.selected)
         return this;
-      const response = await tab.endpoint.call(__privateGet(this, _actions6));
-      return new _TabbedFeed2(__privateGet(this, _actions6), response, false);
+      const response = await tab.endpoint.call(__privateGet(this, _actions7));
+      return new _TabbedFeed2(__privateGet(this, _actions7), response, false);
     }
     async getTabByURL(url) {
       var _a2;
@@ -30563,8 +31438,8 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         throw new InnertubeError(`Tab "${url}" not found`);
       if (tab.selected)
         return this;
-      const response = await tab.endpoint.call(__privateGet(this, _actions6));
-      return new _TabbedFeed2(__privateGet(this, _actions6), response, false);
+      const response = await tab.endpoint.call(__privateGet(this, _actions7));
+      return new _TabbedFeed2(__privateGet(this, _actions7), response, false);
     }
     hasTabWithURL(url) {
       var _a2, _b2;
@@ -30578,7 +31453,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       return (_c = (_b2 = (_a2 = this.page.contents_memo) == null ? void 0 : _a2.getType(Tab)) == null ? void 0 : _b2.find((tab) => tab.selected)) == null ? void 0 : _c.title.toString();
     }
   };
-  _actions6 = /* @__PURE__ */ new WeakMap();
+  _actions7 = /* @__PURE__ */ new WeakMap();
   _tabs = /* @__PURE__ */ new WeakMap();
   __name(_TabbedFeed, "TabbedFeed");
   var TabbedFeed = _TabbedFeed;
@@ -30970,29 +31845,30 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   __name(_FilteredChannelList, "FilteredChannelList");
   var FilteredChannelList = _FilteredChannelList;
   var _page4;
-  var _actions7;
+  var _actions8;
   var _continuation3;
   var _Comments = class _Comments2 {
     constructor(actions, data, already_parsed = false) {
       __privateAdd(this, _page4);
-      __privateAdd(this, _actions7);
+      __privateAdd(this, _actions8);
       __privateAdd(this, _continuation3);
       __publicField2(this, "header");
       __publicField2(this, "contents");
       var _a2, _b2, _c, _d, _e;
       __privateSet(this, _page4, already_parsed ? data : parser_exports.parseResponse(data));
-      __privateSet(this, _actions7, actions);
+      __privateSet(this, _actions8, actions);
       const contents = __privateGet(this, _page4).on_response_received_endpoints;
       if (!contents)
-        throw new InnertubeError("Comments page did not have any content.");
+        throw new InnertubeError("The comments page did not have any content");
       const header_node = (_a2 = contents.at(0)) == null ? void 0 : _a2.as(AppendContinuationItemsAction, ReloadContinuationItemsCommand);
       const body_node = (_b2 = contents.at(1)) == null ? void 0 : _b2.as(AppendContinuationItemsAction, ReloadContinuationItemsCommand);
       this.header = (_c = header_node == null ? void 0 : header_node.contents) == null ? void 0 : _c.firstOfType(CommentsHeader);
       const threads = ((_d = body_node == null ? void 0 : body_node.contents) == null ? void 0 : _d.filterType(CommentThread)) || [];
       this.contents = observe(threads.map((thread) => {
         if (thread.comment)
-          thread.comment.setActions(__privateGet(this, _actions7));
-        thread.setActions(__privateGet(this, _actions7));
+          thread.comment.setActions(__privateGet(this, _actions8));
+        thread.setActions(__privateGet(this, _actions8));
+        thread.processRepliesData();
         return thread;
       }));
       __privateSet(this, _continuation3, (_e = body_node == null ? void 0 : body_node.contents) == null ? void 0 : _e.firstOfType(ContinuationItem));
@@ -31004,7 +31880,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     async applySort(sort) {
       var _a2, _b2, _c, _d;
       if (!this.header)
-        throw new InnertubeError("Page header is missing. Cannot apply sort option.");
+        throw new InnertubeError("Could not apply sort because the comments header is missing");
       let button;
       if (sort === "TOP_COMMENTS") {
         button = (_b2 = (_a2 = this.header.sort_menu) == null ? void 0 : _a2.sub_menu_items) == null ? void 0 : _b2.at(0);
@@ -31012,11 +31888,11 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         button = (_d = (_c = this.header.sort_menu) == null ? void 0 : _c.sub_menu_items) == null ? void 0 : _d.at(1);
       }
       if (!button)
-        throw new InnertubeError("Could not find target button.");
+        throw new InnertubeError("Could not apply sort because the sort button is missing");
       if (button.selected)
         return this;
-      const response = await button.endpoint.call(__privateGet(this, _actions7), { parse: true });
-      return new _Comments2(__privateGet(this, _actions7), response, true);
+      const response = await button.endpoint.call(__privateGet(this, _actions8), { parse: true });
+      return new _Comments2(__privateGet(this, _actions8), response, true);
     }
     /**
      * Creates a top-level comment.
@@ -31025,27 +31901,27 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     async createComment(text) {
       var _a2;
       if (!this.header)
-        throw new InnertubeError("Page header is missing. Cannot create comment.");
+        throw new InnertubeError("Comment could not be created because the page header is missing");
       const button = (_a2 = this.header.create_renderer) == null ? void 0 : _a2.as(CommentSimplebox).submit_button;
       if (!button)
-        throw new InnertubeError("Could not find target button. You are probably not logged in.");
+        throw new InnertubeError("Comment could not be created because the comment button is missing");
       if (!button.endpoint)
-        throw new InnertubeError("Button does not have an endpoint.");
-      return await button.endpoint.call(__privateGet(this, _actions7), { commentText: text });
+        throw new InnertubeError("Comment could not be created because the comment button does not have an endpoint");
+      return await button.endpoint.call(__privateGet(this, _actions8), { commentText: text });
     }
     /**
      * Retrieves next batch of comments.
      */
     async getContinuation() {
       if (!__privateGet(this, _continuation3))
-        throw new InnertubeError("Continuation not found");
-      const data = await __privateGet(this, _continuation3).endpoint.call(__privateGet(this, _actions7), { parse: true });
+        throw new InnertubeError("No continuation item found");
+      const data = await __privateGet(this, _continuation3).endpoint.call(__privateGet(this, _actions8), { parse: true });
       const page = Object.assign({}, __privateGet(this, _page4));
       if (!page.on_response_received_endpoints || !data.on_response_received_endpoints)
-        throw new InnertubeError("Invalid reponse format, missing on_response_received_endpoints.");
+        throw new InnertubeError("Invalid reponse format, missing on_response_received_endpoints");
       page.on_response_received_endpoints.pop();
       page.on_response_received_endpoints.push(data.on_response_received_endpoints[0]);
-      return new _Comments2(__privateGet(this, _actions7), page, true);
+      return new _Comments2(__privateGet(this, _actions8), page, true);
     }
     get has_continuation() {
       return !!__privateGet(this, _continuation3);
@@ -31055,7 +31931,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page4 = /* @__PURE__ */ new WeakMap();
-  _actions7 = /* @__PURE__ */ new WeakMap();
+  _actions8 = /* @__PURE__ */ new WeakMap();
   _continuation3 = /* @__PURE__ */ new WeakMap();
   __name(_Comments, "Comments");
   var Comments = _Comments;
@@ -31205,15 +32081,15 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   __name(_HashtagFeed, "HashtagFeed");
   var HashtagFeed = _HashtagFeed;
   var _page6;
-  var _actions8;
+  var _actions9;
   var _items;
   var _ItemMenu = class _ItemMenu2 {
     constructor(data, actions) {
       __privateAdd(this, _page6);
-      __privateAdd(this, _actions8);
+      __privateAdd(this, _actions9);
       __privateAdd(this, _items);
       __privateSet(this, _page6, data);
-      __privateSet(this, _actions8, actions);
+      __privateSet(this, _actions9, actions);
       const menu = data == null ? void 0 : data.live_chat_item_context_menu_supported_renderers;
       if (!menu || !menu.is(Menu))
         throw new InnertubeError('Response did not have a "live_chat_item_context_menu_supported_renderers" property. The call may have failed.');
@@ -31239,7 +32115,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       }
       if (!endpoint)
         throw new InnertubeError("Target button does not have an endpoint.");
-      return await endpoint.call(__privateGet(this, _actions8), { parse: true });
+      return await endpoint.call(__privateGet(this, _actions9), { parse: true });
     }
     items() {
       return __privateGet(this, _items);
@@ -31249,7 +32125,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page6 = /* @__PURE__ */ new WeakMap();
-  _actions8 = /* @__PURE__ */ new WeakMap();
+  _actions9 = /* @__PURE__ */ new WeakMap();
   _items = /* @__PURE__ */ new WeakMap();
   __name(_ItemMenu, "ItemMenu");
   var ItemMenu = _ItemMenu;
@@ -31292,6 +32168,19 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       this.menu = primary_info == null ? void 0 : primary_info.menu;
       this.endpoint = primary_info == null ? void 0 : primary_info.endpoint;
       this.messages = this.memo.getType(Message);
+    }
+    async getCollaborators() {
+      var _a2, _b2, _c, _d;
+      if (!this.actions.session.logged_in)
+        throw new Error("You must be signed in to perform this operation.");
+      const avatar_stack_view = (_a2 = this.memo.getType(AvatarStackView)) == null ? void 0 : _a2.find((item) => item.renderer_context.command_context);
+      const endpoint = (_b2 = avatar_stack_view == null ? void 0 : avatar_stack_view.renderer_context.command_context) == null ? void 0 : _b2.on_tap;
+      if (!endpoint)
+        throw new InnertubeError("AvatarStackView on_tap endpoint not found");
+      if ((_c = endpoint.command) == null ? void 0 : _c.is(ShowEngagementPanelEndpoint)) {
+        return await endpoint.call(this.actions, { parse: true });
+      }
+      throw new InnertubeError(`Unexpected endpoint type. Expected ShowEngagementPanelEndpoint, got ${(_d = endpoint.command) == null ? void 0 : _d.type}`);
     }
     get items() {
       return observe(this.videos.as(LockupView, PlaylistVideo, ReelItem, ShortsLockupView).filter((video) => video.style !== "PLAYLIST_VIDEO_RENDERER_STYLE_RECOMMENDED_VIDEO"));
@@ -31525,7 +32414,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   _poll_response_delay_queue = /* @__PURE__ */ new WeakMap();
   __name(_SmoothedQueue, "SmoothedQueue");
   var SmoothedQueue = _SmoothedQueue;
-  var _actions9;
+  var _actions10;
   var _video_id;
   var _channel_id;
   var _continuation4;
@@ -31541,7 +32430,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       var _a2, _b2;
       super();
       __privateAdd(this, _LiveChat_instances);
-      __privateAdd(this, _actions9);
+      __privateAdd(this, _actions10);
       __privateAdd(this, _video_id);
       __privateAdd(this, _channel_id);
       __privateAdd(this, _continuation4);
@@ -31554,7 +32443,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       __publicField2(this, "is_replay", false);
       __privateSet(this, _video_id, video_info.basic_info.id);
       __privateSet(this, _channel_id, video_info.basic_info.channel_id);
-      __privateSet(this, _actions9, video_info.actions);
+      __privateSet(this, _actions10, video_info.actions);
       __privateSet(this, _continuation4, (_a2 = video_info.livechat) == null ? void 0 : _a2.continuation);
       this.is_replay = ((_b2 = video_info.livechat) == null ? void 0 : _b2.is_replay) || false;
       this.smoothed_queue = new SmoothedQueue();
@@ -31607,7 +32496,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         number1: 4
       });
       const params = btoa(encodeURIComponent(u8ToBase64(writer.finish())));
-      const response = await __privateGet(this, _actions9).execute("/live_chat/send_message", {
+      const response = await __privateGet(this, _actions10).execute("/live_chat/send_message", {
         richMessage: { textSegments: [{ text }] },
         clientMessageId: Platform.shim.uuidv4(),
         client: "WEB",
@@ -31643,19 +32532,19 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     async getItemMenu(item) {
       if (!item.hasKey("menu_endpoint") || !item.key("menu_endpoint").isInstanceof(NavigationEndpoint))
         throw new InnertubeError("This item does not have a menu.", item);
-      const response = await item.key("menu_endpoint").instanceof(NavigationEndpoint).call(__privateGet(this, _actions9), { parse: true });
+      const response = await item.key("menu_endpoint").instanceof(NavigationEndpoint).call(__privateGet(this, _actions10), { parse: true });
       if (!response)
         throw new InnertubeError("Could not retrieve item menu.", item);
-      return new ItemMenu(response, __privateGet(this, _actions9));
+      return new ItemMenu(response, __privateGet(this, _actions10));
     }
     /**
      * Equivalent to "clicking" a button.
      */
     async selectButton(button) {
-      return await button.endpoint.call(__privateGet(this, _actions9), { parse: true });
+      return await button.endpoint.call(__privateGet(this, _actions10), { parse: true });
     }
   };
-  _actions9 = /* @__PURE__ */ new WeakMap();
+  _actions10 = /* @__PURE__ */ new WeakMap();
   _video_id = /* @__PURE__ */ new WeakMap();
   _channel_id = /* @__PURE__ */ new WeakMap();
   _continuation4 = /* @__PURE__ */ new WeakMap();
@@ -31665,7 +32554,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   pollLivechat_fn = /* @__PURE__ */ __name(function() {
     (async () => {
       try {
-        const response = await __privateGet(this, _actions9).execute(this.is_replay ? "live_chat/get_live_chat_replay" : "live_chat/get_live_chat", { continuation: __privateGet(this, _continuation4), parse: true });
+        const response = await __privateGet(this, _actions10).execute(this.is_replay ? "live_chat/get_live_chat_replay" : "live_chat/get_live_chat", { continuation: __privateGet(this, _continuation4), parse: true });
         const contents = response.continuation_contents;
         if (!contents) {
           this.emit("error", new InnertubeError("Unexpected live chat incremental continuation response", response));
@@ -31717,7 +32606,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         if (__privateGet(this, _mcontinuation)) {
           payload.continuation = __privateGet(this, _mcontinuation);
         }
-        const response = await __privateGet(this, _actions9).execute("/updated_metadata", payload);
+        const response = await __privateGet(this, _actions10).execute("/updated_metadata", payload);
         const data = parser_exports.parseResponse(response.data);
         __privateSet(this, _mcontinuation, (_a2 = data.continuation) == null ? void 0 : _a2.token);
         this.metadata = {
@@ -31744,14 +32633,14 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   __name(_LiveChat22, "LiveChat");
   var LiveChat2 = _LiveChat22;
   var _page7;
-  var _actions10;
+  var _actions11;
   var _NotificationsMenu = class _NotificationsMenu2 {
     constructor(actions, response) {
       __privateAdd(this, _page7);
-      __privateAdd(this, _actions10);
+      __privateAdd(this, _actions11);
       __publicField2(this, "header");
       __publicField2(this, "contents");
-      __privateSet(this, _actions10, actions);
+      __privateSet(this, _actions11, actions);
       __privateSet(this, _page7, parser_exports.parseResponse(response.data));
       if (!__privateGet(this, _page7).actions_memo)
         throw new InnertubeError("Page actions not found");
@@ -31763,15 +32652,15 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       const continuation = (_a2 = __privateGet(this, _page7).actions_memo) == null ? void 0 : _a2.getType(ContinuationItem)[0];
       if (!continuation)
         throw new InnertubeError("Continuation not found");
-      const response = await continuation.endpoint.call(__privateGet(this, _actions10), { parse: false });
-      return new _NotificationsMenu2(__privateGet(this, _actions10), response);
+      const response = await continuation.endpoint.call(__privateGet(this, _actions11), { parse: false });
+      return new _NotificationsMenu2(__privateGet(this, _actions11), response);
     }
     get page() {
       return __privateGet(this, _page7);
     }
   };
   _page7 = /* @__PURE__ */ new WeakMap();
-  _actions10 = /* @__PURE__ */ new WeakMap();
+  _actions11 = /* @__PURE__ */ new WeakMap();
   __name(_NotificationsMenu, "NotificationsMenu");
   var NotificationsMenu = _NotificationsMenu;
   var _Search = class _Search2 extends Feed {
@@ -31859,16 +32748,16 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   __name(_Search, "Search");
   var Search = _Search;
   var _page8;
-  var _actions11;
+  var _actions12;
   var _Settings = class _Settings2 {
     constructor(actions, response) {
       __privateAdd(this, _page8);
-      __privateAdd(this, _actions11);
+      __privateAdd(this, _actions12);
       __publicField2(this, "sidebar");
       __publicField2(this, "introduction");
       __publicField2(this, "sections");
       var _a2, _b2, _c, _d;
-      __privateSet(this, _actions11, actions);
+      __privateSet(this, _actions12, actions);
       __privateSet(this, _page8, parser_exports.parseResponse(response.data));
       this.sidebar = (_a2 = __privateGet(this, _page8).sidebar) == null ? void 0 : _a2.as(SettingsSidebar);
       if (!__privateGet(this, _page8).contents)
@@ -31902,8 +32791,8 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       } else {
         throw new InnertubeError("Invalid item", { target_item });
       }
-      const response = await item.endpoint.call(__privateGet(this, _actions11), { parse: false });
-      return new _Settings2(__privateGet(this, _actions11), response);
+      const response = await item.endpoint.call(__privateGet(this, _actions12), { parse: false });
+      return new _Settings2(__privateGet(this, _actions12), response);
     }
     /**
      * Finds a setting by name and returns it. Use {@link setting_options} to see available options.
@@ -31960,7 +32849,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page8 = /* @__PURE__ */ new WeakMap();
-  _actions11 = /* @__PURE__ */ new WeakMap();
+  _actions12 = /* @__PURE__ */ new WeakMap();
   __name(_Settings, "Settings");
   var Settings = _Settings;
   var _watch_next_continuation;
@@ -32331,14 +33220,14 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   __name(_VideoInfo, "VideoInfo");
   var VideoInfo = _VideoInfo;
   var _page9;
-  var _actions12;
+  var _actions13;
   var _TranscriptInfo = class _TranscriptInfo2 {
     constructor(actions, response) {
       __privateAdd(this, _page9);
-      __privateAdd(this, _actions12);
+      __privateAdd(this, _actions13);
       __publicField2(this, "transcript");
       __privateSet(this, _page9, parser_exports.parseResponse(response.data));
-      __privateSet(this, _actions12, actions);
+      __privateSet(this, _actions13, actions);
       if (!__privateGet(this, _page9).actions_memo)
         throw new Error("Page actions not found");
       this.transcript = __privateGet(this, _page9).actions_memo.getType(Transcript)[0];
@@ -32354,10 +33243,10 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         throw new Error(`Language not found: ${language}`);
       if (target_menu_item.selected)
         return this;
-      const response = await __privateGet(this, _actions12).execute("/get_transcript", {
+      const response = await __privateGet(this, _actions13).execute("/get_transcript", {
         params: target_menu_item.continuation
       });
-      return new _TranscriptInfo2(__privateGet(this, _actions12), response);
+      return new _TranscriptInfo2(__privateGet(this, _actions13), response);
     }
     /**
      * Returns available languages.
@@ -32378,7 +33267,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page9 = /* @__PURE__ */ new WeakMap();
-  _actions12 = /* @__PURE__ */ new WeakMap();
+  _actions13 = /* @__PURE__ */ new WeakMap();
   __name(_TranscriptInfo, "TranscriptInfo");
   var TranscriptInfo = _TranscriptInfo;
   var ytmusic_exports = {};
@@ -32421,16 +33310,16 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   __name(_Album, "Album");
   var Album = _Album;
   var _page11;
-  var _actions13;
+  var _actions14;
   var _Artist = class _Artist2 {
     constructor(response, actions) {
       __privateAdd(this, _page11);
-      __privateAdd(this, _actions13);
+      __privateAdd(this, _actions14);
       __publicField2(this, "header");
       __publicField2(this, "sections");
       var _a2, _b2, _c;
       __privateSet(this, _page11, parser_exports.parseResponse(response.data));
-      __privateSet(this, _actions13, actions);
+      __privateSet(this, _actions14, actions);
       this.header = (_a2 = this.page.header) == null ? void 0 : _a2.item().as(MusicImmersiveHeader, MusicVisualHeader, MusicHeader);
       const music_shelf = ((_b2 = __privateGet(this, _page11).contents_memo) == null ? void 0 : _b2.getType(MusicShelf)) || [];
       const music_carousel_shelf = ((_c = __privateGet(this, _page11).contents_memo) == null ? void 0 : _c.getType(MusicCarouselShelf)) || [];
@@ -32449,7 +33338,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         throw new InnertubeError("Could not find target shelf (Top songs).");
       if (!shelf.endpoint)
         throw new InnertubeError("Target shelf (Top songs) did not have an endpoint.");
-      const page = await shelf.endpoint.call(__privateGet(this, _actions13), { client: "YTMUSIC", parse: true });
+      const page = await shelf.endpoint.call(__privateGet(this, _actions14), { client: "YTMUSIC", parse: true });
       return (_b2 = (_a2 = page.contents_memo) == null ? void 0 : _a2.getType(MusicPlaylistShelf)) == null ? void 0 : _b2[0];
     }
     get page() {
@@ -32457,7 +33346,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page11 = /* @__PURE__ */ new WeakMap();
-  _actions13 = /* @__PURE__ */ new WeakMap();
+  _actions14 = /* @__PURE__ */ new WeakMap();
   __name(_Artist, "Artist");
   var Artist = _Artist;
   var _page12;
@@ -32485,17 +33374,17 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   __name(_Explore, "Explore");
   var Explore = _Explore;
   var _page13;
-  var _actions14;
+  var _actions15;
   var _continuation5;
   var _HomeFeed22 = class _HomeFeed23 {
     constructor(response, actions) {
       __privateAdd(this, _page13);
-      __privateAdd(this, _actions14);
+      __privateAdd(this, _actions15);
       __privateAdd(this, _continuation5);
       __publicField2(this, "sections");
       __publicField2(this, "header");
       var _a2, _b2, _c, _d, _e, _f;
-      __privateSet(this, _actions14, actions);
+      __privateSet(this, _actions15, actions);
       __privateSet(this, _page13, parser_exports.parseResponse(response.data));
       const tab = (_a2 = __privateGet(this, _page13).contents) == null ? void 0 : _a2.item().as(SingleColumnBrowseResults).tabs.find((tab2) => tab2.selected);
       if (!tab)
@@ -32517,11 +33406,11 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     async getContinuation() {
       if (!__privateGet(this, _continuation5))
         throw new InnertubeError("Continuation not found.");
-      const response = await __privateGet(this, _actions14).execute("/browse", {
+      const response = await __privateGet(this, _actions15).execute("/browse", {
         client: "YTMUSIC",
         continuation: __privateGet(this, _continuation5)
       });
-      return new _HomeFeed23(response, __privateGet(this, _actions14));
+      return new _HomeFeed23(response, __privateGet(this, _actions15));
     }
     async applyFilter(target_filter) {
       var _a2, _b2;
@@ -32539,8 +33428,8 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         return this;
       if (!cloud_chip.endpoint)
         throw new InnertubeError("Selected filter does not have an endpoint.");
-      const response = await cloud_chip.endpoint.call(__privateGet(this, _actions14), { client: "YTMUSIC" });
-      return new _HomeFeed23(response, __privateGet(this, _actions14));
+      const response = await cloud_chip.endpoint.call(__privateGet(this, _actions15), { client: "YTMUSIC" });
+      return new _HomeFeed23(response, __privateGet(this, _actions15));
     }
     get filters() {
       var _a2, _b2;
@@ -32554,23 +33443,23 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page13 = /* @__PURE__ */ new WeakMap();
-  _actions14 = /* @__PURE__ */ new WeakMap();
+  _actions15 = /* @__PURE__ */ new WeakMap();
   _continuation5 = /* @__PURE__ */ new WeakMap();
   __name(_HomeFeed22, "HomeFeed");
   var HomeFeed2 = _HomeFeed22;
   var _page14;
-  var _actions15;
+  var _actions16;
   var _continuation6;
   var _Library22 = class _Library23 {
     constructor(response, actions) {
       __privateAdd(this, _page14);
-      __privateAdd(this, _actions15);
+      __privateAdd(this, _actions16);
       __privateAdd(this, _continuation6);
       __publicField2(this, "header");
       __publicField2(this, "contents");
       var _a2, _b2, _c, _d, _e;
       __privateSet(this, _page14, parser_exports.parseResponse(response.data));
-      __privateSet(this, _actions15, actions);
+      __privateSet(this, _actions16, actions);
       const section_list = (_a2 = __privateGet(this, _page14).contents_memo) == null ? void 0 : _a2.getType(SectionList)[0];
       this.header = (_b2 = section_list == null ? void 0 : section_list.header) == null ? void 0 : _b2.as(MusicSideAlignedItem);
       this.contents = (_c = section_list == null ? void 0 : section_list.contents) == null ? void 0 : _c.as(Grid, MusicShelf);
@@ -32598,7 +33487,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       const cmd = (_e = (_d = (_c = target_item.endpoint.payload) == null ? void 0 : _c.commands) == null ? void 0 : _d.find((cmd2) => cmd2.browseSectionListReloadEndpoint)) == null ? void 0 : _e.browseSectionListReloadEndpoint;
       if (!cmd)
         throw new InnertubeError("Failed to find sort option command");
-      const response = await __privateGet(this, _actions15).execute("/browse", {
+      const response = await __privateGet(this, _actions16).execute("/browse", {
         client: "YTMUSIC",
         continuation: cmd.continuation.reloadContinuationData.continuation,
         parse: true
@@ -32627,8 +33516,8 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       if (!target_chip.endpoint)
         throw new InnertubeError("Invalid filter", filter2);
       const target_cmd = new NavigationEndpoint((_c = (_b2 = target_chip.endpoint.payload) == null ? void 0 : _b2.commands) == null ? void 0 : _c[0]);
-      const response = await target_cmd.call(__privateGet(this, _actions15), { client: "YTMUSIC" });
-      return new _Library23(response, __privateGet(this, _actions15));
+      const response = await target_cmd.call(__privateGet(this, _actions16), { client: "YTMUSIC" });
+      return new _Library23(response, __privateGet(this, _actions16));
     }
     /**
      * Retrieves continuation of the library items.
@@ -32636,11 +33525,11 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     async getContinuation() {
       if (!__privateGet(this, _continuation6))
         throw new InnertubeError("No continuation available");
-      const page = await __privateGet(this, _actions15).execute("/browse", {
+      const page = await __privateGet(this, _actions16).execute("/browse", {
         client: "YTMUSIC",
         continuation: __privateGet(this, _continuation6)
       });
-      return new LibraryContinuation(page, __privateGet(this, _actions15));
+      return new LibraryContinuation(page, __privateGet(this, _actions16));
     }
     get has_continuation() {
       return !!__privateGet(this, _continuation6);
@@ -32660,21 +33549,21 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page14 = /* @__PURE__ */ new WeakMap();
-  _actions15 = /* @__PURE__ */ new WeakMap();
+  _actions16 = /* @__PURE__ */ new WeakMap();
   _continuation6 = /* @__PURE__ */ new WeakMap();
   __name(_Library22, "Library");
   var Library2 = _Library22;
   var _page15;
-  var _actions16;
+  var _actions17;
   var _continuation7;
   var _LibraryContinuation = class _LibraryContinuation2 {
     constructor(response, actions) {
       __privateAdd(this, _page15);
-      __privateAdd(this, _actions16);
+      __privateAdd(this, _actions17);
       __privateAdd(this, _continuation7);
       __publicField2(this, "contents");
       __privateSet(this, _page15, parser_exports.parseResponse(response.data));
-      __privateSet(this, _actions16, actions);
+      __privateSet(this, _actions17, actions);
       if (!__privateGet(this, _page15).continuation_contents)
         throw new InnertubeError("No continuation contents found");
       this.contents = __privateGet(this, _page15).continuation_contents.as(MusicShelfContinuation, GridContinuation);
@@ -32683,11 +33572,11 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     async getContinuation() {
       if (!__privateGet(this, _continuation7))
         throw new InnertubeError("No continuation available");
-      const response = await __privateGet(this, _actions16).execute("/browse", {
+      const response = await __privateGet(this, _actions17).execute("/browse", {
         client: "YTMUSIC",
         continuation: __privateGet(this, _continuation7)
       });
-      return new _LibraryContinuation2(response, __privateGet(this, _actions16));
+      return new _LibraryContinuation2(response, __privateGet(this, _actions17));
     }
     get has_continuation() {
       return !!__privateGet(this, _continuation7);
@@ -32697,12 +33586,12 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page15 = /* @__PURE__ */ new WeakMap();
-  _actions16 = /* @__PURE__ */ new WeakMap();
+  _actions17 = /* @__PURE__ */ new WeakMap();
   _continuation7 = /* @__PURE__ */ new WeakMap();
   __name(_LibraryContinuation, "LibraryContinuation");
   var LibraryContinuation = _LibraryContinuation;
   var _page16;
-  var _actions17;
+  var _actions18;
   var _continuation8;
   var _last_fetched_suggestions;
   var _suggestions_continuation;
@@ -32712,7 +33601,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     constructor(response, actions) {
       __privateAdd(this, _Playlist_instances2);
       __privateAdd(this, _page16);
-      __privateAdd(this, _actions17);
+      __privateAdd(this, _actions18);
       __privateAdd(this, _continuation8);
       __publicField2(this, "header");
       __publicField2(this, "contents");
@@ -32720,7 +33609,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       __privateAdd(this, _last_fetched_suggestions);
       __privateAdd(this, _suggestions_continuation);
       var _a2, _b2, _c, _d, _e, _f, _g, _h;
-      __privateSet(this, _actions17, actions);
+      __privateSet(this, _actions18, actions);
       __privateSet(this, _page16, parser_exports.parseResponse(response.data));
       __privateSet(this, _last_fetched_suggestions, null);
       __privateSet(this, _suggestions_continuation, null);
@@ -32751,14 +33640,14 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         throw new InnertubeError("Continuation not found.");
       let response;
       if (typeof __privateGet(this, _continuation8) === "string") {
-        response = await __privateGet(this, _actions17).execute("/browse", {
+        response = await __privateGet(this, _actions18).execute("/browse", {
           client: "YTMUSIC",
           continuation: __privateGet(this, _continuation8)
         });
       } else {
-        response = await __privateGet(this, _continuation8).endpoint.call(__privateGet(this, _actions17), { client: "YTMUSIC" });
+        response = await __privateGet(this, _continuation8).endpoint.call(__privateGet(this, _actions18), { client: "YTMUSIC" });
       }
-      return new _Playlist32(response, __privateGet(this, _actions17));
+      return new _Playlist32(response, __privateGet(this, _actions18));
     }
     /**
      * Retrieves related playlists
@@ -32770,7 +33659,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         throw new InnertubeError('Could not find "Related" section.');
       let section_continuation = target_section_list.continuation;
       while (section_continuation) {
-        const data = await __privateGet(this, _actions17).execute("/browse", {
+        const data = await __privateGet(this, _actions18).execute("/browse", {
           client: "YTMUSIC",
           continuation: section_continuation,
           parse: true
@@ -32805,7 +33694,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page16 = /* @__PURE__ */ new WeakMap();
-  _actions17 = /* @__PURE__ */ new WeakMap();
+  _actions18 = /* @__PURE__ */ new WeakMap();
   _continuation8 = /* @__PURE__ */ new WeakMap();
   _last_fetched_suggestions = /* @__PURE__ */ new WeakMap();
   _suggestions_continuation = /* @__PURE__ */ new WeakMap();
@@ -32815,7 +33704,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     const target_section_list = (_a2 = __privateGet(this, _page16).contents_memo) == null ? void 0 : _a2.getType(SectionList).find((section_list) => section_list.continuation);
     const continuation = __privateGet(this, _suggestions_continuation) || (target_section_list == null ? void 0 : target_section_list.continuation);
     if (continuation) {
-      const page = await __privateGet(this, _actions17).execute("/browse", {
+      const page = await __privateGet(this, _actions18).execute("/browse", {
         client: "YTMUSIC",
         continuation,
         parse: true
@@ -32836,16 +33725,16 @@ ${generateTypescriptClass(classname, context.key_info)}`);
   __name(_Playlist3, "Playlist");
   var Playlist3 = _Playlist3;
   var _page17;
-  var _actions18;
+  var _actions19;
   var _Recap = class _Recap2 {
     constructor(response, actions) {
       __privateAdd(this, _page17);
-      __privateAdd(this, _actions18);
+      __privateAdd(this, _actions19);
       __publicField2(this, "header");
       __publicField2(this, "sections");
       var _a2, _b2, _c, _d, _e, _f, _g;
       __privateSet(this, _page17, parser_exports.parseResponse(response.data));
-      __privateSet(this, _actions18, actions);
+      __privateSet(this, _actions19, actions);
       const header = (_a2 = __privateGet(this, _page17).header) == null ? void 0 : _a2.item();
       this.header = (header == null ? void 0 : header.is(MusicElementHeader)) ? (_d = (_c = (_b2 = __privateGet(this, _page17).header) == null ? void 0 : _b2.item().as(MusicElementHeader).element) == null ? void 0 : _c.model) == null ? void 0 : _d.as(HighlightsCarousel) : (_e = __privateGet(this, _page17).header) == null ? void 0 : _e.item().as(MusicHeader);
       const tab = (_f = __privateGet(this, _page17).contents) == null ? void 0 : _f.item().as(SingleColumnBrowseResults).tabs.firstOfType(Tab);
@@ -32862,29 +33751,29 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       if (!this.header.is(HighlightsCarousel))
         throw new InnertubeError("Recap playlist not available, check back later.");
       const endpoint = this.header.panels[0].text_on_tap_endpoint;
-      const response = await endpoint.call(__privateGet(this, _actions18), { client: "YTMUSIC" });
-      return new Playlist3(response, __privateGet(this, _actions18));
+      const response = await endpoint.call(__privateGet(this, _actions19), { client: "YTMUSIC" });
+      return new Playlist3(response, __privateGet(this, _actions19));
     }
     get page() {
       return __privateGet(this, _page17);
     }
   };
   _page17 = /* @__PURE__ */ new WeakMap();
-  _actions18 = /* @__PURE__ */ new WeakMap();
+  _actions19 = /* @__PURE__ */ new WeakMap();
   __name(_Recap, "Recap");
   var Recap = _Recap;
   var _page18;
-  var _actions19;
+  var _actions20;
   var _continuation9;
   var _Search22 = class _Search23 {
     constructor(response, actions, is_filtered) {
       __privateAdd(this, _page18);
-      __privateAdd(this, _actions19);
+      __privateAdd(this, _actions20);
       __privateAdd(this, _continuation9);
       __publicField2(this, "header");
       __publicField2(this, "contents");
       var _a2, _b2, _c;
-      __privateSet(this, _actions19, actions);
+      __privateSet(this, _actions20, actions);
       __privateSet(this, _page18, parser_exports.parseResponse(response.data));
       if (!__privateGet(this, _page18).contents || !__privateGet(this, _page18).contents_memo)
         throw new InnertubeError("Response did not contain any contents.");
@@ -32906,10 +33795,10 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     async getMore(shelf) {
       if (!shelf || !shelf.endpoint)
         throw new InnertubeError("Cannot retrieve more items for this shelf because it does not have an endpoint.");
-      const response = await shelf.endpoint.call(__privateGet(this, _actions19), { client: "YTMUSIC" });
+      const response = await shelf.endpoint.call(__privateGet(this, _actions20), { client: "YTMUSIC" });
       if (!response)
         throw new InnertubeError("Endpoint did not return any data");
-      return new _Search23(response, __privateGet(this, _actions19), true);
+      return new _Search23(response, __privateGet(this, _actions20), true);
     }
     /**
      * Retrieves search continuation. Only available for filtered searches and shelf continuations.
@@ -32917,11 +33806,11 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     async getContinuation() {
       if (!__privateGet(this, _continuation9))
         throw new InnertubeError("Continuation not found.");
-      const response = await __privateGet(this, _actions19).execute("/search", {
+      const response = await __privateGet(this, _actions20).execute("/search", {
         continuation: __privateGet(this, _continuation9),
         client: "YTMUSIC"
       });
-      return new SearchContinuation(__privateGet(this, _actions19), response);
+      return new SearchContinuation(__privateGet(this, _actions20), response);
     }
     /**
      * Applies given filter to the search.
@@ -32942,8 +33831,8 @@ ${generateTypescriptClass(classname, context.key_info)}`);
         return this;
       if (!cloud_chip.endpoint)
         throw new InnertubeError("Selected filter does not have an endpoint.");
-      const response = await cloud_chip.endpoint.call(__privateGet(this, _actions19), { client: "YTMUSIC" });
-      return new _Search23(response, __privateGet(this, _actions19), true);
+      const response = await cloud_chip.endpoint.call(__privateGet(this, _actions20), { client: "YTMUSIC" });
+      return new _Search23(response, __privateGet(this, _actions20), true);
     }
     get filters() {
       var _a2, _b2;
@@ -32989,20 +33878,20 @@ ${generateTypescriptClass(classname, context.key_info)}`);
     }
   };
   _page18 = /* @__PURE__ */ new WeakMap();
-  _actions19 = /* @__PURE__ */ new WeakMap();
+  _actions20 = /* @__PURE__ */ new WeakMap();
   _continuation9 = /* @__PURE__ */ new WeakMap();
   __name(_Search22, "Search");
   var Search2 = _Search22;
-  var _actions20;
+  var _actions21;
   var _page19;
   var _SearchContinuation = class _SearchContinuation2 {
     constructor(actions, response) {
-      __privateAdd(this, _actions20);
+      __privateAdd(this, _actions21);
       __privateAdd(this, _page19);
       __publicField2(this, "header");
       __publicField2(this, "contents");
       var _a2, _b2;
-      __privateSet(this, _actions20, actions);
+      __privateSet(this, _actions21, actions);
       __privateSet(this, _page19, parser_exports.parseResponse(response.data));
       this.header = (_a2 = __privateGet(this, _page19).header) == null ? void 0 : _a2.item().as(MusicHeader);
       this.contents = (_b2 = __privateGet(this, _page19).continuation_contents) == null ? void 0 : _b2.as(MusicShelfContinuation);
@@ -33011,11 +33900,11 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       var _a2;
       if (!((_a2 = this.contents) == null ? void 0 : _a2.continuation))
         throw new InnertubeError("Continuation not found.");
-      const response = await __privateGet(this, _actions20).execute("/search", {
+      const response = await __privateGet(this, _actions21).execute("/search", {
         continuation: this.contents.continuation,
         client: "YTMUSIC"
       });
-      return new _SearchContinuation2(__privateGet(this, _actions20), response);
+      return new _SearchContinuation2(__privateGet(this, _actions21), response);
     }
     get has_continuation() {
       var _a2;
@@ -33025,7 +33914,7 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       return __privateGet(this, _page19);
     }
   };
-  _actions20 = /* @__PURE__ */ new WeakMap();
+  _actions21 = /* @__PURE__ */ new WeakMap();
   _page19 = /* @__PURE__ */ new WeakMap();
   __name(_SearchContinuation, "SearchContinuation");
   var SearchContinuation = _SearchContinuation;
@@ -33299,13 +34188,23 @@ ${generateTypescriptClass(classname, context.key_info)}`);
       __publicField2(this, "thumbnails");
       __publicField2(this, "endpoint");
       __publicField2(this, "badges");
+      __publicField2(this, "avatar_thumbnail_url");
+      __publicField2(this, "is_current_user");
+      __publicField2(this, "is_public_subscriber");
+      __publicField2(this, "is_creator");
       __publicField2(this, "is_moderator");
       __publicField2(this, "is_verified");
       __publicField2(this, "is_verified_artist");
-      __publicField2(this, "url");
-      var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _A;
-      const nav_text = new Text2(item);
-      this.id = id || ((_d = (_c = (_b2 = (_a2 = nav_text == null ? void 0 : nav_text.runs) == null ? void 0 : _a2[0]) == null ? void 0 : _b2.endpoint) == null ? void 0 : _c.payload) == null ? void 0 : _d.browseId) || ((_f = (_e = nav_text == null ? void 0 : nav_text.endpoint) == null ? void 0 : _e.payload) == null ? void 0 : _f.browseId) || "N/A";
+      var _a2, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+      let nav_text;
+      if (item) {
+        if ("content" in item) {
+          nav_text = Text2.fromAttributed(item);
+        } else {
+          nav_text = new Text2(item);
+        }
+      }
+      this.id = id || ((_d = (_c = (_b2 = (_a2 = nav_text == null ? void 0 : nav_text.runs) == null ? void 0 : _a2[0]) == null ? void 0 : _b2.endpoint) == null ? void 0 : _c.payload) == null ? void 0 : _d.browseId) || ((_f = (_e = nav_text == null ? void 0 : nav_text.endpoint) == null ? void 0 : _e.payload) == null ? void 0 : _f.browseId) || (badges == null ? void 0 : badges.channelId);
       this.name = (nav_text == null ? void 0 : nav_text.text) || "N/A";
       this.thumbnails = thumbs ? Thumbnail.fromResponse(thumbs) : [];
       this.endpoint = ((_h = (_g = nav_text == null ? void 0 : nav_text.runs) == null ? void 0 : _g[0]) == null ? void 0 : _h.endpoint) || (nav_text == null ? void 0 : nav_text.endpoint);
@@ -33317,16 +34216,48 @@ ${generateTypescriptClass(classname, context.key_info)}`);
           this.is_verified_artist = (_k = this.badges) == null ? void 0 : _k.some((badge) => badge.style == "BADGE_STYLE_TYPE_VERIFIED_ARTIST");
         } else {
           this.badges = observe([]);
-          this.is_verified = !!badges.isVerified;
-          this.is_verified_artist = !!badges.isArtist;
+          if ("avatarThumbnailUrl" in badges) {
+            this.avatar_thumbnail_url = badges.avatarThumbnailUrl;
+          }
+          if ("isCurrentUser" in badges) {
+            this.is_current_user = !!badges.isCurrentUser;
+          }
+          if ("isPublicSubscriber" in badges) {
+            this.is_public_subscriber = !!badges.isPublicSubscriber;
+          }
+          if ("isCreator" in badges) {
+            this.is_creator = !!badges.isCreator;
+          }
+          if ("isVerified" in badges) {
+            this.is_verified = !!badges.isVerified;
+          }
+          if ("isArtist" in badges) {
+            this.is_verified_artist = !!badges.isArtist;
+          }
         }
       } else {
         this.badges = observe([]);
       }
-      this.url = ((_o = (_n = (_m = (_l = nav_text == null ? void 0 : nav_text.runs) == null ? void 0 : _l[0]) == null ? void 0 : _m.endpoint) == null ? void 0 : _n.metadata) == null ? void 0 : _o.api_url) === "/browse" && `${URLS.YT_BASE}${((_s = (_r = (_q = (_p = nav_text == null ? void 0 : nav_text.runs) == null ? void 0 : _p[0]) == null ? void 0 : _q.endpoint) == null ? void 0 : _r.payload) == null ? void 0 : _s.canonicalBaseUrl) || `/u/${(_w = (_v = (_u = (_t = nav_text == null ? void 0 : nav_text.runs) == null ? void 0 : _t[0]) == null ? void 0 : _u.endpoint) == null ? void 0 : _v.payload) == null ? void 0 : _w.browseId}`}` || `${URLS.YT_BASE}${((_y = (_x = nav_text == null ? void 0 : nav_text.endpoint) == null ? void 0 : _x.payload) == null ? void 0 : _y.canonicalBaseUrl) || `/u/${(_A = (_z = nav_text == null ? void 0 : nav_text.endpoint) == null ? void 0 : _z.payload) == null ? void 0 : _A.browseId}`}`;
+    }
+    get url() {
+      var _a2;
+      return (_a2 = this.endpoint) == null ? void 0 : _a2.toURL();
     }
     get best_thumbnail() {
       return this.thumbnails[0];
+    }
+    get collaborators() {
+      var _a2, _b2, _c, _d;
+      if (((_b2 = (_a2 = this.endpoint) == null ? void 0 : _a2.command) == null ? void 0 : _b2.is(ShowDialogCommand)) && ((_c = this.endpoint.command.inline_content) == null ? void 0 : _c.is(DialogView))) {
+        const dialog = this.endpoint.command.inline_content;
+        if ((_d = dialog.custom_content) == null ? void 0 : _d.is(ListView)) {
+          return dialog.custom_content.items.as(ListItemView).filter((item) => {
+            var _a3, _b3, _c2, _d2;
+            return ((_d2 = (_c2 = (_b3 = (_a3 = item.renderer_context) == null ? void 0 : _a3.command_context) == null ? void 0 : _b3.on_tap) == null ? void 0 : _c2.metadata) == null ? void 0 : _d2.page_type) === "WEB_PAGE_TYPE_CHANNEL";
+          });
+        }
+      }
+      return [];
     }
   };
   __name(_Author, "Author");
@@ -33573,8 +34504,12 @@ ${headers_serialized}
 ${body_contents}`);
     return Platform.shim.fetch(input, init);
   }, "debugFetch");
-  function u8ToBase64(u82) {
-    return btoa(String.fromCharCode.apply(null, Array.from(u82)));
+  function u8ToBase64(u82, base64url = false) {
+    const result = btoa(String.fromCharCode(...u82));
+    if (base64url) {
+      return result.replace(/\+/g, "-").replace(/\//g, "_");
+    }
+    return result;
   }
   __name(u8ToBase64, "u8ToBase64");
   function base64ToU8(base64) {
@@ -33893,7 +34828,7 @@ return process("${n || ""}", "${sp || ""}", "${s || ""}");`;
     return hex(await crypto.subtle.digest("SHA-1", new TextEncoder().encode(str)));
   }
   __name(sha1Hash, "sha1Hash");
-  function evaluate(_data23, _env) {
+  function evaluate(_data24, _env) {
     throw new Error("To decipher URLs, you must provide your own JavaScript evaluator. See https://ytjs.dev/guide/getting-started.html#providing-a-custom-javascript-interpreter for more details.");
   }
   __name(evaluate, "evaluate");
@@ -34446,6 +35381,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
     IOS: "iOS",
     ANDROID: "ANDROID",
     ANDROID_VR: "ANDROID_VR",
+    VISIONOS: "VISIONOS",
     ANDROID_MUSIC: "ANDROID_MUSIC",
     ANDROID_CREATOR: "ANDROID_CREATOR",
     TV: "TVHTML5",
@@ -34902,7 +35838,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
   __name(_Kids, "Kids");
   var Kids = _Kids;
   var _session4;
-  var _actions21;
+  var _actions22;
   var _Music_instances;
   var fetchInfoFromVideoId_fn;
   var fetchInfoFromEndpoint_fn;
@@ -34910,9 +35846,9 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
     constructor(session) {
       __privateAdd(this, _Music_instances);
       __privateAdd(this, _session4);
-      __privateAdd(this, _actions21);
+      __privateAdd(this, _actions22);
       __privateSet(this, _session4, session);
-      __privateSet(this, _actions21, session.actions);
+      __privateSet(this, _actions22, session.actions);
     }
     /**
      * Retrieves track info. Passing a list item of type MusicTwoRowItem automatically starts a radio.
@@ -34944,50 +35880,50 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
         params = encodeURIComponent(u8ToBase64(writer.finish()));
       }
       const search_endpoint = new NavigationEndpoint({ searchEndpoint: { query, params } });
-      const response = await search_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC" });
-      return new Search2(response, __privateGet(this, _actions21), Reflect.has(filters, "type") && filters.type !== "all");
+      const response = await search_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC" });
+      return new Search2(response, __privateGet(this, _actions22), Reflect.has(filters, "type") && filters.type !== "all");
     }
     async getHomeFeed() {
       const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: "FEmusic_home" } });
-      const response = await browse_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC" });
-      return new HomeFeed2(response, __privateGet(this, _actions21));
+      const response = await browse_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC" });
+      return new HomeFeed2(response, __privateGet(this, _actions22));
     }
     async getExplore() {
       const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: "FEmusic_explore" } });
-      const response = await browse_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC" });
+      const response = await browse_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC" });
       return new Explore(response);
     }
     async getLibrary() {
       const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: "FEmusic_library_landing" } });
-      const response = await browse_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC" });
-      return new Library2(response, __privateGet(this, _actions21));
+      const response = await browse_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC" });
+      return new Library2(response, __privateGet(this, _actions22));
     }
     async getArtist(artist_id) {
       if (!artist_id || !artist_id.startsWith("UC") && !artist_id.startsWith("FEmusic_library_privately_owned_artist"))
         throw new InnertubeError("Invalid artist id", artist_id);
       const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: artist_id } });
-      const response = await browse_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC" });
-      return new Artist(response, __privateGet(this, _actions21));
+      const response = await browse_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC" });
+      return new Artist(response, __privateGet(this, _actions22));
     }
     async getAlbum(album_id) {
       if (!album_id || !album_id.startsWith("MPR") && !album_id.startsWith("FEmusic_library_privately_owned_release"))
         throw new InnertubeError("Invalid album id", album_id);
       const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: album_id } });
-      const response = await browse_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC" });
+      const response = await browse_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC" });
       return new Album(response);
     }
     async getPlaylist(playlist_id) {
       if (!playlist_id.startsWith("VL"))
         playlist_id = `VL${playlist_id}`;
       const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: playlist_id } });
-      const response = await browse_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC" });
-      return new Playlist3(response, __privateGet(this, _actions21));
+      const response = await browse_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC" });
+      return new Playlist3(response, __privateGet(this, _actions22));
     }
     async getUpNext(video_id, automix = true) {
       var _a2, _b2, _c;
       throwIfMissing({ video_id });
       const watch_next_endpoint = new NavigationEndpoint({ watchNextEndpoint: { videoId: video_id } });
-      const response = await watch_next_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC", parse: true });
+      const response = await watch_next_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC", parse: true });
       const tabs = (_a2 = response.contents_memo) == null ? void 0 : _a2.getType(Tab);
       const tab = tabs == null ? void 0 : tabs[0];
       if (!tab)
@@ -35000,7 +35936,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
         const automix_preview_video = playlist_panel.contents.firstOfType(AutomixPreviewVideo);
         if (!automix_preview_video)
           throw new InnertubeError("Automix item not found");
-        const page = await ((_c = automix_preview_video.playlist_video) == null ? void 0 : _c.endpoint.call(__privateGet(this, _actions21), {
+        const page = await ((_c = automix_preview_video.playlist_video) == null ? void 0 : _c.endpoint.call(__privateGet(this, _actions22), {
           videoId: video_id,
           client: "YTMUSIC",
           parse: true
@@ -35015,7 +35951,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
       var _a2;
       throwIfMissing({ video_id });
       const watch_next_endpoint = new NavigationEndpoint({ watchNextEndpoint: { videoId: video_id } });
-      const response = await watch_next_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC", parse: true });
+      const response = await watch_next_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC", parse: true });
       const tabs = (_a2 = response.contents_memo) == null ? void 0 : _a2.getType(Tab);
       const tab = tabs == null ? void 0 : tabs.find((tab2) => {
         var _a3, _b2;
@@ -35023,7 +35959,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
       });
       if (!tab)
         throw new InnertubeError("Could not find target tab.");
-      const page = await tab.endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC", parse: true });
+      const page = await tab.endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC", parse: true });
       if (!page.contents)
         throw new InnertubeError("Unexpected response", page);
       return page.contents.item().as(SectionList, Message);
@@ -35032,7 +35968,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
       var _a2;
       throwIfMissing({ video_id });
       const watch_next_endpoint = new NavigationEndpoint({ watchNextEndpoint: { videoId: video_id } });
-      const response = await watch_next_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC", parse: true });
+      const response = await watch_next_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC", parse: true });
       const tabs = (_a2 = response.contents_memo) == null ? void 0 : _a2.getType(Tab);
       const tab = tabs == null ? void 0 : tabs.find((tab2) => {
         var _a3, _b2;
@@ -35040,7 +35976,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
       });
       if (!tab)
         throw new InnertubeError("Could not find target tab.");
-      const page = await tab.endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC", parse: true });
+      const page = await tab.endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC", parse: true });
       if (!page.contents)
         throw new InnertubeError("Unexpected response", page);
       if (page.contents.item().type === "Message")
@@ -35050,11 +35986,11 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
     }
     async getRecap() {
       const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: "FEmusic_listening_review" } });
-      const response = await browse_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC" });
-      return new Recap(response, __privateGet(this, _actions21));
+      const response = await browse_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC" });
+      return new Recap(response, __privateGet(this, _actions22));
     }
     async getSearchSuggestions(input) {
-      const response = await __privateGet(this, _actions21).execute("/music/get_search_suggestions", {
+      const response = await __privateGet(this, _actions22).execute("/music/get_search_suggestions", {
         input,
         client: "YTMUSIC",
         parse: true
@@ -35065,7 +36001,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
     }
   };
   _session4 = /* @__PURE__ */ new WeakMap();
-  _actions21 = /* @__PURE__ */ new WeakMap();
+  _actions22 = /* @__PURE__ */ new WeakMap();
   _Music_instances = /* @__PURE__ */ new WeakSet();
   fetchInfoFromVideoId_fn = /* @__PURE__ */ __name(async function(video_id, options) {
     var _a2;
@@ -35092,11 +36028,11 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
         poToken: __privateGet(this, _session4).po_token
       };
     }
-    const watch_response = watch_endpoint.call(__privateGet(this, _actions21), extra_payload);
-    const watch_next_response = watch_next_endpoint.call(__privateGet(this, _actions21), { client: "YTMUSIC" });
+    const watch_response = watch_endpoint.call(__privateGet(this, _actions22), extra_payload);
+    const watch_next_response = watch_next_endpoint.call(__privateGet(this, _actions22), { client: "YTMUSIC" });
     const response = await Promise.all([watch_response, watch_next_response]);
     const cpn = generateRandomString(16);
-    return new TrackInfo_default(response, __privateGet(this, _actions21), cpn);
+    return new TrackInfo_default(response, __privateGet(this, _actions22), cpn);
   }, "#fetchInfoFromVideoId");
   fetchInfoFromEndpoint_fn = /* @__PURE__ */ __name(async function(endpoint, options) {
     var _a2;
@@ -35122,15 +36058,15 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
         poToken: __privateGet(this, _session4).po_token
       };
     }
-    const player_response = endpoint.call(__privateGet(this, _actions21), extra_payload);
-    const next_response = endpoint.call(__privateGet(this, _actions21), {
+    const player_response = endpoint.call(__privateGet(this, _actions22), extra_payload);
+    const next_response = endpoint.call(__privateGet(this, _actions22), {
       client: "YTMUSIC",
       enablePersistentPlaylistPanel: true,
       override_endpoint: "/next"
     });
     const cpn = generateRandomString(16);
     const response = await Promise.all([player_response, next_response]);
-    return new TrackInfo_default(response, __privateGet(this, _actions21), cpn);
+    return new TrackInfo_default(response, __privateGet(this, _actions22), cpn);
   }, "#fetchInfoFromEndpoint");
   __name(_Music, "Music");
   var Music = _Music;
@@ -39607,17 +40543,17 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
     InteractionManager: () => InteractionManager,
     PlaylistManager: () => PlaylistManager
   });
-  var _actions22;
+  var _actions23;
   var _AccountManager = class _AccountManager2 {
     constructor(actions) {
-      __privateAdd(this, _actions22);
-      __privateSet(this, _actions22, actions);
+      __privateAdd(this, _actions23);
+      __privateSet(this, _actions23, actions);
     }
     async getInfo(all3 = false) {
       var _a2;
-      if (!__privateGet(this, _actions22).session.logged_in)
+      if (!__privateGet(this, _actions23).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
-      if (!all3 && !!__privateGet(this, _actions22).session.context.user.onBehalfOfUser) {
+      if (!all3 && !!__privateGet(this, _actions23).session.context.user.onBehalfOfUser) {
         throw new InnertubeError('Boolean argument must be true when "on_behalf_of_user" is specified.');
       }
       if (all3) {
@@ -39625,11 +40561,11 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           requestType: "ACCOUNTS_LIST_REQUEST_TYPE_CHANNEL_SWITCHER",
           callCircumstance: "SWITCHING_USERS_FULL"
         } });
-        const response2 = await get_accounts_list_endpoint2.call(__privateGet(this, _actions22), { client: "WEB", parse: true });
+        const response2 = await get_accounts_list_endpoint2.call(__privateGet(this, _actions23), { client: "WEB", parse: true });
         return ((_a2 = response2.actions_memo) == null ? void 0 : _a2.getType(AccountItem)) || [];
       }
       const get_accounts_list_endpoint = new NavigationEndpoint({ getAccountsListInnertubeEndpoint: {} });
-      const response = await get_accounts_list_endpoint.call(__privateGet(this, _actions22), { client: "TV" });
+      const response = await get_accounts_list_endpoint.call(__privateGet(this, _actions23), { client: "TV" });
       return new AccountInfo(response);
     }
     /**
@@ -39637,21 +40573,21 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async getSettings() {
       const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: "SPaccount_overview" } });
-      const response = await browse_endpoint.call(__privateGet(this, _actions22));
-      return new Settings(__privateGet(this, _actions22), response);
+      const response = await browse_endpoint.call(__privateGet(this, _actions23));
+      return new Settings(__privateGet(this, _actions23), response);
     }
   };
-  _actions22 = /* @__PURE__ */ new WeakMap();
+  _actions23 = /* @__PURE__ */ new WeakMap();
   __name(_AccountManager, "AccountManager");
   var AccountManager = _AccountManager;
-  var _actions23;
+  var _actions24;
   var _PlaylistManager_instances;
   var getPlaylist_fn;
   var _PlaylistManager = class _PlaylistManager2 {
     constructor(actions) {
       __privateAdd(this, _PlaylistManager_instances);
-      __privateAdd(this, _actions23);
-      __privateSet(this, _actions23, actions);
+      __privateAdd(this, _actions24);
+      __privateSet(this, _actions24, actions);
     }
     /**
      * Creates a playlist.
@@ -39660,7 +40596,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async create(title, video_ids) {
       throwIfMissing({ title, video_ids });
-      if (!__privateGet(this, _actions23).session.logged_in)
+      if (!__privateGet(this, _actions24).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
       const create_playlist_endpoint = new NavigationEndpoint({
         createPlaylistServiceEndpoint: {
@@ -39668,7 +40604,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           videoIds: video_ids
         }
       });
-      const response = await create_playlist_endpoint.call(__privateGet(this, _actions23));
+      const response = await create_playlist_endpoint.call(__privateGet(this, _actions24));
       return {
         success: response.success,
         status_code: response.status_code,
@@ -39682,14 +40618,14 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async delete(playlist_id) {
       throwIfMissing({ playlist_id });
-      if (!__privateGet(this, _actions23).session.logged_in)
+      if (!__privateGet(this, _actions24).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
       const delete_playlist_endpoint = new NavigationEndpoint({
         deletePlaylistServiceEndpoint: {
           sourcePlaylistId: playlist_id
         }
       });
-      const response = await delete_playlist_endpoint.call(__privateGet(this, _actions23));
+      const response = await delete_playlist_endpoint.call(__privateGet(this, _actions24));
       return {
         playlist_id,
         success: response.success,
@@ -39703,7 +40639,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async addToLibrary(playlist_id) {
       throwIfMissing({ playlist_id });
-      if (!__privateGet(this, _actions23).session.logged_in)
+      if (!__privateGet(this, _actions24).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
       const like_playlist_endpoint = new NavigationEndpoint({
         likeEndpoint: {
@@ -39711,7 +40647,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           target: playlist_id
         }
       });
-      return await like_playlist_endpoint.call(__privateGet(this, _actions23));
+      return await like_playlist_endpoint.call(__privateGet(this, _actions24));
     }
     /**
      * Remove a given playlist to the library of a user.
@@ -39719,7 +40655,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async removeFromLibrary(playlist_id) {
       throwIfMissing({ playlist_id });
-      if (!__privateGet(this, _actions23).session.logged_in)
+      if (!__privateGet(this, _actions24).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
       const remove_like_playlist_endpoint = new NavigationEndpoint({
         likeEndpoint: {
@@ -39727,7 +40663,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           target: playlist_id
         }
       });
-      return await remove_like_playlist_endpoint.call(__privateGet(this, _actions23));
+      return await remove_like_playlist_endpoint.call(__privateGet(this, _actions24));
     }
     /**
      * Adds videos to a given playlist.
@@ -39736,7 +40672,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async addVideos(playlist_id, video_ids) {
       throwIfMissing({ playlist_id, video_ids });
-      if (!__privateGet(this, _actions23).session.logged_in)
+      if (!__privateGet(this, _actions24).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
       const playlist_edit_endpoint = new NavigationEndpoint({
         playlistEditEndpoint: {
@@ -39747,7 +40683,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           }))
         }
       });
-      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions23));
+      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions24));
       return {
         playlist_id,
         action_result: response.data.actions
@@ -39762,7 +40698,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async removeVideos(playlist_id, video_ids, use_set_video_ids = false) {
       throwIfMissing({ playlist_id, video_ids });
-      if (!__privateGet(this, _actions23).session.logged_in)
+      if (!__privateGet(this, _actions24).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
       const playlist = await __privateMethod(this, _PlaylistManager_instances, getPlaylist_fn).call(this, playlist_id);
       if (!playlist.info.is_editable)
@@ -39784,7 +40720,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
       if (!payload.actions.length)
         throw new InnertubeError("Given video ids were not found in this playlist.", video_ids);
       const playlist_edit_endpoint = new NavigationEndpoint({ playlistEditEndpoint: payload });
-      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions23));
+      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions24));
       return {
         playlist_id,
         action_result: response.data.actions
@@ -39799,7 +40735,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async moveVideo(playlist_id, moved_video_id, predecessor_video_id) {
       throwIfMissing({ playlist_id, moved_video_id, predecessor_video_id });
-      if (!__privateGet(this, _actions23).session.logged_in)
+      if (!__privateGet(this, _actions24).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
       const playlist = await __privateMethod(this, _PlaylistManager_instances, getPlaylist_fn).call(this, playlist_id);
       if (!playlist.info.is_editable)
@@ -39823,7 +40759,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
         movedSetVideoIdPredecessor: set_video_id_1
       });
       const playlist_edit_endpoint = new NavigationEndpoint({ playlistEditEndpoint: payload });
-      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions23));
+      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions24));
       return {
         playlist_id,
         action_result: response.data.actions
@@ -39837,7 +40773,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async setName(playlist_id, name) {
       throwIfMissing({ playlist_id, name });
-      if (!__privateGet(this, _actions23).session.logged_in)
+      if (!__privateGet(this, _actions24).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
       const payload = { playlist_id, actions: [] };
       payload.actions.push({
@@ -39845,7 +40781,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
         playlistName: name
       });
       const playlist_edit_endpoint = new NavigationEndpoint({ playlistEditEndpoint: payload });
-      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions23));
+      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions24));
       return {
         playlist_id,
         action_result: response.data.actions
@@ -39858,7 +40794,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async setDescription(playlist_id, description) {
       throwIfMissing({ playlist_id, description });
-      if (!__privateGet(this, _actions23).session.logged_in)
+      if (!__privateGet(this, _actions24).session.logged_in)
         throw new InnertubeError("You must be signed in to perform this operation.");
       const payload = { playlistId: playlist_id, actions: [] };
       payload.actions.push({
@@ -39866,30 +40802,30 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
         playlistDescription: description
       });
       const playlist_edit_endpoint = new NavigationEndpoint({ playlistEditEndpoint: payload });
-      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions23));
+      const response = await playlist_edit_endpoint.call(__privateGet(this, _actions24));
       return {
         playlist_id,
         action_result: response.data.actions
       };
     }
   };
-  _actions23 = /* @__PURE__ */ new WeakMap();
+  _actions24 = /* @__PURE__ */ new WeakMap();
   _PlaylistManager_instances = /* @__PURE__ */ new WeakSet();
   getPlaylist_fn = /* @__PURE__ */ __name(async function(playlist_id) {
     if (!playlist_id.startsWith("VL")) {
       playlist_id = `VL${playlist_id}`;
     }
     const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: playlist_id } });
-    const browse_response = await browse_endpoint.call(__privateGet(this, _actions23), { parse: true });
-    return new Playlist2(__privateGet(this, _actions23), browse_response, true);
+    const browse_response = await browse_endpoint.call(__privateGet(this, _actions24), { parse: true });
+    return new Playlist2(__privateGet(this, _actions24), browse_response, true);
   }, "#getPlaylist");
   __name(_PlaylistManager, "PlaylistManager");
   var PlaylistManager = _PlaylistManager;
-  var _actions24;
+  var _actions25;
   var _InteractionManager = class _InteractionManager2 {
     constructor(actions) {
-      __privateAdd(this, _actions24);
-      __privateSet(this, _actions24, actions);
+      __privateAdd(this, _actions25);
+      __privateSet(this, _actions25, actions);
     }
     /**
      * Likes a given video.
@@ -39897,7 +40833,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async like(video_id) {
       throwIfMissing({ video_id });
-      if (!__privateGet(this, _actions24).session.logged_in)
+      if (!__privateGet(this, _actions25).session.logged_in)
         throw new Error("You must be signed in to perform this operation.");
       const like_endpoint = new NavigationEndpoint({
         likeEndpoint: {
@@ -39905,7 +40841,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           target: video_id
         }
       });
-      return like_endpoint.call(__privateGet(this, _actions24), { client: "TV" });
+      return like_endpoint.call(__privateGet(this, _actions25), { client: "TV" });
     }
     /**
      * Dislikes a given video.
@@ -39913,7 +40849,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async dislike(video_id) {
       throwIfMissing({ video_id });
-      if (!__privateGet(this, _actions24).session.logged_in)
+      if (!__privateGet(this, _actions25).session.logged_in)
         throw new Error("You must be signed in to perform this operation.");
       const dislike_endpoint = new NavigationEndpoint({
         likeEndpoint: {
@@ -39921,7 +40857,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           target: video_id
         }
       });
-      return dislike_endpoint.call(__privateGet(this, _actions24), { client: "TV" });
+      return dislike_endpoint.call(__privateGet(this, _actions25), { client: "TV" });
     }
     /**
      * Removes a like/dislike.
@@ -39929,7 +40865,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async removeRating(video_id) {
       throwIfMissing({ video_id });
-      if (!__privateGet(this, _actions24).session.logged_in)
+      if (!__privateGet(this, _actions25).session.logged_in)
         throw new Error("You must be signed in to perform this operation.");
       const remove_like_endpoint = new NavigationEndpoint({
         likeEndpoint: {
@@ -39937,7 +40873,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           target: video_id
         }
       });
-      return remove_like_endpoint.call(__privateGet(this, _actions24), { client: "TV" });
+      return remove_like_endpoint.call(__privateGet(this, _actions25), { client: "TV" });
     }
     /**
      * Subscribes to the given channel.
@@ -39945,7 +40881,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async subscribe(channel_id) {
       throwIfMissing({ channel_id });
-      if (!__privateGet(this, _actions24).session.logged_in)
+      if (!__privateGet(this, _actions25).session.logged_in)
         throw new Error("You must be signed in to perform this operation.");
       const subscribe_endpoint = new NavigationEndpoint({
         subscribeEndpoint: {
@@ -39953,7 +40889,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           params: "EgIIAhgA"
         }
       });
-      return subscribe_endpoint.call(__privateGet(this, _actions24));
+      return subscribe_endpoint.call(__privateGet(this, _actions25));
     }
     /**
      * Unsubscribes from the given channel.
@@ -39961,7 +40897,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async unsubscribe(channel_id) {
       throwIfMissing({ channel_id });
-      if (!__privateGet(this, _actions24).session.logged_in)
+      if (!__privateGet(this, _actions25).session.logged_in)
         throw new Error("You must be signed in to perform this operation.");
       const unsubscribe_endpoint = new NavigationEndpoint({
         unsubscribeEndpoint: {
@@ -39969,7 +40905,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           params: "CgIIAhgA"
         }
       });
-      return unsubscribe_endpoint.call(__privateGet(this, _actions24));
+      return unsubscribe_endpoint.call(__privateGet(this, _actions25));
     }
     /**
      * Posts a comment on a given video.
@@ -39978,7 +40914,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async comment(video_id, text) {
       throwIfMissing({ video_id, text });
-      if (!__privateGet(this, _actions24).session.logged_in)
+      if (!__privateGet(this, _actions25).session.logged_in)
         throw new Error("You must be signed in to perform this operation.");
       const writer = CreateCommentParams.encode({
         videoId: video_id,
@@ -39994,7 +40930,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           createCommentParams: params
         }
       });
-      return create_comment_endpoint.call(__privateGet(this, _actions24));
+      return create_comment_endpoint.call(__privateGet(this, _actions25));
     }
     /**
      * Translates a given text using YouTube's comment translation feature.
@@ -40006,7 +40942,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
       throwIfMissing({ text, target_language });
       const action = encodeCommentActionParams(22, { text, target_language, ...args });
       const perform_comment_action_endpoint = new NavigationEndpoint({ performCommentActionEndpoint: { action } });
-      const response = await perform_comment_action_endpoint.call(__privateGet(this, _actions24));
+      const response = await perform_comment_action_endpoint.call(__privateGet(this, _actions25));
       const mutation = response.data.frameworkUpdates.entityBatchUpdate.mutations[0].payload.commentEntityPayload;
       return {
         success: response.success,
@@ -40023,7 +40959,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
      */
     async setNotificationPreferences(channel_id, type) {
       throwIfMissing({ channel_id, type });
-      if (!__privateGet(this, _actions24).session.logged_in)
+      if (!__privateGet(this, _actions25).session.logged_in)
         throw new Error("You must be signed in to perform this operation.");
       const pref_types = {
         PERSONALIZED: 1,
@@ -40042,10 +40978,10 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
       });
       const params = encodeURIComponent(u8ToBase64(writer.finish()));
       const modify_channel_notification_preference_endpoint = new NavigationEndpoint({ modifyChannelNotificationPreferenceEndpoint: { params } });
-      return modify_channel_notification_preference_endpoint.call(__privateGet(this, _actions24));
+      return modify_channel_notification_preference_endpoint.call(__privateGet(this, _actions25));
     }
   };
-  _actions24 = /* @__PURE__ */ new WeakMap();
+  _actions25 = /* @__PURE__ */ new WeakMap();
   __name(_InteractionManager, "InteractionManager");
   var InteractionManager = _InteractionManager;
   var _session6;
@@ -40355,7 +41291,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
           type: 1
         }
       });
-      const params = encodeURIComponent(u8ToBase64(writer.finish()));
+      const params = encodeURIComponent(u8ToBase64(writer.finish(), true));
       const browse_endpoint = new NavigationEndpoint({ browseEndpoint: { browseId: "FEhashtag", params } });
       const response = await browse_endpoint.call(__privateGet(this, _session6).actions);
       return new HashtagFeed(this.actions, response);
@@ -43665,23 +44601,23 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
     };
   });
   var deprecatedWarnings = {};
-  validators.transitional = function transitional(validator, version2, message) {
+  validators.transitional = function transitional(validator, version3, message) {
     function formatMessage(opt, desc) {
       return "[Axios v" + VERSION2 + "] Transitional option '" + opt + "'" + desc + (message ? ". " + message : "");
     }
     return (value, opt, opts) => {
       if (validator === false) {
         throw new AxiosError_default(
-          formatMessage(opt, " has been removed" + (version2 ? " in " + version2 : "")),
+          formatMessage(opt, " has been removed" + (version3 ? " in " + version3 : "")),
           AxiosError_default.ERR_DEPRECATED
         );
       }
-      if (version2 && !deprecatedWarnings[opt]) {
+      if (version3 && !deprecatedWarnings[opt]) {
         deprecatedWarnings[opt] = true;
         console.warn(
           formatMessage(
             opt,
-            " has been deprecated since v" + version2 + " and will be removed in the near future"
+            " has been deprecated since v" + version3 + " and will be removed in the near future"
           )
         );
       }
@@ -45602,7 +46538,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
   }
   var ParameterError = class extends Error {
   };
-  var version = "6.0.2";
+  var version2 = "6.0.2";
   var PrefixSecurityEnum = {
     SILENT: "silent",
     STRICT: "strict",
@@ -47026,7 +47962,7 @@ ${getNsigProcessorFn(eval_args.n, eval_args.sp, eval_args.sig)}`;
         // The version of tough-cookie that serialized this jar. Generally a good
         // practice since future versions can make data import decisions based on
         // known past behavior. When/if this matters, use `semver`.
-        version: `tough-cookie@${version}`,
+        version: `tough-cookie@${version2}`,
         // add the store type, to make humans happy:
         storeType: type,
         // CookieJar configuration:

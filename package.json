@@ -11,7 +11,7 @@
   "dependencies": {
     "@syncfm/applemusic-api": "^0.0.6",
     "web-streams-polyfill": "^4.3.0",
-    "youtubei.js": "^17.2.0"
+    "youtubei.js": "^18.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.25.0"
